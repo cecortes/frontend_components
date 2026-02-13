@@ -10,6 +10,6 @@
   - [x] Add the @tailwindcss/vite plugin to your Vite configuration.
   - [x] Add an @import to your CSS file that imports Tailwind CSS.
 
-- Merge the /setup branch to /main, and delete the /setup branch.
+- [] Merge the /setup branch to /main, and delete the /setup branch.
 
-- Create a /dev branch to work on the development of the components, and a /main branch to merge the final code.
+- [] Create a /dev branch to work on the development of the components, and a /main branch to merge the final code.
