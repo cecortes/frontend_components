@@ -10,6 +10,11 @@
   - [x] Add the @tailwindcss/vite plugin to your Vite configuration.
   - [x] Add an @import to your CSS file that imports Tailwind CSS.
 
-- [] Merge the /setup branch to /main, and delete the /setup branch.
+- [x] Merge the /setup branch to /main, and delete the /setup branch.
 
-- [] Create a /dev branch to work on the development of the components, and a /main branch to merge the final code.
+- [x] Create a /dev branch to work on the development of the components, and a /main branch to merge the final code.
+
+- Copy the necessary DACS templates.
+  - [x] Create a new DACS template for the scaffold of the components.
+  - [x] Create the MVC pattern DACS template, which will be used as a base for the components.
+  - [ ] TODO: Create the JS functions DACS template, which will be used to create the necessary JS functions for the components.
