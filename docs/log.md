@@ -17,4 +17,13 @@
 - Copy the necessary DACS templates.
   - [x] Create a new DACS template for the scaffold of the components.
   - [x] Create the MVC pattern DACS template, which will be used as a base for the components.
-  - [ ] TODO: Create the JS functions DACS template, which will be used to create the necessary JS functions for the components.
+  - [x] TODO: Create the JS functions DACS template, which will be used to create the necessary JS functions for the components.
+
+---
+
+## 13-02-26 - Coding the login form component.
+
+- [] Create the login form component, starting with the HTML structure, then the CSS styles, and finally the JS functions.
+  - [] Create the HTML structure of the login form component.
+  - [] Create the CSS styles for the login form component.
+  - [] Create the JS functions for the login form component.
