@@ -26,4 +26,12 @@
 - [x] Create the login form component, starting with the HTML structure, then the CSS styles, and finally the JS functions.
   - [x] Create the HTML structure of the login form component.
   - [x] Create the CSS styles for the login form component.
-  - [] Create the JS functions for the login form component.
+
+---
+
+## 14-02-26 - Coding the login business logic.
+
+- [x] Create the Factory pattern for the login form component.
+  - [x] Code view logic for the login form component.
+  - [x] Show the login form component in the browser, and test that it works as expected.
+  - [] Create the Controller logic for the login form component, which will handle the user interactions and the business logic of the component.

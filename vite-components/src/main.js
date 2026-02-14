@@ -1,9 +1,8 @@
 import "./style.css";
+import { LoginFactory } from "./factory/login_factory";
 
-document.querySelector("#LoginForm").innerHTML = `
-  <div>
-    
-    <h1>Hello Vite!</h1>
-    
-  </div>
-`;
+const loginElement = document.querySelector("#LoginForm");
+
+const loginComponent = LoginFactory.logingComponent();
+
+loginElement.append(loginComponent);
