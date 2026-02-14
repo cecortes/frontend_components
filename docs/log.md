@@ -23,7 +23,7 @@
 
 ## 13-02-26 - Coding the login form component.
 
-- [] Create the login form component, starting with the HTML structure, then the CSS styles, and finally the JS functions.
-  - [] Create the HTML structure of the login form component.
-  - [] Create the CSS styles for the login form component.
+- [x] Create the login form component, starting with the HTML structure, then the CSS styles, and finally the JS functions.
+  - [x] Create the HTML structure of the login form component.
+  - [x] Create the CSS styles for the login form component.
   - [] Create the JS functions for the login form component.
