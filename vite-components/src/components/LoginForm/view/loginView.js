@@ -1,5 +1,8 @@
 "use strict";
 
+/**
+ *
+ */
 export class LoginView {
   constructor(icons) {
     this.icons = icons;
