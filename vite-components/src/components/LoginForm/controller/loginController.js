@@ -22,5 +22,9 @@ export class LoginController {
       $logoTitle.target.innerText = "Obligatorio usar Target";
       console.log($logoTitle.target.innerText);
     });
+
+    $togglePassBtn.addEventListener("click", () => {
+      this.view.togglePasswordType($passInput, $togglePassBtn);
+    });
   }
 }

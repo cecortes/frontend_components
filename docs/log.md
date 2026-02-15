@@ -34,4 +34,12 @@
 - [x] Create the Factory pattern for the login form component.
   - [x] Code view logic for the login form component.
   - [x] Show the login form component in the browser, and test that it works as expected.
-  - [] Create the Controller logic for the login form component, which will handle the user interactions and the business logic of the component.
+  - [x] Create the Controller logic for the login form component, which will handle the user interactions and the business logic of the component.
+
+---
+
+## 15-02-26 - Coding the toogle password component.
+
+- [x] Code the toogle password logic.
+  - [x] When the user clicks on the toogle password button, the password input field should change its type from "password" to "text", and vice versa.
+  - [x] The toogle password button should also change its icon from an eye to an eye with a slash, and vice versa.

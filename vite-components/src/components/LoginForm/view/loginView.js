@@ -111,8 +111,16 @@ export class LoginView {
     };
   }
 
-  togglePasswordType() {
-    const input = this.ui.passInput;
-    input.type = input.type === "password" ? "text" : "password";
+  togglePasswordType(toggleInput, toggleElement) {
+    const elementWithIcon = toggleElement;
+    const input = toggleInput;
+
+    if (input.type === "password") {
+      elementWithIcon.innerHTML = this.icons.eyeOff;
+      input.type = "text";
+    } else {
+      elementWithIcon.innerHTML = this.icons.eye;
+      input.type = "password";
+    }
   }
 }
