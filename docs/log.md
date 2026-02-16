@@ -43,3 +43,8 @@
 - [x] Code the toogle password logic.
   - [x] When the user clicks on the toogle password button, the password input field should change its type from "password" to "text", and vice versa.
   - [x] The toogle password button should also change its icon from an eye to an eye with a slash, and vice versa.
+  - [x] Test the toogle password functionality in the browser, and make sure it works as expected.
+- [x] Code recovery password logic.
+  - [x] When the user clicks on the recovery password link, the user should redirect to a new page with a form to recover the password.
+  - [x] The recovery link must be a env variable, so we can change it in the future without having to change the code.
+  - [x] Test the recovery password functionality in the browser, and make sure it works as expected.

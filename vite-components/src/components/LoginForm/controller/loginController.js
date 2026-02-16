@@ -26,5 +26,11 @@ export class LoginController {
     $togglePassBtn.addEventListener("click", () => {
       this.view.togglePasswordType($passInput, $togglePassBtn);
     });
+
+    $recoverPassLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      const recoveryLink = import.meta.env.VITE_FORGOTPASS_LINK;
+      window.location.href = recoveryLink;
+    });
   }
 }
