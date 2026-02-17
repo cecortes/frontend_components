@@ -1,0 +1,173 @@
+# @dacs/dacTemplate.dac
+---
+# Metadatos del DAC
+dac_id: "scaffold_mvc_component"
+version: "2.1.0"
+author: "Cesar Lopez <cesar@example.com>"
+created_at: "2026-02-12T00:00:00Z"
+type: "pattern"
+description: "Genera la estructura MVC completa para un componente frontend reutilizable en Vite."
+stack:
+  - "javascript"
+  - "vite"
+  - "css"
+scope: "component"
+depends_on:
+  - "@dacs/mvc_pattern.dac"
+  - "@dacs/js_functions.dac"
+
+# Contexto de Ejecución
+context:
+  component_name: "{{NombreDelComponente}}" # PascalCase (ej: LoginForm)
+  base_path: "src/components"
+
+# Reglas generales
+instructions:
+  - "DEBES generar una carpeta con el nombre exacto del componente."
+  - "DEBES generar exactamente 3 archivos JS dentro de esa carpeta: Model, View, Controller."
+  - "El código debe ser Vanilla JS moderno compatible con Vite."
+
+# Implementación: Reglas por Capa MVC
+implementation_rules:
+  directory_structure:
+    responsibility: "Estructura de archivos y carpetas"
+    must_follow:
+      - id: "str-001"
+        rule: "Crear directorio 'src/components/{{NombreDelComponente}}/'."
+        severity: "error"
+      - id: "str-002"
+        rule: "Los archivos DEBEN llamarse: '{{NombreDelComponente}}Model.js', '{{NombreDelComponente}}View.js', '{{NombreDelComponente}}Controller.js'."
+        severity: "error"
+
+  model_layer:
+    responsibility: "Lógica de datos y comunicación con Backend"
+    file_suffix: "Model.js"
+    must_follow:
+      - id: "mod-001"
+        rule: "DEBE contener una clase '{{NombreDelComponente}}Model'."
+        severity: "error"
+      - id: "mod-002"
+        rule: "NO debe manipular el DOM ni importar la Vista."
+        severity: "error"
+      - id: "mod-003"
+        rule: "Debe manejar las llamadas a API (fetch/axios) y retornar datos puros."
+
+  view_layer:
+    responsibility: "Renderizado de HTML y selectores del DOM"
+    file_suffix: "View.js"
+    must_follow:
+      - id: "view-001"
+        rule: "DEBE contener una clase '{{NombreDelComponente}}View'."
+        severity: "error"
+      - id: "view-002"
+        rule: "DEBE exponer un método 'getTemplate()' o 'render()' que retorne string HTML."
+        severity: "error"
+      - id: "view-003"
+        rule: "NO debe contener lógica de negocio ni llamadas a APIs."
+        severity: "warning"
+      - id: "view-004"
+        rule: "Debe exponer métodos para bindear eventos (ej: bindLogin(handler))."
+
+  controller_layer:
+    responsibility: "Orquestación e inicialización"
+    file_suffix: "Controller.js"
+    must_follow:
+      - id: "ctrl-001"
+        rule: "DEBE importar Model y View usando rutas relativas y extensión .js (requerido por Vite)."
+        severity: "error"
+        example: "import UserListModel from './UserListModel.js';"
+      - id: "ctrl-002"
+        rule: "DEBE contener una clase '{{NombreDelComponente}}Controller' que instancie el Model y la View."
+      - id: "ctrl-003"
+        rule: "DEBE ser el único punto de entrada para inicializar el componente."
+
+# Verificación: Ejemplo de un componente 'LoginForm'
+example_verification:
+  responsibility: "Validar la interacción MVC"
+  description: "Ejemplo de cómo deben verse los 3 archivos para un componente 'LoginForm'."
+  
+  expected_structure:
+    - src/components/LoginForm/LoginFormModel.js
+    - src/components/LoginForm/LoginFormView.js
+    - src/components/LoginForm/LoginFormController.js
+
+  code_snippets:
+    LoginFormModel.js: |
+      export class LoginFormModel {
+        constructor() {
+          this.user = null;
+        }
+        async authenticate(username, password) {
+          // Lógica de fetch real aquí
+          if(username === 'admin' && password === '123') return { id: 1 };
+          throw new Error('Credenciales inválidas');
+        }
+      }
+
+    LoginFormView.js: |
+      export class LoginFormView {
+        constructor() {
+          this.app = document.getElementById('app');
+        }
+        
+        getTemplate() {
+          return `
+            <form id="login-form">
+              <input type="text" id="username" placeholder="User" />
+              <input type="password" id="password" placeholder="Pass" />
+              <button type="submit">Entrar</button>
+            </form>
+          `;
+        }
+
+        render() {
+          this.app.innerHTML = this.getTemplate();
+        }
+
+        bindLogin(handler) {
+          const form = document.getElementById('login-form');
+          form.addEventListener('submit', event => {
+            event.preventDefault();
+            const user = document.getElementById('username').value;
+            const pass = document.getElementById('password').value;
+            handler(user, pass);
+          });
+        }
+      }
+
+    LoginFormController.js: |
+      import { LoginFormModel } from './LoginFormModel.js';
+      import { LoginFormView } from './LoginFormView.js';
+
+      export class LoginFormController {
+        constructor(model, view) {
+          this.model = model;
+          this.view = view;
+
+          // Enlazar eventos de la vista con métodos del controlador
+          this.view.bindLogin(this.handleLogin.bind(this));
+        }
+
+        async handleLogin(user, pass) {
+          try {
+            const data = await this.model.authenticate(user, pass);
+            console.log('Login exitoso', data);
+          } catch (error) {
+            console.error(error);
+          }
+        }
+      }
+
+# Notas Técnicas
+important_notes:
+  - "El Controlador actúa como el 'Pegamento'. La Vista no sabe que el Modelo existe."
+  - "Usa 'export class' en lugar de 'export default' para mantener consistencia en imports."
+  - "Para Vite, asegura que cualquier CSS específico se importe en el archivo View.js o Controller.js."
+
+placeholders:
+  NombreDelComponente:
+    type: "string"
+    pattern: "^[A-Z][a-zA-Z0-9]*$"
+    description: "Nombre del componente en PascalCase (ej: UserTable, NavBar)."
+
+---
