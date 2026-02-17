@@ -48,3 +48,14 @@
   - [x] When the user clicks on the recovery password link, the user should redirect to a new page with a form to recover the password.
   - [x] The recovery link must be a env variable, so we can change it in the future without having to change the code.
   - [x] Test the recovery password functionality in the browser, and make sure it works as expected.
+
+---
+
+## 16-02-26 - Coding the validators rules for the login form component.
+
+- [x] Code the validators rules for the login form component.
+  - [x] The user input field should be required, and should have a valid format.
+  - [x] The password input field should be required, and should have a minimum length of 8 characters.
+  - [x] Test the validators rules in the browser, and make sure they work as expected.
+
+---

@@ -41,6 +41,7 @@ export class LoginView {
                 autocomplete="username"
                 required
               />
+              <div class="validation-tooltip" id="usernameError" role="alert" aria-live="polite"></div>
             </div>
           </div>
 
@@ -63,6 +64,7 @@ export class LoginView {
               <button type="button" class="toggle-password" id="togglePassword" aria-label="Mostrar contraseña">
                 ${this.icons.eye}
               </button>
+              <div class="validation-tooltip" id="passwordError" role="alert" aria-live="polite"></div>
             </div>
           </div>
 
@@ -108,6 +110,8 @@ export class LoginView {
       $togglePassBtn: this.element.querySelector("#togglePassword"),
       $loginBtn: this.element.querySelector("#loginButton"),
       $recoverPassLink: this.element.querySelector("#forgotPasswordLink"),
+      $userError: this.element.querySelector("#usernameError"),
+      $passError: this.element.querySelector("#passwordError"),
     };
   }
 
@@ -122,5 +126,34 @@ export class LoginView {
       elementWithIcon.innerHTML = this.icons.eye;
       input.type = "password";
     }
+  }
+
+  /**
+   * Muestra el error de validación para un campo
+   * @param {HTMLInputElement} inputElement - El elemento input
+   * @param {HTMLElement} errorElement - El elemento del tooltip de error
+   * @param {string} message - El mensaje de error a mostrar
+   */
+  showValidationError(inputElement, errorElement, message) {
+    // Añadir clase de error al input
+    inputElement.classList.add('input-error');
+    
+    // Mostrar el tooltip con el mensaje
+    errorElement.textContent = message;
+    errorElement.classList.add('show');
+  }
+
+  /**
+   * Oculta el error de validación para un campo
+   * @param {HTMLInputElement} inputElement - El elemento input
+   * @param {HTMLElement} errorElement - El elemento del tooltip de error
+   */
+  hideValidationError(inputElement, errorElement) {
+    // Remover clase de error del input
+    inputElement.classList.remove('input-error');
+    
+    // Ocultar el tooltip
+    errorElement.textContent = '';
+    errorElement.classList.remove('show');
   }
 }
