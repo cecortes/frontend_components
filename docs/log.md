@@ -59,3 +59,9 @@
   - [x] Test the validators rules in the browser, and make sure they work as expected.
 
 ---
+
+## 17-02-26 - Starting Backend.
+
+- [x] Start the backend development for the login form component, which will handle the authentication logic and the communication with the database.
+  - [] Create the necessary endpoints for the login form component, such as the login endpoint, middleware for authentication, etc.
+  - [] Test the backend endpoints using a tool like Postman, and make sure they work as expected.
