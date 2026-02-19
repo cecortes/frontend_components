@@ -40,24 +40,45 @@ export class LoginController {
     $userInput.addEventListener("blur", (element) => {
       const userField = element.target.value;
       const validation = this.validator.validateField(userField, "user");
-      
-      if (!validation.isValid) {
-        this.view.showValidationError($userInput, $userError, validation.message);
-      } else {
-        this.view.hideValidationError($userInput, $userError);
-      }
+
+      this.loginInputsPopUp(validation, $userInput, $userError);
     });
 
     // Validación del campo contraseña en blur
     $passInput.addEventListener("blur", (element) => {
       const passField = element.target.value;
       const validation = this.validator.validateField(passField, "password");
-      
-      if (!validation.isValid) {
-        this.view.showValidationError($passInput, $passError, validation.message);
-      } else {
-        this.view.hideValidationError($passInput, $passError);
-      }
+
+      this.loginInputsPopUp(validation, $passInput, $passError);
     });
+
+    // Submit Form
+    $loginBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const validationUser = this.validator.validateField(
+        $userInput.value,
+        "user",
+      );
+      const validationPass = this.validator.validateField(
+        $passInput.value,
+        "password",
+      );
+
+      this.loginInputsPopUp(validationUser, $userInput, $userError);
+      this.loginInputsPopUp(validationPass, $passInput, $passError);
+    });
+  }
+
+  loginInputsPopUp(validatorObject, inputElement, errElement) {
+    if (!validatorObject.isValid) {
+      this.view.showValidationError(
+        inputElement,
+        errElement,
+        validatorObject.message,
+      );
+    } else {
+      this.view.hideValidationError(inputElement, errElement);
+    }
   }
 }
