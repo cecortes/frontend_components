@@ -3,7 +3,7 @@ import express from "express";
 import {
   handleLogin,
   handleRegister,
-} from "../controllers/users/authController.js";
+} from "../controllers/authentication/controller.js";
 import { authenticateToken } from "../middlewares/auth.js";
 
 // Crear el router

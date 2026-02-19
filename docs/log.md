@@ -63,5 +63,14 @@
 ## 17-02-26 - Starting Backend.
 
 - [x] Start the backend development for the login form component, which will handle the authentication logic and the communication with the database.
-  - [] Create the necessary endpoints for the login form component, such as the login endpoint, middleware for authentication, etc.
-  - [] Test the backend endpoints using a tool like Postman, and make sure they work as expected.
+  - [x] Create the necessary endpoints for the login form component, such as the login endpoint, middleware for authentication, etc.
+  - [x] Test the backend endpoints using a tool like Postman, and make sure they work as expected.
+
+---
+
+## 18-02-26 - Refactoring backend for the login form component.
+
+- [x] Refactor the backend code for the login form component, to make it more modular and maintainable.
+  - [x] Create a separate file for the authentication logic, which will handle the authentication process and the communication with the database.
+  - [x] Create a separate file for the user logic, which will handle the user-related operations, such as creating a new user, updating user information, etc.
+  - [x] Test the refactored backend code using a tool like Postman, and make sure it works as expected.

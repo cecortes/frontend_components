@@ -1,5 +1,8 @@
 // Importar dependencias (usando sintaxis ESM)
-import { loginUser, registerUser } from "../../services/users/authService.js";
+import {
+  loginUser,
+  registerUser,
+} from "../../services/authentication/service.js";
 
 /**
  * Maneja la petición POST /login
