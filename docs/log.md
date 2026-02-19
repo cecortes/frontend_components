@@ -74,3 +74,4 @@
   - [x] Create a separate file for the authentication logic, which will handle the authentication process and the communication with the database.
   - [x] Create a separate file for the user logic, which will handle the user-related operations, such as creating a new user, updating user information, etc.
   - [x] Test the refactored backend code using a tool like Postman, and make sure it works as expected.
+- [x] Create a .env template file, wich will contain the instructions for the necessary environment variables.
