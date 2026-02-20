@@ -76,6 +76,11 @@
   - [x] Test the refactored backend code using a tool like Postman, and make sure it works as expected.
 - [x] Create a .env template file, wich will contain the instructions for the necessary environment variables.
 - [-] Code the submit logic for the login form component, which will handle the form submission and the communication with the backend.
-  - [-] When the user submits the login form, the component should send a request to the login endpoint if the form is valid, with the user input and password as parameters.
+
+---
+
+## 19-02-26 - Coding the submit logic for the login form component.
+
+- [-] When the user submits the login form, the component should send a request to the login endpoint if the form is valid, with the user input and password as parameters.
   - [] The component should also handle the response from the backend, and show an error message if the login fails, or redirect to the dashboard if the login is successful.
   - [] Test the submit logic in the browser, and make sure it works as expected.

@@ -38,16 +38,15 @@ export class LoginController {
 
     // Validación del campo usuario en blur
     $userInput.addEventListener("blur", (element) => {
-      const userField = element.target.value;
-      const validation = this.validator.validateField(userField, "user");
+      const validation = this.validateInput(element.target);
+      console.log(validation);
 
       this.loginInputsPopUp(validation, $userInput, $userError);
     });
 
     // Validación del campo contraseña en blur
     $passInput.addEventListener("blur", (element) => {
-      const passField = element.target.value;
-      const validation = this.validator.validateField(passField, "password");
+      const validation = this.validateInput(element.target);
 
       this.loginInputsPopUp(validation, $passInput, $passError);
     });
@@ -56,17 +55,23 @@ export class LoginController {
     $loginBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
-      const validationUser = this.validator.validateField(
-        $userInput.value,
-        "user",
+      const validationUser = this.validateInput($userInput);
+      const validationPass = this.validateInput($passInput);
+
+      const userPopUp = this.loginInputsPopUp(
+        validationUser,
+        $userInput,
+        $userError,
       );
-      const validationPass = this.validator.validateField(
-        $passInput.value,
-        "password",
+      const passPopUp = this.loginInputsPopUp(
+        validationPass,
+        $passInput,
+        $passError,
       );
 
-      this.loginInputsPopUp(validationUser, $userInput, $userError);
-      this.loginInputsPopUp(validationPass, $passInput, $passError);
+      if (!userPopUp || !passPopUp) return;
+
+      console.log("Get User and PAss");
     });
   }
 
@@ -77,8 +82,23 @@ export class LoginController {
         errElement,
         validatorObject.message,
       );
+      return false;
     } else {
       this.view.hideValidationError(inputElement, errElement);
+      return true;
+    }
+  }
+
+  validateInput(element) {
+    switch (element.id) {
+      case "username":
+        return this.validator.validateField(element.value, element);
+        break;
+      case "password":
+        return this.validator.validateField(element.value, element);
+        break;
+      default:
+        throw new Error("Input Element not Found!!");
     }
   }
 }
