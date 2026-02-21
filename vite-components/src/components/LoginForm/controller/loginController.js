@@ -37,16 +37,15 @@ export class LoginController {
     });
 
     // Validación del campo usuario en blur
-    $userInput.addEventListener("blur", (element) => {
-      const validation = this.validateInput(element.target);
-      console.log(validation);
+    $userInput.addEventListener("blur", () => {
+      const validation = this.validator.validateField($userInput);
 
       this.loginInputsPopUp(validation, $userInput, $userError);
     });
 
     // Validación del campo contraseña en blur
-    $passInput.addEventListener("blur", (element) => {
-      const validation = this.validateInput(element.target);
+    $passInput.addEventListener("blur", () => {
+      const validation = this.validator.validateField($passInput);
 
       this.loginInputsPopUp(validation, $passInput, $passError);
     });
@@ -55,8 +54,8 @@ export class LoginController {
     $loginBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
-      const validationUser = this.validateInput($userInput);
-      const validationPass = this.validateInput($passInput);
+      const validationUser = this.validator.validateField($userInput);
+      const validationPass = this.validator.validateField($passInput);
 
       const userPopUp = this.loginInputsPopUp(
         validationUser,
@@ -86,19 +85,6 @@ export class LoginController {
     } else {
       this.view.hideValidationError(inputElement, errElement);
       return true;
-    }
-  }
-
-  validateInput(element) {
-    switch (element.id) {
-      case "username":
-        return this.validator.validateField(element.value, element);
-        break;
-      case "password":
-        return this.validator.validateField(element.value, element);
-        break;
-      default:
-        throw new Error("Input Element not Found!!");
     }
   }
 }

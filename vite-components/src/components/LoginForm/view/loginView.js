@@ -1,8 +1,5 @@
 "use strict";
 
-/**
- *
- */
 export class LoginView {
   constructor(icons) {
     this.icons = icons;
@@ -136,11 +133,11 @@ export class LoginView {
    */
   showValidationError(inputElement, errorElement, message) {
     // Añadir clase de error al input
-    inputElement.classList.add('input-error');
-    
+    inputElement.classList.add("input-error");
+
     // Mostrar el tooltip con el mensaje
     errorElement.textContent = message;
-    errorElement.classList.add('show');
+    errorElement.classList.add("show");
   }
 
   /**
@@ -150,10 +147,10 @@ export class LoginView {
    */
   hideValidationError(inputElement, errorElement) {
     // Remover clase de error del input
-    inputElement.classList.remove('input-error');
-    
+    inputElement.classList.remove("input-error");
+
     // Ocultar el tooltip
-    errorElement.textContent = '';
-    errorElement.classList.remove('show');
+    errorElement.textContent = "";
+    errorElement.classList.remove("show");
   }
 }
