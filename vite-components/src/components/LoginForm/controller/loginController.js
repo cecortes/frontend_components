@@ -1,11 +1,31 @@
 "use strict";
 
 export class LoginController {
+  /**
+   * @method constructor
+   * @description
+   * Inicializa el controlador de login con su vista y validador correspondientes.
+   *
+   * @param {LoginView} view - Instancia de la vista del formulario de login.
+   * @param {FieldsValidator} fieldsValidator - Instancia del validador de campos.
+   * @returns {void}
+   * @example
+   * const controller = new LoginController(new LoginView(), new FieldsValidator());
+   */
   constructor(view, fieldsValidator) {
     this.view = view;
     this.validator = fieldsValidator;
   }
 
+  /**
+   * @method loginEventHandler
+   * @description
+   * Configura y gestiona los escuchadores de eventos para los elementos del formulario de login.
+   *
+   * @returns {void}
+   * @example
+   * loginController.loginEventHandler();
+   */
   loginEventHandler() {
     // Destructuring values from LoginElements
     const {
@@ -21,15 +41,41 @@ export class LoginController {
       $passError,
     } = this.view.LoginElements;
 
+    /**
+     * @method handleLogoTitleClick
+     * @description
+     * Cambia el texto del título del logo al hacer clic.
+     *
+     * @param {PointerEvent} $logoTitle - El objeto del evento de clic.
+     * @example
+     * $logoTitle.addEventListener("click", ($logoTitle) => { ... });
+     */
     $logoTitle.addEventListener("click", ($logoTitle) => {
       $logoTitle.target.innerText = "Obligatorio usar Target";
       console.log($logoTitle.target.innerText);
     });
 
+    /**
+     * @method handleTogglePassClick
+     * @description
+     * Alterna la visibilidad de la contraseña entre texto plano y asteriscos.
+     *
+     * @example
+     * $togglePassBtn.addEventListener("click", () => { ... });
+     */
     $togglePassBtn.addEventListener("click", () => {
       this.view.togglePasswordType($passInput, $togglePassBtn);
     });
 
+    /**
+     * @method handleRecoverPassClick
+     * @description
+     * Redirige al usuario a la página de recuperación de contraseña.
+     *
+     * @param {PointerEvent} e - El objeto del evento de clic.
+     * @example
+     * $recoverPassLink.addEventListener("click", (e) => { ... });
+     */
     $recoverPassLink.addEventListener("click", (e) => {
       e.preventDefault();
       const recoveryLink = import.meta.env.VITE_FORGOTPASS_LINK;
@@ -37,6 +83,14 @@ export class LoginController {
     });
 
     // Validación del campo usuario en blur
+    /**
+     * @method handleUserBlur
+     * @description
+     * Valida el campo de usuario cuando pierde el foco.
+     *
+     * @example
+     * $userInput.addEventListener("blur", () => { ... });
+     */
     $userInput.addEventListener("blur", () => {
       const validation = this.validator.validateField($userInput);
 
@@ -44,6 +98,14 @@ export class LoginController {
     });
 
     // Validación del campo contraseña en blur
+    /**
+     * @method handlePassBlur
+     * @description
+     * Valida el campo de contraseña cuando pierde el foco.
+     *
+     * @example
+     * $passInput.addEventListener("blur", () => { ... });
+     */
     $passInput.addEventListener("blur", () => {
       const validation = this.validator.validateField($passInput);
 
@@ -51,6 +113,15 @@ export class LoginController {
     });
 
     // Submit Form
+    /**
+     * @method handleLoginClick
+     * @description
+     * Procesa el intento de inicio de sesión validando los campos y enviando el formulario.
+     *
+     * @param {PointerEvent} e - El objeto del evento de clic.
+     * @example
+     * $loginBtn.addEventListener("click", (e) => { ... });
+     */
     $loginBtn.addEventListener("click", (e) => {
       e.preventDefault();
 
@@ -74,6 +145,18 @@ export class LoginController {
     });
   }
 
+  /**
+   * @method loginInputsPopUp
+   * @description
+   * Gestiona la visualización de mensajes de error en los inputs basándose en el resultado de la validación.
+   *
+   * @param {Object} validatorObject - Objeto que contiene el estado de validación (isValid y message).
+   * @param {HTMLElement} inputElement - El elemento input del DOM que se está validando.
+   * @param {HTMLElement} errElement - El elemento del DOM donde se mostrará el error.
+   * @returns {boolean} - Retorna true si el campo es válido, false en caso contrario.
+   * @example
+   * const isValid = loginController.loginInputsPopUp(validation, $userInput, $userError);
+   */
   loginInputsPopUp(validatorObject, inputElement, errElement) {
     if (!validatorObject.isValid) {
       this.view.showValidationError(
