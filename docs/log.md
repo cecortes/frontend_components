@@ -84,3 +84,14 @@
 - [-] When the user submits the login form, the component should send a request to the login endpoint if the form is valid, with the user input and password as parameters.
   - [] The component should also handle the response from the backend, and show an error message if the login fails, or redirect to the dashboard if the login is successful.
   - [] Test the submit logic in the browser, and make sure it works as expected.
+
+---
+
+## 20-02-26 - Refactoring the login form logic.
+
+- [x] Refactor the login form logic, to make it more modular and maintainable.
+  - [x] Simplify the login controller logic, refactoring methods and functions to make them more concise and easier to understand.
+  - [x] Refactoring validator to use element attributes to define the validation rules, instead of hardcoding them in the JS code.
+  - [x] Completing the JSDoc for login controller and login view.
+
+---
