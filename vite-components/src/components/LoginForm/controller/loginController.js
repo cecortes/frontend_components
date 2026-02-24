@@ -7,13 +7,15 @@ export class LoginController {
    * Inicializa el controlador de login con su vista y validador correspondientes.
    *
    * @param {LoginView} view - Instancia de la vista del formulario de login.
+   * @param {LoginModel} model - Instancia del modelo para el login.
    * @param {FieldsValidator} fieldsValidator - Instancia del validador de campos.
    * @returns {void}
    * @example
    * const controller = new LoginController(new LoginView(), new FieldsValidator());
    */
-  constructor(view, fieldsValidator) {
+  constructor(view, loginModel, fieldsValidator) {
     this.view = view;
+    this.model = loginModel;
     this.validator = fieldsValidator;
   }
 
@@ -141,7 +143,8 @@ export class LoginController {
 
       if (!userPopUp || !passPopUp) return;
 
-      console.log("Get User and PAss");
+      // Model service for Login
+      this.handleModelLogin($userInput, $passInput);
     });
   }
 
@@ -169,5 +172,12 @@ export class LoginController {
       this.view.hideValidationError(inputElement, errElement);
       return true;
     }
+  }
+
+  handleModelLogin(userInput, passInput) {
+    // Get user and password
+    const userData = userInput.value;
+    const passData = passInput.value;
+    console.log(userData, passData);
   }
 }

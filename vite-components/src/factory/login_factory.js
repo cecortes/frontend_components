@@ -3,14 +3,16 @@
 import { icons } from "../components/LoginForm/icons/svg_icons";
 import { LoginController } from "../components/LoginForm/controller/loginController";
 import { LoginView } from "../components/LoginForm/view/loginView";
+import { LoginModel } from "../components/LoginForm/model/loginModel";
 import { FieldsValidator } from "../components/Validator/fieldsValidator";
 
 export class LoginFactory {
   // Constructor no longer needed.
   static loginComponent() {
     const view = new LoginView(icons);
+    const model = new LoginModel();
     const validator = new FieldsValidator();
-    const controller = new LoginController(view, validator);
+    const controller = new LoginController(view, model, validator);
 
     // Login DOM element
     const htmlLoginForm = view.renderLoginForm();

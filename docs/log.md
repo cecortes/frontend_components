@@ -95,3 +95,10 @@
   - [x] Completing the JSDoc for login controller and login view.
 
 ---
+
+## 23-02-26 - Completing Login Form Component.
+
+- [x] Make a function to get user and password values from the form, and use it in the submit logic, instead of getting the values directly from the DOM.
+  - [ ] Create a Model to handle the endpoint communication, and use it in the login controller, instead of making the fetch request directly in the controller.
+
+---
