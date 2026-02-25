@@ -81,10 +81,10 @@ export class FieldsValidator {
     }
 
     // Regla: Al menos una mayúscula.
-    const hasUppercase = /[A-Z]/.test(element.value);
-    if (!hasUppercase) {
-      return { isValid: false, message: "Contraseña inválida" };
-    }
+    // const hasUppercase = /[A-Z]/.test(element.value);
+    // if (!hasUppercase) {
+    //   return { isValid: false, message: "Contraseña inválida" };
+    // }
 
     // Regla: Al menos un caracter especial de @#!$_*& O al menos un número.
     const hasSpecialOrNumber = /[@#!$_*&0-9]/.test(element.value);

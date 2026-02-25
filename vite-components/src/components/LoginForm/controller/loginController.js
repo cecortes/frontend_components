@@ -174,10 +174,21 @@ export class LoginController {
     }
   }
 
-  handleModelLogin(userInput, passInput) {
+  async handleModelLogin(userInput, passInput) {
     // Get user and password
     const userData = userInput.value;
     const passData = passInput.value;
-    console.log(userData, passData);
+
+    try {
+      const data = await this.model.login(userData, passData);
+
+      // Get token
+      console.log(data.token);
+
+      //Save token in the storage
+      //Redirect user
+    } catch (error) {
+      console.log(error.message);
+    }
   }
 }

@@ -16,6 +16,7 @@ export const handleLogin = async (req, res) => {
     return res.status(400).json({
       success: false,
       message: "Usuario y contraseña son requeridos.",
+      code: 400,
     });
   }
 
@@ -36,6 +37,7 @@ export const handleLogin = async (req, res) => {
       return res.status(401).json({
         success: false,
         message: "Credenciales incorrectas.",
+        code: 401,
       });
     }
 
@@ -44,6 +46,7 @@ export const handleLogin = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error interno del servidor.",
+      code: 500,
     });
   }
 };

@@ -99,6 +99,15 @@
 ## 23-02-26 - Completing Login Form Component.
 
 - [x] Make a function to get user and password values from the form, and use it in the submit logic, instead of getting the values directly from the DOM.
-  - [ ] Create a Model to handle the endpoint communication, and use it in the login controller, instead of making the fetch request directly in the controller.
+
+---
+
+## 24-02-26 - Coding the model for the login form component.
+
+- [x] Create a Model to handle the endpoint communication, and use it in the login controller, instead of making the fetch request directly in the controller.
+  - [x] The model should use a env variable to get the base URL of the backend, so we can change it in the future without having to change the code.
+  - [x] The model need a method to send the login request to the backend, and handle the response, returning the necessary data to the controller.
+  - [x] Test the model in the browser, and make sure it works as expected.
+  - [x] Modify the validator to allow a password without capital letters.
 
 ---
