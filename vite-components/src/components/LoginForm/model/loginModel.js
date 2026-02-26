@@ -18,7 +18,7 @@ export class LoginModel {
       const res = await response.json();
 
       if (!res.success) {
-        throw new Error(res.code);
+        throw new Error(res.message);
       }
 
       //Code 200
