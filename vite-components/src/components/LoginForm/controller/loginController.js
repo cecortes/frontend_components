@@ -13,10 +13,11 @@ export class LoginController {
    * @example
    * const controller = new LoginController(new LoginView(), new FieldsValidator());
    */
-  constructor(view, loginModel, fieldsValidator) {
+  constructor(view, loginModel, fieldsValidator, modalController = null) {
     this.view = view;
     this.model = loginModel;
     this.validator = fieldsValidator;
+    this.modalController = modalController;
   }
 
   /**
@@ -188,7 +189,11 @@ export class LoginController {
       //Save token in the storage
       //Redirect user
     } catch (error) {
-      console.log(error.message);
+      if (this.modalController) {
+        this.modalController.showError(error.message);
+      } else {
+        console.log(error.message);
+      }
     }
   }
 }
