@@ -4,19 +4,29 @@ export class LoginController {
   /**
    * @method constructor
    * @description
-   * Inicializa el controlador de login con su vista y validador correspondientes.
+   * Inicializa el controlador de login con su vista, modelo, validador,
+   * almacenamiento y controlador de modal correspondientes.
    *
    * @param {LoginView} view - Instancia de la vista del formulario de login.
-   * @param {LoginModel} model - Instancia del modelo para el login.
+   * @param {LoginModel} loginModel - Instancia del modelo para el login.
    * @param {FieldsValidator} fieldsValidator - Instancia del validador de campos.
+   * @param {SessionStorage} storage - Instancia del almacenamiento de sesión.
+   * @param {ModalController|null} modalController - Instancia opcional del controlador de modal para errores.
    * @returns {void}
    * @example
-   * const controller = new LoginController(new LoginView(), new FieldsValidator());
+   * const controller = new LoginController(new LoginView(), new LoginModel(), new FieldsValidator(), new SessionStorage());
    */
-  constructor(view, loginModel, fieldsValidator, modalController = null) {
+  constructor(
+    view,
+    loginModel,
+    fieldsValidator,
+    storage,
+    modalController = null,
+  ) {
     this.view = view;
     this.model = loginModel;
     this.validator = fieldsValidator;
+    this.storage = storage;
     this.modalController = modalController;
   }
 
@@ -175,6 +185,19 @@ export class LoginController {
     }
   }
 
+  /**
+   * @async
+   * @method handleModelLogin
+   * @description
+   * Procesa el inicio de sesión enviando las credenciales al modelo y manejando la respuesta.
+   *
+   * @param {HTMLElement} userInput - El elemento input del DOM que contiene el usuario.
+   * @param {HTMLElement} passInput - El elemento input del DOM que contiene la contraseña.
+   * @returns {Promise<Object>} - Promesa que resuelve con los datos del usuario logueado incluyendo el token.
+   * @throws {Error} - Error si las credenciales son inválidas o hay problemas de conexión.
+   * @example
+   * await controller.handleModelLogin($userInput, $passInput);
+   */
   async handleModelLogin(userInput, passInput) {
     // Get user and password
     const userData = userInput.value;

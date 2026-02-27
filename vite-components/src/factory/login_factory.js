@@ -6,6 +6,7 @@ import { LoginView } from "../components/LoginForm/view/loginView.js";
 import { LoginModel } from "../components/LoginForm/model/loginModel.js";
 import { FieldsValidator } from "../components/Validator/fieldsValidator.js";
 import { ModalFactory } from "./modal_factory.js";
+import { SessionStorage } from "../components/Storage/storage.js";
 
 export class LoginFactory {
   // Constructor no longer needed.
@@ -18,7 +19,14 @@ export class LoginFactory {
     const view = new LoginView(icons);
     const model = new LoginModel();
     const validator = new FieldsValidator();
-    const controller = new LoginController(view, model, validator, modalController);
+    const storage = new SessionStorage();
+    const controller = new LoginController(
+      view,
+      model,
+      validator,
+      storage,
+      modalController,
+    );
 
     // Login DOM element
     const htmlLoginForm = view.renderLoginForm();
