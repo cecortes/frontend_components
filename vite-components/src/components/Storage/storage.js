@@ -24,9 +24,9 @@ export class SessionStorage {
    *
    * @returns {string} - El token almacenado en el objeto.
    * @example
-   * const token = session.getToken();
+   * const token = session.Token;
    */
-  getToken() {
+  get Token() {
     return this.sessionData.token;
   }
 
@@ -38,11 +38,11 @@ export class SessionStorage {
    * @param {string} token - El token a guardar.
    * @returns {void}
    * @example
-   * session.setToken("nuevo_token_aqui");
+   * session.Token = "nuevo_token_aqui";
    */
-  setToken(token) {
-    if (typeof token !== "string" || token.trim() === "") {
-      throw new Error("El token debe ser un string válido no vacío");
+  set Token(token) {
+    if (typeof token !== "string") {
+      throw new Error("El token debe ser un string válido");
     }
     this.sessionData.token = token;
   }
