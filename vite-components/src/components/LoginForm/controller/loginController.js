@@ -206,17 +206,43 @@ export class LoginController {
     try {
       const data = await this.model.login(userData, passData);
 
-      // Get token
-      console.log(data.token);
-
       //Save token in the storage
+      this.storage.Token = data.token;
+      this.storage.saveSessionStorage();
+
+      //Clear Inputs
+      this.clearInputs();
+
+      //DEBUG
+      console.log(this.storage.sessionData);
+
       //Redirect user
+      this.view.redirectToDashboard();
     } catch (error) {
       if (this.modalController) {
         this.modalController.showError(error.message);
+        //Clear Inputs
+        this.clearInputs();
       } else {
         console.log(error.message);
       }
     }
+  }
+
+  /**
+   * @method clearInputs
+   * @description
+   * Limpia los valores de los campos de entrada del formulario de login.
+   *
+   * @returns {void}
+   * @example
+   * this.clearInputs();
+   */
+  clearInputs() {
+    // Destructure
+    const { $userInput, $passInput } = this.view.LoginElements;
+
+    $userInput.value = "";
+    $passInput.value = "";
   }
 }

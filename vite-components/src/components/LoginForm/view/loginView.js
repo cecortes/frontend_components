@@ -192,4 +192,17 @@ export class LoginView {
     errorElement.textContent = "";
     errorElement.classList.remove("show");
   }
+
+  /**
+   * @method redirectToDashboard
+   * @description
+   * Redirige al usuario a la página del dashboard después de un inicio de sesión exitoso.
+   *
+   * @returns {void}
+   * @example
+   * this.redirectToDashboard();
+   */
+  redirectToDashboard() {
+    window.location.href = "./dashboard/dash.html";
+  }
 }
