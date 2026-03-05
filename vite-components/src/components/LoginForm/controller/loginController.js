@@ -206,8 +206,10 @@ export class LoginController {
     try {
       const data = await this.model.login(userData, passData);
 
-      //Save token in the storage
+      //Save token, user in the storage
       this.storage.Token = data.token;
+      this.storage.UserName = data.user;
+      this.storage.Role = data.role;
       this.storage.saveSessionStorage();
 
       //Clear Inputs
@@ -216,8 +218,8 @@ export class LoginController {
       //DEBUG
       console.log(this.storage.sessionData);
 
-      //Redirect user
-      this.view.redirectToDashboard();
+      //Redirect user <--------------------------------------
+      //this.view.redirectToDashboard();
     } catch (error) {
       if (this.modalController) {
         this.modalController.showError(error.message);

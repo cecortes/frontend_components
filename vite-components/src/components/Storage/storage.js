@@ -14,6 +14,8 @@ export class SessionStorage {
   constructor() {
     this.sessionData = {
       token: "",
+      user: "",
+      role: "",
     };
   }
 
@@ -31,6 +33,32 @@ export class SessionStorage {
   }
 
   /**
+   * @method UserName
+   * @description
+   * Obtiene el usuario guardado en el objeto "Single Source of Truth".
+   *
+   * @returns {string} - El usuario almacenado en el objeto.
+   * @example
+   * const UserName = session.UserName;
+   */
+  get UserName() {
+    return this.sessionData.user;
+  }
+
+  /**
+   * @method Role
+   * @description
+   * Obtiene el Rol guardado en el objeto "Single Source of Truth".
+   *
+   * @returns {string} - El Rol almacenado en el objeto.
+   * @example
+   * const Rol = session.Rol;
+   */
+  get Role() {
+    return this.sessionData.role;
+  }
+
+  /**
    * @method setToken
    * @description
    * Escribe un nuevo token en el objeto "Single Source of Truth".
@@ -45,6 +73,40 @@ export class SessionStorage {
       throw new Error("El token debe ser un string válido");
     }
     this.sessionData.token = token;
+  }
+
+  /**
+   * @method UserName
+   * @description
+   * Escribe un nuevo username en el objeto "Single Source of Truth".
+   *
+   * @param {string} user - El username a guardar.
+   * @returns {void}
+   * @example
+   * session.UserName = "nuevo_username_aqui";
+   */
+  set UserName(user) {
+    if (typeof user !== "string") {
+      throw new Error("El usuario debe ser un string válido");
+    }
+    this.sessionData.user = user;
+  }
+
+  /**
+   * @method Role
+   * @description
+   * Escribe un nuevo role en el objeto "Single Source of Truth".
+   *
+   * @param {string} role - El rol a guardar.
+   * @returns {void}
+   * @example
+   * session.Role = "nuevo_rol_aqui";
+   */
+  set Role(role) {
+    if (typeof role !== "string") {
+      throw new Error("El rol debe ser un string válido");
+    }
+    this.sessionData.role = role;
   }
 
   /**
