@@ -22,13 +22,15 @@ export const handleLogin = async (req, res) => {
 
   try {
     // 3. Llamar al servicio para que haga el trabajo
-    const token = await loginUser(username, password);
+    const response = await loginUser(username, password);
 
     // 4. Si el servicio fue exitoso, devolver el token
     res.json({
       success: true,
       message: "Login exitoso.",
-      token: token,
+      token: response[0],
+      user: response[1],
+      role: response[2],
     });
   } catch (error) {
     // 5. Manejar errores

@@ -53,7 +53,11 @@ export const loginUser = async (username, password) => {
       { expiresIn: "30m" }, // El token expira en 30 min
     );
 
-    return token;
+    // 8. username, role
+    const usuario = user.users_user;
+    const role = user.users_role;
+
+    return [token, usuario, role];
   } catch (error) {
     // Si el error es el que lanzamos (Credenciales), lo volvemos a lanzar
     // para que el controlador lo atrape como un error 401.
