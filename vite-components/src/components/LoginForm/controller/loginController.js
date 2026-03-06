@@ -219,7 +219,12 @@ export class LoginController {
       console.log(this.storage.sessionData);
 
       //Redirect user <--------------------------------------
-      //this.view.redirectToDashboard();
+      if (window.router) {
+        window.router.navigate("/dashboard");
+      } else {
+        window.history.pushState({}, "", "/dashboard");
+        window.dispatchEvent(new PopStateEvent("popstate"));
+      }
     } catch (error) {
       if (this.modalController) {
         this.modalController.showError(error.message);
