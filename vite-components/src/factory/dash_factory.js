@@ -6,19 +6,25 @@ import { SessionStorage } from "../components/Storage/storage.js";
 import { DashboardController } from "../components/Dashboard/controller/dashController.js";
 
 export class DashboardFactory {
-  // Constructor no needed
-  static dashComponent() {
+  /**
+   * @async
+   * @method dashComponent
+   * @description
+   * Crea y retorna el componente Dashboard completo inicializado.
+   * Instancia la vista, modelo, storage y controlador del dashboard,
+   * luego inicializa el controlador para renderizar el HTML.
+   *
+   * @returns {Promise<Object>} Objeto conteniendo el elemento HTML renderizado y el controlador del dashboard.
+   * @example
+   * const { element, controller } = await DashboardFactory.dashComponent();
+   */
+  static async dashComponent() {
     const view = new DashboardView();
     const model = new DashboardModel();
     const storage = new SessionStorage();
     const controller = new DashboardController(view, model, storage);
 
-    // Dash DOM Element
-
-    // Init Controller
-
-    //return
-    //return { element, controller };
-    return controller.init().then((element) => ({ element, controller }));
+    const element = await controller.init();
+    return { element, controller };
   }
 }
