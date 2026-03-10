@@ -111,3 +111,12 @@
   - [x] Modify the validator to allow a password without capital letters.
 
 ---
+
+## 09-03-26 - Creación del Spec y Mockup del Dashboard
+
+- [x] Generar el documento de especificación (`docs/specs/dashboard_spec.md`) para el componente Dashboard, estableciendo el diseño "Mobile-First" sin el uso de JavaScript ni patrón MVC por el momento.
+- [x] Crear el mockup estático (`test/dashboard.html`) implementando la estructura del menú lateral (hamburguesa usando solo CSS) y contenedores para métricas de inventario/ventas y tablas para Usuarios, O.C. y Componentes.
+- [x] Corregir la integración de `Design Tokens` nativos en el HTML debido a incompatibilidades directas leyendo el `@theme` de Tailwind 4 desde el navegador, forzando los colores reales (Steel Gray y Soft Cyan) y un aspecto completamente profesional.
+- [x] Agregar la carga global de la fuente `Work Sans` desde Google Fonts y forzar el renderizado en todo el documento para coincidir con la identidad visual estipulada.
+
+---
