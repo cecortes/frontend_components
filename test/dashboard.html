@@ -194,6 +194,25 @@
         left: 0;
       }
 
+      /* Overlay invisible para capturar el click de cierre */
+      .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 950; /* Sobre el top-bar (900) pero debajo del sidebar (1000) */
+        opacity: 0;
+        visibility: hidden;
+        cursor: pointer;
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      #menu-toggle:checked ~ .sidebar-overlay {
+        visibility: visible;
+        display: block;
+      }
+
       #menu-toggle:checked ~ .main-container {
         filter: blur(2px) brightness(0.7);
         pointer-events: none;
@@ -350,6 +369,9 @@
   </head>
   <body>
     <input type="checkbox" id="menu-toggle" />
+
+    <!-- Overlay Invisible para Cierre en Móvil -->
+    <label for="menu-toggle" class="sidebar-overlay"></label>
 
     <!-- Sidebar de Navegación -->
     <aside class="sidebar">
