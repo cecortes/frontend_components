@@ -120,3 +120,14 @@
 - [x] Agregar la carga global de la fuente `Work Sans` desde Google Fonts y forzar el renderizado en todo el documento para coincidir con la identidad visual estipulada.
 
 ---
+
+## 10-03-26 - Migración de Dashboard a Componente MVC y Documentación JSDoc
+
+- [x] Migración del archivo estático `dashboard.html` a la arquitectura de componentes MVC del proyecto, logrando que el dashboard funcione como un módulo de visualización y control reutilizable.
+  - [x] **Vista (`dashView.js`)**: Se encapsuló la estructura HTML del dashboard dentro del método `getTemplate()`. Se generó dinámicamente el DOM incrustando selectores para buscar e identificar elementos interactivos (barra de búsqueda, botones de cabecera) y se expusieron métodos para enlazar dichos eventos (`bindLogout`, `bindExport`, `bindSearchClient`, etc.).
+  - [x] **Controlador (`dashController.js`)**: Se implementó la lógica de inicialización en el componente mediante `init()`. Se protegió el acceso verificando si el token de sesión es válido; si lo es, conecta la vista con el modelo simulando el consumo de la DB y registra las acciones a través de `dashboardEventHandler()`.
+  - [x] **Modelo (`dashModel.js`)**: Se definió un modelo robusto con estado para clientes, productos y órdenes. Se implementó una respuesta asíncrona simulada (mock object) en la función `fetchDashboardData()` lista para conectarse directamente al backend de la aplicación cuando exista.
+- [x] Se añadió la documentación JSDoc obligatoria a los métodos principales de las clases `DashboardModel`, `DashboardController` y `DashboardView`.
+- [x] La documentación se generó siguiendo estrictamente la guía de estilo para JavaScript definida en `.agent/rules/js_functions.md`, garantizando uniformidad sin alterar la lógica de negocio ni la funcionalidad de los componentes.
+
+---

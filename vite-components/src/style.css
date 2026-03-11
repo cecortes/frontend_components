@@ -123,6 +123,10 @@
   }
 
   :root {
+    /* Layout Variables */
+    --sidebar-width: 260px;
+    --header-height: 64px;
+
     /* Tipografía: Work Sans - Versátil y profesional */
     font-family:
       "Work Sans",
@@ -495,7 +499,7 @@
 
 /* Tooltip Arrow - Mobile (Top) */
 .validation-tooltip::before {
-  content: '';
+  content: "";
   position: absolute;
   top: -6px;
   left: 50%;
@@ -638,7 +642,9 @@
   z-index: 100;
   opacity: 0;
   visibility: hidden;
-  transition: opacity 0.3s ease, visibility 0.3s ease;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
 }
 
 .modal-overlay.modal-visible {
@@ -861,4 +867,303 @@ body.modal-open {
     height: 52px;
     font-size: 1.0625rem;
   }
+}
+
+/* ============================================
+   DASHBOARD COMPONENT STYLES
+   ============================================ */
+
+/* Hack de Checkbox para el menú hamburguesa sin JS */
+#menu-toggle {
+  display: none;
+}
+
+/* Sidebar Sidebar */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: calc(-1 * var(--sidebar-width));
+  width: var(--sidebar-width);
+  height: 100vh;
+  background-color: var(--color-background-secondary);
+  border-right: 1px solid var(--color-border-subtle);
+  z-index: 1000;
+  transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+}
+
+.sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2.5rem;
+  text-decoration: none;
+}
+
+.logo-symbol {
+  width: 32px;
+  height: 32px;
+  background-color: var(--color-primary-500);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: bold;
+}
+
+.sidebar-nav {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.nav-item a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.75rem 1rem;
+  color: var(--color-text-secondary);
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+}
+
+.nav-item a:hover {
+  background-color: var(--color-surface-hover);
+  color: var(--color-primary-400);
+  transform: translateX(4px);
+}
+
+.nav-item a.active {
+  background-color: var(--color-primary-500);
+  color: white;
+  box-shadow: 0 4px 12px rgba(59, 142, 194, 0.3);
+}
+
+/* Main Content */
+.main-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  transition: margin-left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.top-bar {
+  height: var(--header-height);
+  background-color: var(--color-background-primary);
+  border-bottom: 1px solid var(--color-border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1.5rem;
+  position: sticky;
+  top: 0;
+  z-index: 900;
+}
+
+.burger-label {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.burger-label:hover {
+  background-color: var(--color-surface);
+}
+
+.burger-line {
+  width: 24px;
+  height: 2px;
+  background-color: var(--color-text-primary);
+  border-radius: 2px;
+  transition: 0.3s;
+}
+
+/* Comportamiento del Menu Toggle */
+#menu-toggle:checked ~ .sidebar {
+  left: 0;
+}
+
+/* Overlay invisible para capturar el click de cierre */
+.sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 950;
+  opacity: 0;
+  visibility: hidden;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+#menu-toggle:checked ~ .sidebar-overlay {
+  visibility: visible;
+  display: block;
+}
+
+#menu-toggle:checked ~ .main-container {
+  filter: blur(2px) brightness(0.7);
+  pointer-events: none;
+}
+
+/* Layout Responsivo */
+@media (min-width: 1024px) {
+  .sidebar {
+    left: 0;
+  }
+
+  .main-container {
+    margin-left: var(--sidebar-width);
+  }
+
+  .burger-label {
+    display: none;
+  }
+
+  #menu-toggle:checked ~ .main-container {
+    filter: none;
+    pointer-events: auto;
+  }
+}
+
+/* Dashboard Content Area */
+.dashboard-content {
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.section-header {
+  margin-bottom: 1.5rem;
+}
+
+/* Gráficas Section */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .charts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.chart-card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 1rem;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.chart-img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+/* Tablas Section */
+.tables-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.table-container {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: 12px;
+  padding: 1.5rem;
+}
+
+.table-header {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .table-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+.search-box {
+  max-width: 300px;
+}
+
+.data-table-wrapper {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th {
+  padding: 1rem;
+  border-bottom: 2px solid var(--color-border-subtle);
+  color: var(--color-text-muted);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+td {
+  padding: 1rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-secondary);
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+tr:hover td {
+  background-color: var(--color-surface-hover);
+}
+
+/* Custom Scrollbar for better aesthetics */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-background-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-subtle);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-default);
 }
