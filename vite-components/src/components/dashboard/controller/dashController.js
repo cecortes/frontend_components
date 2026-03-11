@@ -1,23 +1,6 @@
 "use strict";
 
-/**
- * @class DashboardController
- * @description
- * Controlador principal para el componente Dashboard. Maneja la lógica de
- * inicialización, autenticación y coordinación entre vista y modelo.
- */
 export class DashboardController {
-  /**
-   * @async
-   * @method constructor
-   * @description
-   * Inicializa el controlador del Dashboard con las dependencias necesarias.
-   *
-   * @param {Object} view - Instancia de la vista del Dashboard.
-   * @param {Object} model - Instancia del modelo del Dashboard.
-   * @param {Object} storage - Instancia del servicio de almacenamiento (Storage).
-   * @param {Object|null} modalController - Instancia opcional del controlador de modales.
-   */
   constructor(view, model, storage, modalController = null) {
     this.view = view;
     this.model = model;
@@ -29,53 +12,122 @@ export class DashboardController {
    * @async
    * @method init
    * @description
-   * Inicializa el Dashboard verificando la autenticación del usuario,
-   * renderizando la vista y retornando el HTML generado.
+   * Inicializa el dashboard, verifica la autenticación del usuario, renderiza la vista y carga los datos.
    *
-   * @returns {Promise<string|void>} - El HTML renderizado del Dashboard o undefined si redirige a login.
-   * @throws {Error} - Lanza error si falla la verificación de autenticación.
+   * @returns {Promise<HTMLElement|void>} Retorna el HTML del dashboard si la sesión es válida, de lo contrario redirige.
    */
   async init() {
-    // CHECK AUTH <----- VERIFY THIS...
+    // CHECK AUTH
     this.storage.loadSessionStorage();
     if (!this.storage.Token) {
       window.location.href = "/"; // Redirigir a login
       return;
     }
-    // CHECK AUTH <----- VERIFY THIS...
 
-    // Render vista
+    // Render vista (HTML Estático con MVC)
     const html = this.view.renderDashboard();
 
     // Bind events
-    //this.dashboardEventHandler();
+    this.dashboardEventHandler();
 
-    // Cargar datos
-    //await this.loadDashboardData();
+    // Llamada asíncrona de datos desde el Modelo
+    await this.loadDashboardData();
 
     return html;
   }
 
   /**
-   * @todo
    * @method dashboardEventHandler
    * @description
-   * Manejador de eventos para el Dashboard. Deberá vincular los eventos
-   * del DOM (clics, submits, etc.) con sus respectivos handlers.
+   * Asigna y enlaza todos los eventos generados desde la vista con los manejadores del controlador.
    *
    * @returns {void}
    */
-  // dashboardEventHandler
+  dashboardEventHandler() {
+    this.view.bindLogout(() => this.handleLogout());
+    this.view.bindExport(() => this.handleExportData());
+    this.view.bindSearchClient((query) => this.handleSearchClient(query));
+    this.view.bindSearchProduct((query) => this.handleSearchProduct(query));
+    this.view.bindSearchOrder((query) => this.handleSearchOrder(query));
+  }
 
   /**
-   * @todo
+   * @async
    * @method loadDashboardData
    * @description
-   * Carga los datos necesarios para el Dashboard desde el modelo.
-   * Deberá realizar las llamadas asíncronas necesarias para obtener
-   * y renderizar la información.
+   * Carga los datos esenciales para el dashboard invocando al modelo.
    *
    * @returns {Promise<void>}
    */
-  //loadDashboardData
+  async loadDashboardData() {
+    try {
+      const data = await this.model.fetchDashboardData();
+      // En una implementación real más compleja se llamarían métodos "updateTables(data)" del dashboardView aquí.
+      console.log("[DashboardController] Dummy Data Fetched:", data);
+    } catch (error) {
+      console.error(
+        "[DashboardController] Error fetching dashboard data:",
+        error,
+      );
+    }
+  }
+
+  /**
+   * @method handleLogout
+   * @description
+   * Maneja la acción de cerrado de sesión, eliminando el token y redirigiendo a la página principal.
+   *
+   * @returns {void}
+   */
+  handleLogout() {
+    this.storage.removeItemStorage("Token");
+    window.location.href = "/";
+  }
+
+  /**
+   * @method handleExportData
+   * @description
+   * Maneja el evento de exportación de la información de la tabla a distintos formatos (CSV/PDF).
+   *
+   * @returns {void}
+   */
+  handleExportData() {
+    console.log("[DashboardController] Exportando datos a CSV/PDF...");
+  }
+
+  /**
+   * @method handleSearchClient
+   * @description
+   * Maneja la acción de filtrado dentro de la lista de clientes.
+   *
+   * @param {string} query - El término de búsqueda ingresado por el usuario.
+   * @returns {void}
+   */
+  handleSearchClient(query) {
+    console.log("[DashboardController] Filtrando clientes por:", query);
+  }
+
+  /**
+   * @method handleSearchProduct
+   * @description
+   * Maneja la acción de búsqueda interaccionada dentro del listado de inventario.
+   *
+   * @param {string} query - El término a buscar en la tabla de productos.
+   * @returns {void}
+   */
+  handleSearchProduct(query) {
+    console.log("[DashboardController] Filtrando inventario por:", query);
+  }
+
+  /**
+   * @method handleSearchOrder
+   * @description
+   * Maneja la acción de filtrado para las órdenes de compras registradas.
+   *
+   * @param {string} query - La porción de texto buscada para las órdenes.
+   * @returns {void}
+   */
+  handleSearchOrder(query) {
+    console.log("[DashboardController] Filtrando orden de compra por:", query);
+  }
 }
