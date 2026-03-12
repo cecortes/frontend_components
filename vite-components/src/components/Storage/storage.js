@@ -164,4 +164,45 @@ export class SessionStorage {
     this.sessionData = { token: "" };
     window.sessionStorage.removeItem("sessionData");
   }
+
+  /**
+   * @async
+   * @function validateSession
+   * @description
+   * Verifica el token de sesión, si es válido
+   * permite abrir la url, si es inválido redirige al
+   * login
+   *
+   *
+   */
+  async validateSession() {
+    const token = this.Token;
+
+    if (!token) {
+      // TODO: Redirigir al login
+      // window.location.href = "../../../index.html";
+      return;
+    }
+
+    // TODO: Implementar en un modelo para no tener el fetch en el storage
+    try {
+      const response = await fetch(`${this.apiBaseUrl}/verify-token`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
+
+      // TODO: Los errores se muestran en el modal de error, no en la consola.
+      if (!response.ok) {
+        throw new Error("Token inválido o expirado");
+      }
+    } catch (error) {
+      // TODO: Mostrar error en el modal de error, no en la consola.
+      console.error("Error validando token:", error.message);
+      // TODO: Redirigir al login
+      // window.location.href = "../../../index.html";
+    }
+  }
 }
