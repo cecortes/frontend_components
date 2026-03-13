@@ -216,7 +216,7 @@ export class LoginController {
       this.clearInputs();
 
       //DEBUG
-      console.log(this.storage.sessionData);
+      //console.log(this.storage.sessionData);
 
       //Redirect user <--------------------------------------
       if (window.router) {

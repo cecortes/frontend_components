@@ -1,10 +1,11 @@
 "use strict";
 
 export class DashboardController {
-  constructor(view, model, storage, modalController = null) {
+  constructor(view, model, storage, auth, modalController = null) {
     this.view = view;
     this.model = model;
     this.storage = storage;
+    this.auth = auth;
     this.modalController = modalController;
   }
 
@@ -18,10 +19,15 @@ export class DashboardController {
    */
   async init() {
     // CHECK AUTH
-    this.storage.loadSessionStorage();
-    if (!this.storage.Token) {
-      window.location.href = "/"; // Redirigir a login
-      return;
+    const sessionData = this.storage.loadSessionStorage();
+
+    // TODO: Implementar try catch para la validación del token, en caso de error mostrar modal de error y redirigir al login
+    try {
+      await this.auth.init(sessionData);
+    } catch (error) {
+      console.log(error.message);
+      this.modalController.showError(error.message);
+      //window.location.href = "/";
     }
 
     // Render vista (HTML Estático con MVC)

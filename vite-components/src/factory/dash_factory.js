@@ -4,6 +4,7 @@ import { DashboardView } from "../components/Dashboard/view/dashView.js";
 import { DashboardModel } from "../components/Dashboard/model/dashModel.js";
 import { SessionStorage } from "../components/Storage/storage.js";
 import { DashboardController } from "../components/Dashboard/controller/dashController.js";
+import { AuthController } from "../components/Auth/controller/authController.js";
 
 export class DashboardFactory {
   /**
@@ -22,7 +23,8 @@ export class DashboardFactory {
     const view = new DashboardView();
     const model = new DashboardModel();
     const storage = new SessionStorage();
-    const controller = new DashboardController(view, model, storage);
+    const auth = new AuthController();
+    const controller = new DashboardController(view, model, storage, auth);
 
     const element = await controller.init();
     return { element, controller };
