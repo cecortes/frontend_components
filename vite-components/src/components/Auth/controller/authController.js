@@ -35,6 +35,6 @@ export class AuthController {
    * authController.init();
    */
   init(sessionData) {
-    this.model.validateToken(sessionData);
+    return this.model.validateToken(sessionData);
   }
 }

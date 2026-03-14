@@ -28,17 +28,15 @@ export class AuthModel {
    *
    * @returns {void}
    */
-  validateToken(sessionData) {
-    const token = sessionData.token;
-
-    if (!token) {
-      console.log("Token inválido o expirado");
+  async validateToken(sessionData) {
+    if (!sessionData || !sessionData.token) {
       throw new Error("Token inválido o expirado");
     }
 
-    // TODO: Implementar en un modelo para no tener el fetch en el storage
     try {
-      const response = fetch(`${this.apiBaseUrl}/verify-token`, {
+      const token = sessionData.token;
+
+      const response = await fetch(`${this.apiBaseUrl}/verify-token`, {
         method: "GET",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -46,15 +44,12 @@ export class AuthModel {
         },
       });
 
-      // TODO: Los errores se muestran en el modal de error, no en la consola.
       if (!response.ok) {
         throw new Error("Token inválido o expirado");
       }
     } catch (error) {
-      // TODO: Mostrar error en el modal de error, no en la consola.
-      console.error("Error validando token:", error.message);
-      // TODO: Redirigir al login
-      // window.location.href = "../../../index.html";
+      // Relanzar el error para que el controlador superior lo maneje y muestre el modal
+      throw new Error(error.message || "Token inválido o expirado");
     }
   }
 }

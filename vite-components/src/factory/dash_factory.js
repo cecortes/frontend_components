@@ -6,6 +6,8 @@ import { SessionStorage } from "../components/Storage/storage.js";
 import { DashboardController } from "../components/Dashboard/controller/dashController.js";
 import { AuthController } from "../components/Auth/controller/authController.js";
 
+import { ModalFactory } from "./modal_factory.js";
+
 export class DashboardFactory {
   /**
    * @async
@@ -17,16 +19,25 @@ export class DashboardFactory {
    *
    * @returns {Promise<Object>} Objeto conteniendo el elemento HTML renderizado y el controlador del dashboard.
    * @example
-   * const { element, controller } = await DashboardFactory.dashComponent();
+   * const { element, modal, controller } = await DashboardFactory.dashComponent();
    */
   static async dashComponent() {
+    const { element: modalElement, controller: modalController } =
+      ModalFactory.modalComponent();
+
     const view = new DashboardView();
     const model = new DashboardModel();
     const storage = new SessionStorage();
     const auth = new AuthController();
-    const controller = new DashboardController(view, model, storage, auth);
+    const controller = new DashboardController(
+      view,
+      model,
+      storage,
+      auth,
+      modalController,
+    );
 
     const element = await controller.init();
-    return { element, controller };
+    return { element, modal: modalElement, controller };
   }
 }

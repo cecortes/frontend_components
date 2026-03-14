@@ -3,29 +3,40 @@ description: Regla de Diseño Arquitectónico (MVC). Esta regla DEBE APLICARSE S
 ---
 
 # @dacs/styles/mvc_pattern.dac
+
 #
+
 # Declarative Agent Communication (DAC)
+
 # Guía de estilo obligatoria para implementar el patrón
+
 # Model-View-Controller (MVC) en Componentes Frontend Modernos (Vite/ESM).
 
 # Metadatos
+
 dac_id: pattern_mvc
 version: "2.0.0"
 type: guideline
 description: >
-  Define la estructura, responsabilidades y flujo de datos obligatorios 
-  para implementar componentes frontend reutilizables bajo el patrón MVC 
-  usando Clases ES6 y Módulos.
-stack: 
-  - javascript
-  - vite
-scope: global
+Define la estructura, responsabilidades y flujo de datos obligatorios
+para implementar componentes frontend reutilizables bajo el patrón MVC
+usando Clases ES6 y Módulos.
+stack:
+
+- javascript
+- vite
+  scope: global
 
 # Instrucciones Generales para el Agente
+
 # Al generar CUALQUIER componente (ej. LoginForm, UserTable, Modal, etc.):
+
 # 1. DEBES separar el código estrictamente en 3 archivos dentro de la carpeta del componente.
+
 # 2. DEBES utilizar sintaxis de `class` (Clases ES6) para permitir múltiples instancias.
+
 # 3. DEBES utilizar `export` nombrado (no default) para facilitar el tree-shaking.
+
 # 4. El flujo de datos es UNIDIRECCIONAL en la renderización y BIDIRECCIONAL en eventos a través del Controlador.
 
 # ---
@@ -35,13 +46,31 @@ scope: global
 - **Responsabilidad:** Gestionar el estado local del componente y la comunicación con APIs externas.
 - **MANDATORY:** Debe ser una `class`.
 - **MANDATORY:** NO DEBE tener referencias al DOM ni a la Vista.
-- **MANDATORY:** Sus métodos deben ser asíncronos (`async`) si implican comunicación de red.
+- **MANDATORY:** NO DEBE manipular ni manejar errores UI (ej. abrir modales, hacer alertas) ni mostrarlos en consola silenciosamente. Su responsabilidad es exponer la validez o invalidez relanzando los errores (`throw`) para que el Controlador decida cómo presentarlos.
 - **Ejemplo:**
   `export class UserModel {`
   `  constructor() { this.users = []; }`
   `  async fetchUsers() { /* fetch API */ return data; }`
   `  addUser(user) { this.users.push(user); }`
   `}`
+
+  **Ejemplo Avanzado (Validez de Datos y Errores - authModel.js):**
+
+  ```javascript
+  export class AuthModel {
+    async validateToken(sessionData) {
+      if (!sessionData || !sessionData.token) {
+        throw new Error("Token inválido o expirado"); // El error se delega al controlador
+      }
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error("Error del servidor");
+      } catch (error) {
+        throw new Error(error.message); // Nunca hacer console.error ni abrir un Modal aquí
+      }
+    }
+  }
+  ```
 
 # 2. La Vista (View) - {Componente}View.js
 
@@ -108,5 +137,6 @@ scope: global
 - **Paso 5 (Actualización):** Controlador recibe respuesta del Modelo -> llama a `view.update()` o `view.render()`.
 
 # Restricciones de Implementación (Vite/ESM)
+
 - **Imports:** SIEMPRE incluir la extensión del archivo. (ej. `import ... from './UserView.js'`).
 - **Estilos:** Si el componente tiene CSS, debe importarse en el `View.js` o en el `Controller.js` según la estrategia de estilos global.

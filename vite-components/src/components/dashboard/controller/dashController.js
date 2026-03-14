@@ -26,8 +26,10 @@ export class DashboardController {
       await this.auth.init(sessionData);
     } catch (error) {
       console.log(error.message);
-      this.modalController.showError(error.message);
-      //window.location.href = "/";
+      this.modalController.showError(error.message, () => {
+        window.router.navigate("/");
+      });
+      return;
     }
 
     // Render vista (HTML Estático con MVC)
