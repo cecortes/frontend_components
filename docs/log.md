@@ -111,3 +111,43 @@
   - [x] Modify the validator to allow a password without capital letters.
 
 ---
+
+## 09-03-26 - Creación del Spec y Mockup del Dashboard
+
+- [x] Generar el documento de especificación (`docs/specs/dashboard_spec.md`) para el componente Dashboard, estableciendo el diseño "Mobile-First" sin el uso de JavaScript ni patrón MVC por el momento.
+- [x] Crear el mockup estático (`test/dashboard.html`) implementando la estructura del menú lateral (hamburguesa usando solo CSS) y contenedores para métricas de inventario/ventas y tablas para Usuarios, O.C. y Componentes.
+- [x] Corregir la integración de `Design Tokens` nativos en el HTML debido a incompatibilidades directas leyendo el `@theme` de Tailwind 4 desde el navegador, forzando los colores reales (Steel Gray y Soft Cyan) y un aspecto completamente profesional.
+- [x] Agregar la carga global de la fuente `Work Sans` desde Google Fonts y forzar el renderizado en todo el documento para coincidir con la identidad visual estipulada.
+
+---
+
+## 10-03-26 - Migración de Dashboard a Componente MVC y Documentación JSDoc
+
+- [x] Migración del archivo estático `dashboard.html` a la arquitectura de componentes MVC del proyecto, logrando que el dashboard funcione como un módulo de visualización y control reutilizable.
+  - [x] **Vista (`dashView.js`)**: Se encapsuló la estructura HTML del dashboard dentro del método `getTemplate()`. Se generó dinámicamente el DOM incrustando selectores para buscar e identificar elementos interactivos (barra de búsqueda, botones de cabecera) y se expusieron métodos para enlazar dichos eventos (`bindLogout`, `bindExport`, `bindSearchClient`, etc.).
+  - [x] **Controlador (`dashController.js`)**: Se implementó la lógica de inicialización en el componente mediante `init()`. Se protegió el acceso verificando si el token de sesión es válido; si lo es, conecta la vista con el modelo simulando el consumo de la DB y registra las acciones a través de `dashboardEventHandler()`.
+  - [x] **Modelo (`dashModel.js`)**: Se definió un modelo robusto con estado para clientes, productos y órdenes. Se implementó una respuesta asíncrona simulada (mock object) en la función `fetchDashboardData()` lista para conectarse directamente al backend de la aplicación cuando exista.
+- [x] Se añadió la documentación JSDoc obligatoria a los métodos principales de las clases `DashboardModel`, `DashboardController` y `DashboardView`.
+- [x] La documentación se generó siguiendo estrictamente la guía de estilo para JavaScript definida en `.agent/rules/js_functions.md`, garantizando uniformidad sin alterar la lógica de negocio ni la funcionalidad de los componentes.
+
+---
+
+## 14-03-26 - Validación de Token y Redirección al Login
+
+- [x] **Implementación de Estrategia de Redirección**: Se desarrolló un flujo completo para manejar sesiones expiradas o tokens inválidos, asegurando que el usuario sea notificado mediante un modal antes de ser redirigido al login.
+  - [x] **Modelo (`authModel.js`)**: Se eliminó el manejo silencioso de errores. Ahora el modelo valida la presencia del token y lanza excepciones (`throw Error`) para que el controlador gestione la respuesta visual.
+  - [x] **Controlador de Modal (`modalController.js`)**: Se extendió la funcionalidad de `showError` para aceptar un callback `onClose`. Este callback se ejecuta justo cuando el usuario cierra el modal, permitiendo acciones post-notificación.
+  - [x] **Controlador de Dashboard (`dashController.js`)**: Se configuró la captura de errores en el método `init`. Al detectar un fallo de autenticación, se invoca el modal de error y se le pasa una función de navegación que usa `window.router.navigate("/")` para volver al inicio de forma fluida (SPA).
+  - [x] **Factory y Main (`dash_factory.js`, `main.js`)**: Se corrigió un bug de inyección donde el Dashboard carecía de un controlador de modal. Ahora se instancia mediante `ModalFactory` y el elemento HTML se adjunta al `body` para garantizar su visibilidad.
+- [x] **Actualización de Reglas de Desarrollo**:
+  - [x] Se modificó `.agent/rules/mvc_pattern.md` para prohibir formalmente que los Modelos manipulen la UI o la consola, reforzando la separación de responsabilidades donde el Controlador es el único encargado de decidir cómo presentar los errores al usuario.
+
+---
+
+## 15-03-26 - Gestión Modular de Assets SVG y Refactorización de Vistas
+
+- [x] **Gestión de Recursos por Componente**: Se estableció la regla de que cada componente debe tener sus propios recursos. Se crearon archivos `svg_icons.js` específicos en `src/components/LoginForm/icons/` y `src/components/Dashboard/icons/` para guardar los iconos SVG de cada módulo, resolviendo la redundancia de HTML en las vistas.
+- [x] **Refactorización de Componentes (MVC)**:
+  - [x] **Vistas (`LoginView.js`, `dashView.js`)**: Se actualizaron para recibir el objeto de iconos correspondiente a través del constructor. Se implementó el uso de variables dinámicas (`${this.icons.name}`) en las plantillas HTML, lo que reduce el peso de los archivos y facilita su lectura.
+  - [x] **Factories (`login_factory.js`, `dash_factory.js`)**: Se integró la lógica de inyección de dependencias. Cada factory importa exclusivamente los iconos de su componente y los provee a la vista correspondiente.
+- [x] **Optimización de Mantenibilidad e Independencia**: Esta estructura garantiza el encapsulamiento; si un componente es reutilizado o movido en el futuro, lleva consigo sus propios recursos visuales sin depender de un archivo centralizado, respetando así la alta cohesión.

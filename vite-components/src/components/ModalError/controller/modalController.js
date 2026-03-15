@@ -13,6 +13,7 @@ export class ModalController {
   constructor(view, model) {
     this.view = view;
     this.model = model;
+    this.onCloseCallback = null;
   }
 
   /**
@@ -76,6 +77,12 @@ export class ModalController {
   handleClose() {
     this.model.setVisible(false);
     this.view.hide();
+
+    if (typeof this.onCloseCallback === "function") {
+      const callback = this.onCloseCallback;
+      this.onCloseCallback = null; // Limpiar antes de ejecutar
+      callback();
+    }
   }
 
   /**
@@ -89,7 +96,8 @@ export class ModalController {
    * @example
    * modalController.showError("INVALID_CREDENTIALS");
    */
-  showError(message) {
+  showError(message, onClose = null) {
+    this.onCloseCallback = onClose;
     this.model.setMessage(message);
     this.model.setVisible(true);
     this.view.show(message);

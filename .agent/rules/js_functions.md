@@ -1,0 +1,92 @@
+---
+description: Regla de Estilo JavaScript (Clases y Métodos). Esta regla DEBE APLICARSE SIEMPRE al generar o modificar cualquier archivo .js, sin excepciones.
+---
+
+# dacs/js_functions.dac
+#
+# Declarative Agent Configuration (DAC)
+# Provee la guía de estilo para la escritura de JavaScript (Clases y Métodos).
+
+# Metadatos
+dac_id: style_js
+type: guideline
+description: >
+  Establece las reglas, convenciones y mejores prácticas obligatorias
+  que TODOS los agentes deben seguir al escribir CUALQUIER archivo .js 
+  (Modelos, Vistas, Controladores) para los componentes de este proyecto.
+stack: [javascript, vite]
+scope: global
+
+# Instrucciones para el Agente
+# Al generar CUALQUIER archivo .js:
+# 1. ADHIÉRETE estrictamente a las reglas de nomenclatura, comentarios y
+#    estructura definidas a continuación.
+# 2. El objetivo es producir código limpio, orientado a objetos (Clases) y 
+#    mantenible que parezca escrito por un solo ingeniero senior.
+# 3. Presta especial atención a la sección de JSDoc; es OBLIGATORIA.
+---
+
+# 1. Nomenclatura (Naming Conventions)
+
+- **Formato:** Todos los métodos y variables deben usar `camelCase` (ej. `miMetodoEjemplo`).
+- **Nombres de Clases:** DEBEN usar `PascalCase` (ej. `UserModel`, `LoginController`).
+- **Variables del DOM:** Toda variable o propiedad de clase que almacene un elemento del DOM DEBE iniciar con `$` (ej. `this.$submitBtn = document.getElementById(...)`).
+- **Claridad:** El nombre debe ser descriptivo y claro.
+- **Prefijos de Verbos:** Los métodos deben empezar con un verbo que describa su acción principal:
+  - `handle...`: Para manejadores de eventos (ej. `handleFormSubmit`).
+  - `render...`: Para métodos que dibujan o actualizan el DOM en la Vista (ej. `renderTable`).
+  - `get...`: Para obtener datos o templates (ej. `getById`, `getTemplate`).
+  - `save...`: Para guardar, crear o actualizar datos en el Modelo.
+  - `delete...`: Para eliminar datos en el Modelo.
+  - `validate...`: Para funciones de validación.
+  - `bind...`: Para métodos en la Vista que exponen eventos (ej. `bindSubmit`).
+
+# 2. Comentarios (JSDoc Obligatorio)
+
+- **MANDATORY:** TODO método principal de una clase DEBE tener un bloque de comentarios JSDoc (`/** ... */`) encima.
+- **Propósito:** Esto es crucial para entender el "contrato" del método (qué acepta y qué devuelve).
+- **Formato para Métodos de Clase:**
+
+  `/**`
+  ` * @async (si el método es asíncrono)`
+  ` * @method nombreDelMetodo`
+  ` * @description`
+  ` * Breve descripción (una línea) de lo que hace el método.`
+  ` *`
+  ` * @param {tipo} nombreDelParam - Descripción del parámetro.`
+  ` * @returns {tipo} - Descripción de lo que retorna (usar {void} si no retorna nada).`
+  ` * @throws {tipo} - Descripción de posibles errores lanzados (si aplica).`
+  ` * @example`
+  ` * // returns 42`
+  ` * nombreDeLaFuncion(param1, param2);`
+  ` */`
+
+- **Ejemplo de Implementación en un Modelo:**
+
+  `/**`
+  ` * @async`
+  ` * @method getProductById`
+  ` * @description`
+  ` * Realiza un fetch para obtener un producto específico usando su ID.`
+  ` *`
+  ` * @param {string|number} id - El ID único del producto a buscar.`
+  ` * @returns {Promise<Object|null>} El objeto del producto o null si falla.`
+  ` */`
+  `async getProductById(id) {`
+  `  // ...lógica aquí`
+  `}`
+
+# 3. Estructura y Sintaxis (ES6+ Modular)
+
+- **Declaración Principal:**
+  - DEBES usar sintaxis de **Clases ES6** (`export class NombreClase {}`) para la estructura principal de los archivos, en lugar de funciones globales.
+  - Los comportamientos deben definirse como **métodos** dentro de la clase.
+- **Contexto (this) y Callbacks:**
+  - Usa **Arrow Functions** (`=>`) de manera OBLIGATORIA para callbacks y manejadores de eventos anónimos para preservar el contexto de `this` de la clase (ej. `this.$btn.addEventListener('click', (e) => { this.handle(e) })`).
+- **Variables:**
+  - Usa `const` por defecto para todas las variables de bloque.
+  - Usa `let` ÚNICAMENTE si la variable necesita ser reasignada.
+  - **NO USAR `var`** bajo ninguna circunstancia.
+- **Responsabilidad Única:** Cada método debe hacer UNA sola cosa y hacerla bien.
+  - **MALO:** `async loadAndRenderProducts() { ... }`
+  - **BUENO:** `async fetchProducts() { ... }` (en el Model) y `renderTable(data)` (en la View).
