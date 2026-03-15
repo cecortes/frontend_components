@@ -71,7 +71,7 @@ export class DashboardController {
     try {
       const data = await this.model.fetchDashboardData();
       // En una implementación real más compleja se llamarían métodos "updateTables(data)" del dashboardView aquí.
-      console.log("[DashboardController] Dummy Data Fetched:", data);
+      //console.log("[DashboardController] Dummy Data Fetched:", data);
     } catch (error) {
       console.error(
         "[DashboardController] Error fetching dashboard data:",
