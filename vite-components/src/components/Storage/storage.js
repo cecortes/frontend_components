@@ -144,6 +144,7 @@ export class SessionStorage {
       const data = window.sessionStorage.getItem("sessionData");
       if (data) {
         this.sessionData = JSON.parse(data);
+        return this.sessionData;
       }
     } catch (error) {
       console.error("No se pudo cargar desde sessionStorage:", error.message);
