@@ -131,3 +131,23 @@
 - [x] La documentación se generó siguiendo estrictamente la guía de estilo para JavaScript definida en `.agent/rules/js_functions.md`, garantizando uniformidad sin alterar la lógica de negocio ni la funcionalidad de los componentes.
 
 ---
+
+## 14-03-26 - Validación de Token y Redirección al Login
+
+- [x] **Implementación de Estrategia de Redirección**: Se desarrolló un flujo completo para manejar sesiones expiradas o tokens inválidos, asegurando que el usuario sea notificado mediante un modal antes de ser redirigido al login.
+  - [x] **Modelo (`authModel.js`)**: Se eliminó el manejo silencioso de errores. Ahora el modelo valida la presencia del token y lanza excepciones (`throw Error`) para que el controlador gestione la respuesta visual.
+  - [x] **Controlador de Modal (`modalController.js`)**: Se extendió la funcionalidad de `showError` para aceptar un callback `onClose`. Este callback se ejecuta justo cuando el usuario cierra el modal, permitiendo acciones post-notificación.
+  - [x] **Controlador de Dashboard (`dashController.js`)**: Se configuró la captura de errores en el método `init`. Al detectar un fallo de autenticación, se invoca el modal de error y se le pasa una función de navegación que usa `window.router.navigate("/")` para volver al inicio de forma fluida (SPA).
+  - [x] **Factory y Main (`dash_factory.js`, `main.js`)**: Se corrigió un bug de inyección donde el Dashboard carecía de un controlador de modal. Ahora se instancia mediante `ModalFactory` y el elemento HTML se adjunta al `body` para garantizar su visibilidad.
+- [x] **Actualización de Reglas de Desarrollo**:
+  - [x] Se modificó `.agent/rules/mvc_pattern.md` para prohibir formalmente que los Modelos manipulen la UI o la consola, reforzando la separación de responsabilidades donde el Controlador es el único encargado de decidir cómo presentar los errores al usuario.
+
+---
+
+## 15-03-26 - Gestión Modular de Assets SVG y Refactorización de Vistas
+
+- [x] **Gestión de Recursos por Componente**: Se estableció la regla de que cada componente debe tener sus propios recursos. Se crearon archivos `svg_icons.js` específicos en `src/components/LoginForm/icons/` y `src/components/Dashboard/icons/` para guardar los iconos SVG de cada módulo, resolviendo la redundancia de HTML en las vistas.
+- [x] **Refactorización de Componentes (MVC)**:
+  - [x] **Vistas (`LoginView.js`, `dashView.js`)**: Se actualizaron para recibir el objeto de iconos correspondiente a través del constructor. Se implementó el uso de variables dinámicas (`${this.icons.name}`) en las plantillas HTML, lo que reduce el peso de los archivos y facilita su lectura.
+  - [x] **Factories (`login_factory.js`, `dash_factory.js`)**: Se integró la lógica de inyección de dependencias. Cada factory importa exclusivamente los iconos de su componente y los provee a la vista correspondiente.
+- [x] **Optimización de Mantenibilidad e Independencia**: Esta estructura garantiza el encapsulamiento; si un componente es reutilizado o movido en el futuro, lleva consigo sus propios recursos visuales sin depender de un archivo centralizado, respetando así la alta cohesión.
