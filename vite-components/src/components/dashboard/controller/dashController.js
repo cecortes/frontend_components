@@ -1,12 +1,20 @@
 "use strict";
 
 export class DashboardController {
-  constructor(view, model, storage, auth, modalController = null) {
+  constructor(
+    view,
+    model,
+    storage,
+    auth,
+    modalController = null,
+    sidebarController = null,
+  ) {
     this.view = view;
     this.model = model;
     this.storage = storage;
     this.auth = auth;
     this.modalController = modalController;
+    this.sidebarController = sidebarController;
   }
 
   /**
@@ -32,8 +40,17 @@ export class DashboardController {
       return;
     }
 
+    // Inicializar Sidebar Component
+    const userData = { name: this.storage.UserName, role: this.storage.Role };
+    const sidebarHTML = this.sidebarController
+      ? this.sidebarController.getSidebarHTML("dashboard", userData)
+      : "";
+    const burgerHTML = this.sidebarController
+      ? this.sidebarController.getBurgerHTML()
+      : "";
+
     // Render vista (HTML Estático con MVC)
-    const html = this.view.renderDashboard();
+    const html = this.view.renderDashboard(sidebarHTML, burgerHTML);
 
     // Bind events
     this.dashboardEventHandler();
