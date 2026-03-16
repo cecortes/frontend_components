@@ -7,6 +7,7 @@ import { DashboardController } from "../components/Dashboard/controller/dashCont
 import { AuthController } from "../components/Auth/controller/authController.js";
 
 import { ModalFactory } from "./modal_factory.js";
+import { SidebarFactory } from "./sidebar_factory.js";
 import { icons } from "../components/Dashboard/icons/svg_icons.js";
 
 export class DashboardFactory {
@@ -26,6 +27,8 @@ export class DashboardFactory {
     const { element: modalElement, controller: modalController } =
       ModalFactory.modalComponent();
 
+    const sidebarController = SidebarFactory.createSidebar();
+
     const view = new DashboardView(icons);
     const model = new DashboardModel();
     const storage = new SessionStorage();
@@ -36,6 +39,7 @@ export class DashboardFactory {
       storage,
       auth,
       modalController,
+      sidebarController,
     );
 
     const element = await controller.init();

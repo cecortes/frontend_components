@@ -34,10 +34,10 @@ export class DashboardView {
    *
    * @returns {HTMLElement} El elemento DOM padre creado a partir del template del Dashboard.
    */
-  renderDashboard() {
+  renderDashboard(sidebarHTML = "", burgerHTML = "") {
     const html = `
       <div class="dashboard-wrapper" style="display: flex; min-height: 100vh; width: 100%; overflow-x: hidden;">
-        ${this.getTemplate()}
+        ${this.getTemplate(sidebarHTML, burgerHTML)}
       </div>
     `;
 
@@ -55,126 +55,15 @@ export class DashboardView {
    *
    * @returns {string} Código HTML representativo del layout base del dashboard.
    */
-  getTemplate() {
+  getTemplate(sidebarHTML = "", burgerHTML = "") {
     return `
-<input type="checkbox" id="menu-toggle" />
-
-    <!-- Overlay Invisible para Cierre en Móvil -->
-    <label for="menu-toggle" class="sidebar-overlay"></label>
-
-    <!-- Sidebar de Navegación -->
-    <aside class="sidebar">
-      <a href="#" class="sidebar-logo">
-        <div class="logo-symbol">W</div>
-        <h2
-          style="font-size: 1.5rem; margin: 0; color: var(--color-primary-400)"
-        >
-          WARESmart
-        </h2>
-      </a>
-
-      <ul class="sidebar-nav">
-        <li class="nav-item">
-          <a href="#" class="active">
-            ${this.icons.dashboard}
-            Dashboard
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="#">
-            ${this.icons.users}
-            Usuarios
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="#">
-            ${this.icons.clients}
-            Clientes
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="#">
-            ${this.icons.products}
-            Productos
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="#">
-            ${this.icons.orders}
-            O.C.
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="#">
-            ${this.icons.entries}
-            Entradas
-          </a>
-        </li>
-        <li class="nav-item">
-          <a href="#">
-            ${this.icons.outcomes}
-            Salidas
-          </a>
-        </li>
-      </ul>
-
-      <div
-        style="
-          margin-top: auto;
-          padding-top: 1rem;
-          border-top: 1px solid var(--color-border-subtle);
-          display: flex;
-          align-items: center;
-          gap: 12px;
-        "
-      >
-        <div
-          style="
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--color-surface-hover);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-          "
-        >
-          ${this.icons.profile}
-        </div>
-        <div>
-          <p
-            style="
-              font-size: 0.875rem;
-              font-weight: 600;
-              margin: 0;
-              color: var(--color-text-primary);
-            "
-          >
-            Admin User
-          </p>
-          <p
-            style="
-              font-size: 0.75rem;
-              margin: 0;
-              color: var(--color-text-muted);
-            "
-          >
-            Administrador
-          </p>
-        </div>
-      </div>
-    </aside>
+    ${sidebarHTML}
 
     <!-- Contenido Principal -->
     <main class="main-container">
       <!-- Barra Superior -->
       <header class="top-bar">
-        <label for="menu-toggle" class="burger-label">
-          <div class="burger-line"></div>
-          <div class="burger-line"></div>
-          <div class="burger-line"></div>
-        </label>
+        ${burgerHTML}
 
         <h2 style="font-size: 1.25rem; margin: 0">Resumen del Sistema</h2>
 

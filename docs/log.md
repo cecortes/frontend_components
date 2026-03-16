@@ -151,3 +151,20 @@
   - [x] **Vistas (`LoginView.js`, `dashView.js`)**: Se actualizaron para recibir el objeto de iconos correspondiente a través del constructor. Se implementó el uso de variables dinámicas (`${this.icons.name}`) en las plantillas HTML, lo que reduce el peso de los archivos y facilita su lectura.
   - [x] **Factories (`login_factory.js`, `dash_factory.js`)**: Se integró la lógica de inyección de dependencias. Cada factory importa exclusivamente los iconos de su componente y los provee a la vista correspondiente.
 - [x] **Optimización de Mantenibilidad e Independencia**: Esta estructura garantiza el encapsulamiento; si un componente es reutilizado o movido en el futuro, lleva consigo sus propios recursos visuales sin depender de un archivo centralizado, respetando así la alta cohesión.
+
+---
+
+## 16-03-26 - Extracción de Componente Sidebar y Aplicación de Patrón Factory
+
+- [x] **Modularización del Menú de Navegación**: Se extrajo con éxito la barra de navegación lateral del `Dashboard` para convertirla en el componente independiente `Sidebar`, permitiendo su reutilización en futuros módulos (Usuarios, Clientes, etc.).
+- [x] **Implementación de Componente Sidebar (MVC)**:
+  - [x] **Vista (`sidebarView.js`)**: Se diseñó para retornar bloques de HTML separados (_Aside_ y _Burger Button_), permitiendo su inyección estratégica en el layout sin romper el funcionamiento del CSS actual (checkbox hack).
+  - [x] **Controlador (`sidebarController.js`)**: Se implementó para gestionar la lógica de presentación, recibiendo por inyección la vista y permitiendo dinamizar la ruta activa (`activeRoute`) y los datos del usuario (`userData`).
+  - [x] **Iconos (`svg_icons.js`)**: Se trasladaron y aislaron los SVG de navegación al nuevo directorio del componente para asegurar su autonomía.
+- [x] **Refactorización de Arquitectura y Patrón Factory**:
+  - [x] **Fábrica de Sidebar (`sidebar_factory.js`)**: Se creó para centralizar la creación del componente Sidebar y sus dependencias.
+  - [x] **Inyección de Dependencias (DI)**: Se refactorizó el `DashboardController` y su fábrica (`dash_factory.js`) para recibir el componente Sidebar a través del constructor, eliminando importaciones directas y instanciaciones acopladas dentro de los controladores, cumpliendo así con las reglas de arquitectura del proyecto.
+  - [x] **Integración con Storage**: Se vinculó la visualización del perfil en el sidebar con los datos reales del `SessionStorage` (`UserName` y `Role`).
+- [x] **Documentación Técnica**:
+  - [x] **Especificación (`SideBar_Spec.md`)**: Se detalló el flujo de datos, la lógica de implementación por bloques y los criterios de aceptación.
+  - [x] **Decisión Arquitectónica (`001_sidebar_extraction_decision.md`)**: Se registró formalmente la decisión de desacoplar la navegación y el uso de DI para mejorar la escalabilidad del sistema.
