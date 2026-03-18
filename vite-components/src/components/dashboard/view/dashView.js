@@ -34,10 +34,10 @@ export class DashboardView {
    *
    * @returns {HTMLElement} El elemento DOM padre creado a partir del template del Dashboard.
    */
-  renderDashboard(sidebarHTML = "", burgerHTML = "") {
+  renderDashboard(sidebarHTML = "", burgerHTML = "", tablaUsuariosHTML = "") {
     const html = `
       <div class="dashboard-wrapper" style="display: flex; min-height: 100vh; width: 100%; overflow-x: hidden;">
-        ${this.getTemplate(sidebarHTML, burgerHTML)}
+        ${this.getTemplate(sidebarHTML, burgerHTML, tablaUsuariosHTML)}
       </div>
     `;
 
@@ -55,7 +55,7 @@ export class DashboardView {
    *
    * @returns {string} Código HTML representativo del layout base del dashboard.
    */
-  getTemplate(sidebarHTML = "", burgerHTML = "") {
+  getTemplate(sidebarHTML = "", burgerHTML = "", tablaUsuariosHTML = "") {
     return `
     ${sidebarHTML}
 
@@ -350,6 +350,8 @@ export class DashboardView {
               </table>
             </div>
           </div>
+
+          ${tablaUsuariosHTML}
         </section>
       </div>
     </main>

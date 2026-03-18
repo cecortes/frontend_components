@@ -168,3 +168,25 @@
 - [x] **Documentación Técnica**:
   - [x] **Especificación (`SideBar_Spec.md`)**: Se detalló el flujo de datos, la lógica de implementación por bloques y los criterios de aceptación.
   - [x] **Decisión Arquitectónica (`001_sidebar_extraction_decision.md`)**: Se registró formalmente la decisión de desacoplar la navegación y el uso de DI para mejorar la escalabilidad del sistema.
+
+---
+
+## 17-03-26 - Implementación y Componentización de Tabla de Usuarios
+
+- [x] **Implementación de Tabla de Usuarios**: Se agregó una nueva sección de "Usuarios del Sistema" al final del Dashboard, manteniendo la consistencia visual y funcional con las tablas existentes.
+  - [x] **Estilos y UI**: Se creó la clase `.btn-danger` en `style.css` para los botones de borrado y se aplicó una regla global para centrar los títulos (`<th>`) de todas las tablas del proyecto.
+- [x] **Componentización de TablaUsuarios (MVC)**: Se extrajo la lógica de la tabla de usuarios a su propio componente independiente para mejorar la mantenibilidad y escalabilidad.
+  - [x] **Modelo (`tablaUsuariosModel.js`)**: Implementa la carga asíncrona de datos simulada mediante promesas.
+  - [x] **Vista (`tablaUsuariosView.js`)**: Genera el HTML dinámico de la tabla y sus filas a partir de los datos del modelo.
+  - [x] **Controlador (`tablaUsuariosController.js`)**: Gestiona el ciclo de vida del componente y la obtención de datos.
+  - [x] **Factoría (`tabla_usuarios_factory.js`)**: Centraliza la instanciación e inyección de dependencias del componente.
+- [x] **Inyección de Dependencias y Refactorización**:
+  - [x] Se modificó `dash_factory.js` para integrar `TablaUsuariosFactory`.
+  - [x] Se refactorizó `DashboardController` para recibir el controlador de usuarios por inyección de dependencias.
+  - [x] Se actualizó `dashView.js` para inyectar el HTML del componente dinámicamente, eliminando el código hardcodeado previo.
+- [x] **Documentación Técnica**:
+  - [x] **Especificación (`UserTable_spec.md`)**: Se detallaron los requerimientos, estructura MVC y resultados visuales.
+  - [x] **Decisión Arquitectónica (`002_user_table_componentization_decision.md`)**: Se registró la justificación técnica de la modularización y el uso del patrón Factory.
+- [ ] **Tareas Pendientes (Backlog)**:
+  - [ ] Modificar `tablaUsuariosModel.js` para realizar peticiones reales al backend.
+  - [ ] Migrar la visualización de la tabla de usuarios para utilizar la librería `datatable.js`.

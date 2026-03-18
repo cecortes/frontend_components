@@ -8,6 +8,7 @@ export class DashboardController {
     auth,
     modalController = null,
     sidebarController = null,
+    tablaUsuariosController = null,
   ) {
     this.view = view;
     this.model = model;
@@ -15,6 +16,7 @@ export class DashboardController {
     this.auth = auth;
     this.modalController = modalController;
     this.sidebarController = sidebarController;
+    this.tablaUsuariosController = tablaUsuariosController;
   }
 
   /**
@@ -49,8 +51,17 @@ export class DashboardController {
       ? this.sidebarController.getBurgerHTML()
       : "";
 
+    // Inicializar TablaUsuarios Component
+    const tablaUsuariosHTML = this.tablaUsuariosController
+      ? await this.tablaUsuariosController.init()
+      : "";
+
     // Render vista (HTML Estático con MVC)
-    const html = this.view.renderDashboard(sidebarHTML, burgerHTML);
+    const html = this.view.renderDashboard(
+      sidebarHTML,
+      burgerHTML,
+      tablaUsuariosHTML,
+    );
 
     // Bind events
     this.dashboardEventHandler();
