@@ -186,7 +186,25 @@
   - [x] Se actualizó `dashView.js` para inyectar el HTML del componente dinámicamente, eliminando el código hardcodeado previo.
 - [x] **Documentación Técnica**:
   - [x] **Especificación (`UserTable_spec.md`)**: Se detallaron los requerimientos, estructura MVC y resultados visuales.
-  - [x] **Decisión Arquitectónica (`002_user_table_componentization_decision.md`)**: Se registró la justificación técnica de la modularización y el uso del patrón Factory.
+  - [x] **Decisión Arquitectónica (`002_user_table_componentization_decision.md`)**: Se registró la justificación técnica de la modularización y el uso des patrón Factory.
+
+---
+
+## 18-03-26 - Integración de DataTables en Tabla de Usuarios y Estandarización de Estilos
+
+- [x] **Integración de DataTables en TablaUsuarios**: Se migró el renderizado manual de filas a la librería interactiva `datatables.js` para proveer capacidades de búsqueda, ordenamiento y paginación.
+  - [x] **Instalación de Dependencias**: Se instaló `datatables.net-dt` mediante NPM para un manejo modular (ESM).
+  - [x] **Refactorización de Vista (`tablaUsuariosView.js`)**: Se adaptó el `renderTable` para entregar el cascarón estático y se creó `initDataTable` para la inicialización dinámica.
+  - [x] **Refactorización de Controlador (`tablaUsuariosController.js`)**: Se implementó una lógica de "Polling" (setInterval) en `bindEvents` para garantizar la existencia física del elemento en el DOM antes de la instanciación de la librería. Se adoptó la delegación de eventos (`Event Delegation`) para las acciones de Editar/Borrar.
+  - [x] **Orquestación en Dashboard**: Se vinculó el ciclo de vida del componente hijo (`TablaUsuarios`) con el `DashboardController` invocando sus eventos tras el renderizado principal.
+- [x] **Alineación Estética y Diseño Premium**:
+  - [x] **Personalización del Buscador**: Se utilizó el callback `initComplete` de DataTables para mutar dinámicamente el DOM del buscador, inyectando las clases institucionales (`.input-wrapper`, `.input-icon`, `.input-field`) y el SVG de la lupa.
+  - [x] **Sobrescritura de Estilos CSS**: Se añadieron reglas específicas en `style.css` con selectores de alta prioridad para neutralizar el diseño nativo de DataTables y asegurar la coherencia visual con el resto del Dashboard (bordes, fondos y paddings corregidos).
+- [x] **Pruebas y Datos**: Se expandió el `TablaUsuariosModel` con 15 usuarios adicionales (Total 20) para validar el comportamiento fluido de la paginación y los filtros globales.
+- [x] **Documentación y Transferencia de Conocimiento**:
+  - [x] **Skill de Proyecto (`datatables_integration/SKILL.md`)**: Se creó una guía maestra "paso a paso" que documenta el flujo oficial para futuras integraciones de tablas dinámicas siguiendo el ciclo de vida del DOM y MVC.
+  - [x] **Especificación Técnica (`datatables_spec.md`)**: Se detalló el "Qué, Para Qué y Por Qué" de cada cambio técnico efectuado.
+  - [x] **Decisión Arquitectónica (`003_datatables_integration_decision.md`)**: Se registró formalmente la adopción de la librería y las estrategias de gestión de eventos elegidas.
+
 - [ ] **Tareas Pendientes (Backlog)**:
   - [ ] Modificar `tablaUsuariosModel.js` para realizar peticiones reales al backend.
-  - [ ] Migrar la visualización de la tabla de usuarios para utilizar la librería `datatable.js`.

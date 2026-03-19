@@ -1184,3 +1184,23 @@ tr:hover td {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-border-default);
 }
+
+/* ============================================
+   Sobrescritura UI de DataTables
+   ============================================ */
+div.dt-container .dt-search .input-field {
+  padding: 0 1rem 0 3rem !important; /* Rescata el espacio de la lupa */
+  background-color: var(
+    --color-background-secondary
+  ) !important; /* Rescata tu fondo oscuro */
+  border: 1.5px solid var(--color-border-default) !important; /* Rescata tu color de borde */
+  border-radius: 8px !important; /* Rescata tus bordes redondos */
+  color: var(--color-text-primary) !important;
+  outline: none !important;
+}
+
+div.dt-container .dt-search .input-field:focus {
+  border-color: var(--color-primary-500) !important;
+  background-color: var(--color-surface-elevated) !important;
+  box-shadow: 0 0 0 3px rgba(59, 142, 194, 0.1) !important;
+}

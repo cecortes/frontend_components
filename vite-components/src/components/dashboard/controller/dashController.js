@@ -65,6 +65,9 @@ export class DashboardController {
 
     // Bind events
     this.dashboardEventHandler();
+    if (this.tablaUsuariosController) {
+      this.tablaUsuariosController.bindEvents();
+    }
 
     // Llamada asíncrona de datos desde el Modelo
     await this.loadDashboardData();
