@@ -3,30 +3,32 @@
 import DataTable from "datatables.net-dt";
 import "datatables.net-dt/css/dataTables.dataTables.min.css";
 
-export class TablaUsuariosView {
+export class TablaClientesView {
   constructor() {}
 
   /**
    * @method renderTable
    * @description Genera el cascarón de HTML de la tabla para inyectar al DOM.
+   * La barra de búsqueda nativa fue removida para dejar que DataTables
+   * inyecte la propia, la cual estilizaremos después.
    * @returns {string} Código HTML estático de la tabla sin datos.
    */
   renderTable() {
     return `
-          <!-- Tabla de Usuarios (Componente Extraído) -->
+          <!-- Tabla de Clientes (Componente Extraído) -->
           <div class="table-container card">
             <div class="table-header">
-              <h4>Usuarios del Sistema</h4>
+              <h4>Gestión de Clientes</h4>
             </div>
 
             <div class="data-table-wrapper">
-              <table id="usuarios-table" class="display" style="width:100%">
+              <table id="clientes-table" class="display" style="width:100%">
                 <thead>
                   <tr>
-                    <th>Nombre</th>
-                    <th>Mail</th>
-                    <th>Usuario</th>
-                    <th>Rol</th>
+                    <th>ID</th>
+                    <th>Nombre del Cliente</th>
+                    <th>Ubicación</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
@@ -41,31 +43,44 @@ export class TablaUsuariosView {
 
   /**
    * @method initDataTable
-   * @description Inicializa la librería DataTables estática sobre el HTML.
-   * @param {Array} usersData - Datos obtenidos del modelo.
+   * @description Inicializa la librería DataTables y aplica las estilizaciones correspondientes al estándar.
+   * @param {Array} clientsData - Datos obtenidos del modelo asíncrono.
    */
-  initDataTable(usersData) {
+  initDataTable(clientsData) {
     const config = {
-      data: usersData,
+      data: clientsData,
       info: false,
       paging: false,
       scrollY: "50vh",
       scrollCollapse: true,
       columns: [
+        { data: "id" },
         { data: "nombre" },
-        { data: "mail" },
-        { data: "usuario" },
-        { data: "rol" },
+        { data: "ubicacion" },
+        {
+          data: "estado",
+          render: function (data, type, row) {
+            // Replicar los badges estéticos originales de Activo/Inactivo
+            if (data === "Activo") {
+              return `<span class="badge badge-high">Activo</span>`;
+            } else {
+              return `<span class="badge badge-low">Inactivo</span>`;
+            }
+          },
+        },
         {
           data: null,
-          orderable: false,
-          searchable: false,
+          orderable: false, // Fundamental para evitar que se ordene por HTML
+          searchable: false, // Evita que busque atributos del HTML del botón
           render: function (data, type, row) {
             return `
-              <div style="display: flex; gap: 8px; justify-content: center;">
-                <button class="btn btn-primary btn-edit" data-id="${row.usuario}" style="padding: 4px 8px; font-size: 0.75rem">Editar</button>
-                <button class="btn btn-danger btn-delete" data-id="${row.usuario}" style="padding: 4px 8px; font-size: 0.75rem">Borrar</button>
-              </div>
+              <button
+                class="btn btn-secondary btn-view"
+                data-id="${row.id}"
+                style="padding: 4px 8px; font-size: 0.75rem"
+              >
+                Ver
+              </button>
             `;
           },
         },
@@ -85,7 +100,7 @@ export class TablaUsuariosView {
         },
       },
       initComplete: function () {
-        const table = document.getElementById("usuarios-table");
+        const table = document.getElementById("clientes-table");
         if (!table) return;
 
         // DataTables inyecta sus controles rodeando la tabla original
@@ -95,7 +110,7 @@ export class TablaUsuariosView {
         const dtSearch = dtContainer.querySelector(".dt-search");
         if (dtSearch) {
           dtSearch.classList.add("input-wrapper", "search-box");
-          dtSearch.style.marginBottom = "0"; // Para estar al mismo nivel que el de "lengthMenu"
+          dtSearch.style.marginBottom = "0";
 
           const label = dtSearch.querySelector("label");
           if (label) {
@@ -105,9 +120,9 @@ export class TablaUsuariosView {
           const input = dtSearch.querySelector(".dt-input");
           if (input) {
             input.classList.add("input-field");
-            input.placeholder = "Buscar usuario...";
+            input.placeholder = "Buscar cliente...";
 
-            // Inyectar el icono como ocurre en la tabla genérica
+            // Inyectar el icono como ocurre en la tabla estática de referencias
             const iconHTML = `
               <div class="input-icon">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -122,7 +137,7 @@ export class TablaUsuariosView {
       },
     };
 
-    // Inicializar mediante el import de ESM
-    new DataTable("#usuarios-table", config);
+    // Inicializar mediante constructor
+    new DataTable("#clientes-table", config);
   }
 }

@@ -9,6 +9,7 @@ export class DashboardController {
     modalController = null,
     sidebarController = null,
     tablaUsuariosController = null,
+    tablaClientesController = null,
   ) {
     this.view = view;
     this.model = model;
@@ -17,6 +18,7 @@ export class DashboardController {
     this.modalController = modalController;
     this.sidebarController = sidebarController;
     this.tablaUsuariosController = tablaUsuariosController;
+    this.tablaClientesController = tablaClientesController;
   }
 
   /**
@@ -56,17 +58,26 @@ export class DashboardController {
       ? await this.tablaUsuariosController.init()
       : "";
 
+    // Inicializar TablaClientes Component
+    const tablaClientesHTML = this.tablaClientesController
+      ? await this.tablaClientesController.init()
+      : "";
+
     // Render vista (HTML Estático con MVC)
     const html = this.view.renderDashboard(
       sidebarHTML,
       burgerHTML,
       tablaUsuariosHTML,
+      tablaClientesHTML,
     );
 
     // Bind events
     this.dashboardEventHandler();
     if (this.tablaUsuariosController) {
       this.tablaUsuariosController.bindEvents();
+    }
+    if (this.tablaClientesController) {
+      this.tablaClientesController.bindEvents();
     }
 
     // Llamada asíncrona de datos desde el Modelo

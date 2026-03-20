@@ -28,19 +28,24 @@ Debe retornar la estructura maestra estática, un `<table>` con un `ID` único q
 ```javascript
 renderTable() {
   return \`
-    <div class="data-table-wrapper" style="padding: 1rem;">
-      <table id="mi-nueva-tabla" class="display" style="width:100%">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <!-- Cabeceras necesarias -->
-          </tr>
-        </thead>
-        <tbody>
-          <!-- VACÍO. DataTables se encargará. -->
-        </tbody>
-      </table>
+    <div class="table-container card">
+      <div class="table-header">
+        <h4>Título de la Tabla</h4>
+      </div>
+      <div class="data-table-wrapper">
+        <table id="mi-nueva-tabla" class="display" style="width:100%">
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Nombre</th>
+              <!-- Cabeceras necesarias -->
+            </tr>
+          </thead>
+          <tbody>
+            <!-- VACÍO. DataTables se encargará. -->
+          </tbody>
+        </table>
+      </div>
     </div>
   \`;
 }
@@ -63,10 +68,28 @@ Para asegurar la cohesión del diseño premium sin afectar los CSS globales, deb
 initDataTable(dataCollection) {
   const config = {
     data: dataCollection,
+    // Configuraciones de visualización para formato "Panel con Scroll"
+    info: false,
+    paging: false,
+    scrollY: "50vh",
+    scrollCollapse: true,
     columns: [
       { data: "id" },     /* Las claves que vienen del Objeto JSON */
       { data: "nombre" },
-      /* ... Agregar el render: función para botones de control ... */
+      /* Columna de Acciones Personalizada */
+      {
+        data: null,
+        orderable: false, // OBLIGATORIO: Evita intentar organizar por HTML
+        searchable: false, // OBLIGATORIO: Evita que el buscador filtre texto en los botones
+        render: function (data, type, row) {
+          return `
+            <div style="display: flex; gap: 8px; justify-content: center;">
+              <button class="btn btn-primary btn-edit" data-id="${row.id}" style="padding: 4px 8px; font-size: 0.75rem">Editar</button>
+              <button class="btn btn-danger btn-delete" data-id="${row.id}" style="padding: 4px 8px; font-size: 0.75rem">Borrar</button>
+            </div>
+          `;
+        }
+      }
     ],
     language: {
        search: "Buscar:",
@@ -119,11 +142,16 @@ initDataTable(dataCollection) {
 
 ## 3. Instrucciones para el Controlador (Controller)
 
-El Controlador es el cerebro. Solicita el modelo e inicializa DataTables solo comprobando que el elemento virtual pre-cargado haya tocado el navegador de redentizado.
+El Controlador es el cerebro. Proveerá el cascarón HTML al renderizador superior a través de un método `init()`, y paralelamente (o inmediatamente después, dependiendo de la cadena que inyecte la vista al body) ejecutará un ciclo de repetición (polling) dentro de `bindEvents()` para enlazar DataTables garantizando que la vista ya exista en el DOM.
 
 ```javascript
+async init() {
+  // Retorna el cascarón (Empty Shell) estático
+  return this.view.renderTable();
+}
+
 async bindEvents() {
-  // Polling seguro para esperar el Pintado del DOM dictado por el Router
+  // Polling seguro para esperar el Pintado del DOM dictado por el Router superior
   const checkExist = setInterval(async () => {
     const tableEl = document.getElementById("mi-nueva-tabla");
     if (tableEl && document.body.contains(tableEl)) {
@@ -151,8 +179,29 @@ async bindEvents() {
 }
 ```
 
-## 4. Notas Arquitectónicas Cruciales
+## 4. Instanciación (Patrón Factory)
+
+El acoplamiento final del MVC dentro del ecosistema asíncrono debe realizarse siempre delegando la inyección de dependencias a un archivo de fábrica (`_factory.js`) local del componente. Ningún componente superior debe instanciar directamente los módulos MVC para mantener limpieza del cógido y alta mantenibilidad.
+
+```javascript
+import { MiModelo } from "./model/miModelo.js";
+import { MiVista } from "./view/miVista.js";
+import { MiControlador } from "./controller/miControlador.js";
+
+export function createMiComponente() {
+  const model = new MiModelo();
+  const view = new MiVista();
+  const controller = new MiControlador(model, view);
+
+  return { model, view, controller };
+}
+```
+
+## 5. Notas Arquitectónicas Cruciales
 
 - **No tocar `style.css` global en cada tabla nueva:** Las reglas visuales ya están blindadas globalmente para sobreescribir `.dt-search .input-field` evitando duplicidad. Al hacer que el `<input>` reciba `.input-field` en _JS_, hereda todo.
 - **Aislamiento del Modelo:** El modelo no requiere en lo absoluto adaptación para DataTables, su trabajo final es arrojar Promesas con Matrices/Subarreglos puras `(JSON)`.
 - **Reuso estricto del HTML y Layout:** Al aplicar esta _skill_, un humano o tú, garantiza no corromper integraciones visuales, haciendo lucir el dashboard increíblemente cohesionado y estético siempre.
+- **`Scroll vs Paginación` en layouts compactos:** Si el contenedor visual lo requiere (ej: un modal ancho o un un panel delimitado en el dashboard), es preferible desactivar la paginación tradicional y habilitar el scroll vertical usando `paging: false`, `info: false` adjuntando propiedades como `scrollY: "50vh"` y `scrollCollapse: true`. Esto estandariza la vista y mantiene el _grid_ alineado dentro del contenedor.
+- **Columnas de Botones Limpias:** Siempre utiliza las flags `orderable: false` y `searchable: false` en las columnas que rendericen HTML estático (como botones de control "Editar/Borrar") para evitar comportamientos defectuosos o errores lógicos en el filtrado de DataTables.
+- **Rigurosidad Asíncrona del Modelo:** El Modelo debe estar estructurado como Clase y sus métodos encargados de solicitar datos (`fetchMyData`) obligatoriamente deben retornar Promesas (`Promise<Array>`) para soportar y asimilar asincronismo real de red e inyección escalable con bases de datos.

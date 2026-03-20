@@ -9,6 +9,7 @@ import { AuthController } from "../components/Auth/controller/authController.js"
 import { ModalFactory } from "./modal_factory.js";
 import { SidebarFactory } from "./sidebar_factory.js";
 import { TablaUsuariosFactory } from "./tabla_usuarios_factory.js";
+import { createTablaClientes } from "../components/TablaClientes/tabla_clientes_factory.js";
 import { icons } from "../components/Dashboard/icons/svg_icons.js";
 
 export class DashboardFactory {
@@ -30,6 +31,7 @@ export class DashboardFactory {
 
     const sidebarController = SidebarFactory.createSidebar();
     const tablaUsuariosController = TablaUsuariosFactory.createTablaUsuarios();
+    const tablaClientesController = createTablaClientes().controller;
 
     const view = new DashboardView(icons);
     const model = new DashboardModel();
@@ -43,6 +45,7 @@ export class DashboardFactory {
       modalController,
       sidebarController,
       tablaUsuariosController,
+      tablaClientesController,
     );
 
     const element = await controller.init();

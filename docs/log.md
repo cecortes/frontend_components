@@ -206,5 +206,26 @@
   - [x] **Especificación Técnica (`datatables_spec.md`)**: Se detalló el "Qué, Para Qué y Por Qué" de cada cambio técnico efectuado.
   - [x] **Decisión Arquitectónica (`003_datatables_integration_decision.md`)**: Se registró formalmente la adopción de la librería y las estrategias de gestión de eventos elegidas.
 
+---
+
+## 19-03-26 - Componentización de Gestión de Clientes, Evolución de DataTables y Refactorización MVC
+
+- [x] **Evolución del Canon de Integración (`SKILL.md`)**:
+  - [x] Se analizó la implementación de `TablaUsuarios` para mejorar la guía maestra de DataTables, añadiendo el patrón de "Panel con Scroll" (`50vh`) como alternativa preferente a la paginación para layouts de dashboard compactos.
+  - [x] Se estandarizó la lógica de columnas de acciones inyectando flags obligatorias (`orderable: false`, `searchable: false`) en las columnas con HTML (botones) para evitar errores lógicos en el filtrado.
+  - [x] Se incorporó formalmente la sección de **Instanciación (Patrón Factory)** y la rigurosidad asíncrona en los **Modelos** (`fetchData` retornando `Promises`) dentro del documento de la skill.
+- [x] **Componentización de Tabla de Clientes (`TablaClientes`)**:
+  - [x] **Modelo (`tablaClientesModel.js`)**: Se implementó una capa de datos asíncrona que simula un delay de red y retorna una promesa con 20 registros de clientes corporativos (IDs, Nombres, Ubicaciones y Estados).
+  - [x] **Vista (`tablaClientesView.js`)**: Se diseñó siguiendo el nuevo canon de `SKILL.md`. Implementa un layout de scroll vertical, badges dinámicos para estados ("Activo"/"Inactivo") y la mutación del buscador de DataTables para integrar el icono SVG institucional de búsqueda.
+  - [x] **Controlador (`tablaClientesController.js`)**: Se desacopló el ciclo de vida, proveyendo un método `init()` para el cascarón HTML y un `bindEvents()` con polling para la inicialización segura del plugin tras la inyección en el DOM.
+  - [x] **Fábrica (`tabla_clientes_factory.js`)**: Se creó para encapsular la instanciación y ensamble de las dependencias MVC del componente.
+- [x] **Reorganización y Refactorización del Dashboard**:
+  - [x] **Reubicación Visual**: Se movió la tabla de "Gestión de Clientes" a la penúltima posición del dashboard, justo antes de los usuarios, optimizando el flujo de lectura del Panel de Resumen.
+  - [x] **Inyección de Dependencias (DI)**: Se refactorizó `dash_factory.js` y `DashboardController.js` para recibir e inyectar el componente de clientes de forma dinámica a través del constructor, eliminando todo el HTML estático persistente en `dashView.js`.
+- [x] **Documentación Técnica y Soporte de IA**:
+  - [x] **Especificación (`ClientsTable_spec.md`)**: Se generó el documento detallando requerimientos, arquitectura de archivos y decisiones de diseño para el nuevo componente.
+
 - [ ] **Tareas Pendientes (Backlog)**:
+  - [ ] Implementar la componentización de la tabla de "Órdenes de Compra Recientes" siguiendo el nuevo estándar.
+  - [ ] Migrar el `DashboardModel` para centralizar las peticiones asíncronas de todos los sub-componentes.
   - [ ] Modificar `tablaUsuariosModel.js` para realizar peticiones reales al backend.
