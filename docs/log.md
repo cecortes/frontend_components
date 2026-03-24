@@ -229,3 +229,19 @@
   - [ ] Implementar la componentización de la tabla de "Órdenes de Compra Recientes" siguiendo el nuevo estándar.
   - [ ] Migrar el `DashboardModel` para centralizar las peticiones asíncronas de todos los sub-componentes.
   - [ ] Modificar `tablaUsuariosModel.js` para realizar peticiones reales al backend.
+
+---
+
+## 23-03-26 - Integración de Backend, Corrección de Storage y Reglas de Tablas MVC
+
+- [x] **Integración Real del Backend para Tabla Usuarios**:
+  - [x] Se analizó la estructura del backend (rutas, controladores y responses en `/users/get/all`) para diseñar la estrategia de consumo.
+  - [x] Se modificó `tablaUsuariosModel.js` para reemplazar los datos "hardcodeados" con una llamada asíncrona (`fetch`) real tipo `POST`, inyectando el token en los headers (`Authorization: Bearer <token>`). El modelo asume la responsabilidad de procesar la respuesta devolviendo un objeto de `Error` o mapeando las variables del JSON (`users_name` -> `nombre`, etc.) asegurando que la vista y las columnas de la tabla permanezcan inquebrantables.
+  - [x] Se modificó `tablaUsuariosController.js` para interceptar proactivamente la excepción del modelo en caso de fallas de conexión (Ej. `HTTP 500` o `HTTP 403`) y mostrar un mensaje explícito sólo por consola, protegiendo al frontend de crash.
+- [x] **Corrección de Arquitectura de Autenticación (Bug 403 Forbidden)**:
+  - [x] Se detectó y resolvió un fallo donde `localStorage.getItem("token")` de forma directa retornaba nulo, debido a que el estándar del proyecto utiliza `sessionStorage` encapsulado en formato JSON mediante la clase centralizada.
+  - [x] Se modificó `tabla_usuarios_factory.js` para instanciar la clase `SessionStorage` de manera correcta, invocar `loadSessionStorage()` y posteriormente inyectarla como dependencia indispensable en la instanciación del `TablaUsuariosModel()`.
+  - [x] Se refactorizó el modelo para asimilar y recuperar la sesión en curso consumiéndola de manera limpia desde el objeto Inyectado (`this.storage.Token`).
+- [x] **Creación de Nueva Skill y Reglas Automáticas de Desarrollo**:
+  - [x] Se documentó un archivo de `SKILL.md` (`.agent/skills/backend_table_integration/SKILL.md`) con las prácticas aprendidas como un protocolo obligatorio futuro para peticiones a backend renderizadas a tablas en DataTables, ordenando variables en `.env`.
+  - [x] Se escribió una Regla Automática condicional (Workflow/Rule) dictando a la IA que aplique dicha Skill inevitablemente siempre que deba diseñar componentes MVC que impliquen tablas con datos de conexión real, previniendo bugs e inconsistencias estructurales.

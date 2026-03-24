@@ -3,6 +3,7 @@
 import { TablaUsuariosView } from "../components/TablaUsuarios/view/tablaUsuariosView.js";
 import { TablaUsuariosModel } from "../components/TablaUsuarios/model/tablaUsuariosModel.js";
 import { TablaUsuariosController } from "../components/TablaUsuarios/controller/tablaUsuariosController.js";
+import { SessionStorage } from "../components/Storage/storage.js";
 
 export class TablaUsuariosFactory {
   /**
@@ -14,7 +15,9 @@ export class TablaUsuariosFactory {
    */
   static createTablaUsuarios() {
     const view = new TablaUsuariosView();
-    const model = new TablaUsuariosModel();
+    const storage = new SessionStorage();
+    storage.loadSessionStorage();
+    const model = new TablaUsuariosModel(storage);
     const controller = new TablaUsuariosController(view, model);
     return controller;
   }

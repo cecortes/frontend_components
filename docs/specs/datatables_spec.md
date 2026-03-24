@@ -39,6 +39,15 @@ La naturaleza manipuladora de la librería (la cual opera incisivamente sobre el
 - **Qué:** Se formuló una adición imperativa resguardada al final del archivo con sintaxis `div.dt-container .dt-search .input-field`.
   - **Por qué:** DataTables inyecta un set primario hostil sobre el `input`. Re-estableciendo la autoridad con prioridades forzadas (`!important`), el archivo maestro restablece el orden dictando sus propias formas visuales para el `border-radius`, margen y el padding original.
 
+### 3.4. Integración Asíncrona Oficial y Autenticación Centralizada
+
+- **Qué:** Se eliminaron los mocks (datos en duro y `setTimeout`) del `tablaUsuariosModel.js` transformando la petición en un `fetch` dinámico hacia el endpoint real del backend desde las variables de entorno (`.env`). La información cruda asimétrica (`users_name`, `users_role`) fue capturada y mapeada directamente a los keys visuales de la vista.
+  - **Por qué:** Aseguró la persistencia real de la base de datos preservando al milímetro el diseño original de la vista de DataTables. Delegar el parseo internamente en el modelo salvó a la vista de quebrarse o tener que conocer prefijos o llaves agenas al frontend.
+- **Qué:** Se integró la comunicación de tokens usando `SessionStorage` a través de inyección de dependencias en la factoría (`tabla_usuarios_factory.js`).
+  - **Por qué:** Consumir ingenuamente un string plano llamado `token` mediante `localStorage` resultaba invariablemente en fallos tipo `HTTP 403 Forbidden` dados los estándares de la App; inyectar la clase autorizada `SessionStorage` (Single Source of Truth) a la creación del modelo erradica la posibilidad de desintonización en las peticiones.
+- **Qué:** Se configuró una pared interceptora de código de estatus HTTP en `tablaUsuariosController.js` para los errores de retorno devueltos por el backend.
+  - **Por qué:** Blindó firmemente la fluidez del navegador protegiendo contra inicializaciones crasheadas o malogradas hacia la librería DataTables si la base de datos se corta, restringiendo las fallas a códigos explícitos en consola resguardando al usuario corriente de interrupciones o fallos blancos.
+
 ## 4. Criterios de Aceptación (Completados)
 
 1. [x] **Funcionalidad Completa:** Búsqueda inmediata, paginación visual y ordenamiento simétrico.

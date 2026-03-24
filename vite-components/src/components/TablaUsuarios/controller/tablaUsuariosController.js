@@ -74,8 +74,8 @@ export class TablaUsuariosController {
           });
         } catch (error) {
           console.error(
-            "[TablaUsuariosController] Error vinculando eventos o DataTables:",
-            error,
+            "[TablaUsuariosController] Error HTTP al cargar usuarios:",
+            error.message,
           );
         }
       }
