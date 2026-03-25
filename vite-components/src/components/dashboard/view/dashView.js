@@ -34,10 +34,15 @@ export class DashboardView {
    *
    * @returns {HTMLElement} El elemento DOM padre creado a partir del template del Dashboard.
    */
-  renderDashboard(sidebarHTML = "", burgerHTML = "") {
+  renderDashboard(
+    sidebarHTML = "",
+    burgerHTML = "",
+    tablaUsuariosHTML = "",
+    tablaClientesHTML = "",
+  ) {
     const html = `
       <div class="dashboard-wrapper" style="display: flex; min-height: 100vh; width: 100%; overflow-x: hidden;">
-        ${this.getTemplate(sidebarHTML, burgerHTML)}
+        ${this.getTemplate(sidebarHTML, burgerHTML, tablaUsuariosHTML, tablaClientesHTML)}
       </div>
     `;
 
@@ -55,7 +60,12 @@ export class DashboardView {
    *
    * @returns {string} Código HTML representativo del layout base del dashboard.
    */
-  getTemplate(sidebarHTML = "", burgerHTML = "") {
+  getTemplate(
+    sidebarHTML = "",
+    burgerHTML = "",
+    tablaUsuariosHTML = "",
+    tablaClientesHTML = "",
+  ) {
     return `
     ${sidebarHTML}
 
@@ -126,95 +136,6 @@ export class DashboardView {
 
         <!-- SECCIÓN DE TABLAS -->
         <section class="tables-section">
-          <!-- Tabla de Clientes -->
-          <div class="table-container card">
-            <div class="table-header">
-              <h4>Gestión de Clientes</h4>
-              <div class="input-group search-box" style="margin-bottom: 0">
-                <div class="input-wrapper">
-                  <div class="input-icon">
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                    >
-                      <circle cx="11" cy="11" r="8"></circle>
-                      <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
-                    </svg>
-                  </div>
-                  <input
-                    type="text"
-                    class="input-field"
-                    placeholder="Buscar cliente..."
-                  />
-                </div>
-              </div>
-            </div>
-
-            <div class="data-table-wrapper">
-              <table>
-                <thead>
-                  <tr>
-                    <th>ID</th>
-                    <th>Nombre del Cliente</th>
-                    <th>Ubicación</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>C-1001</td>
-                    <td>Tech Solutions S.A.</td>
-                    <td>Ciudad de México</td>
-                    <td><span class="badge badge-high">Activo</span></td>
-                    <td>
-                      <button
-                        class="btn btn-secondary"
-                        style="padding: 4px 8px; font-size: 0.75rem"
-                      >
-                        Ver
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>C-1002</td>
-                    <td>Global Logistics Ltd.</td>
-                    <td>Monterrey</td>
-                    <td><span class="badge badge-high">Activo</span></td>
-                    <td>
-                      <button
-                        class="btn btn-secondary"
-                        style="padding: 4px 8px; font-size: 0.75rem"
-                      >
-                        Ver
-                      </button>
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>C-1003</td>
-                    <td>Industrial Regia</td>
-                    <td>Guadalajara</td>
-                    <td><span class="badge badge-low">Inactivo</span></td>
-                    <td>
-                      <button
-                        class="btn btn-secondary"
-                        style="padding: 4px 8px; font-size: 0.75rem"
-                      >
-                        Ver
-                      </button>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-
           <!-- Tabla de Productos -->
           <div class="table-container card">
             <div class="table-header">
@@ -350,6 +271,10 @@ export class DashboardView {
               </table>
             </div>
           </div>
+
+          ${tablaClientesHTML}
+
+          ${tablaUsuariosHTML}
         </section>
       </div>
     </main>
