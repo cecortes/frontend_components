@@ -1,14 +1,26 @@
 "use strict";
 
-/**
- *
- */
 export class LoginView {
+  /**
+   * @method constructor
+   * @description
+   * Inicializa la clase LoginView con los iconos SVG necesarios para el formulario.
+   *
+   * @param {Object} icons - Objeto que contiene los iconos SVG para el formulario (logo, user, lock, eye, eyeOff)
+   * @returns {void}
+   */
   constructor(icons) {
     this.icons = icons;
     this.element = null; // Aquí guardaremos la referencia al DOM
   }
 
+  /**
+   * @method renderLoginForm
+   * @description
+   * Renderiza y retorna el formulario de login como elemento DOM.
+   *
+   * @returns {HTMLElement} - El elemento div.container del formulario de login
+   */
   renderLoginForm() {
     const html = `
       <div class="login-container">
@@ -100,6 +112,13 @@ export class LoginView {
     return this.element;
   }
 
+  /**
+   * @method LoginElements
+   * @description
+   * Retorna un objeto con todas las referencias a elementos del DOM.
+   *
+   * @returns {Object} - Objeto con las referencias a los elementos del DOM ($logoTitle, $logoSubTitle, $form, $userInput, $passInput, $togglePassBtn, $loginBtn, $recoverPassLink, $userError, $passError)
+   */
   get LoginElements() {
     return {
       $logoTitle: this.element.querySelector("#logoTitle"),
@@ -115,6 +134,15 @@ export class LoginView {
     };
   }
 
+  /**
+   * @method togglePasswordType
+   * @description
+   * Alterna el tipo de input entre password y text para mostrar/ocultar la contraseña.
+   *
+   * @param {HTMLInputElement} toggleInput - El elemento input de contraseña
+   * @param {HTMLElement} toggleElement - El elemento botón que contiene el icono del ojo
+   * @returns {void}
+   */
   togglePasswordType(toggleInput, toggleElement) {
     const elementWithIcon = toggleElement;
     const input = toggleInput;
@@ -129,31 +157,52 @@ export class LoginView {
   }
 
   /**
-   * Muestra el error de validación para un campo
-   * @param {HTMLInputElement} inputElement - El elemento input
+   * @method showValidationError
+   * @description
+   * Muestra el error de validación para un campo del formulario.
+   *
+   * @param {HTMLInputElement} inputElement - El elemento input del campo
    * @param {HTMLElement} errorElement - El elemento del tooltip de error
    * @param {string} message - El mensaje de error a mostrar
+   * @returns {void}
    */
   showValidationError(inputElement, errorElement, message) {
     // Añadir clase de error al input
-    inputElement.classList.add('input-error');
-    
+    inputElement.classList.add("input-error");
+
     // Mostrar el tooltip con el mensaje
     errorElement.textContent = message;
-    errorElement.classList.add('show');
+    errorElement.classList.add("show");
   }
 
   /**
-   * Oculta el error de validación para un campo
-   * @param {HTMLInputElement} inputElement - El elemento input
+   * @method hideValidationError
+   * @description
+   * Oculta el error de validación para un campo del formulario.
+   *
+   * @param {HTMLInputElement} inputElement - El elemento input del campo
    * @param {HTMLElement} errorElement - El elemento del tooltip de error
+   * @returns {void}
    */
   hideValidationError(inputElement, errorElement) {
     // Remover clase de error del input
-    inputElement.classList.remove('input-error');
-    
+    inputElement.classList.remove("input-error");
+
     // Ocultar el tooltip
-    errorElement.textContent = '';
-    errorElement.classList.remove('show');
+    errorElement.textContent = "";
+    errorElement.classList.remove("show");
+  }
+
+  /**
+   * @method redirectToDashboard
+   * @description
+   * Redirige al usuario a la página del dashboard después de un inicio de sesión exitoso.
+   *
+   * @returns {void}
+   * @example
+   * this.redirectToDashboard();
+   */
+  redirectToDashboard() {
+    window.location.href = "./dashboard/dash.html";
   }
 }

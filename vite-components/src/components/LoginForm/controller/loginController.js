@@ -1,11 +1,44 @@
 "use strict";
 
 export class LoginController {
-  constructor(view, fieldsValidator) {
+  /**
+   * @method constructor
+   * @description
+   * Inicializa el controlador de login con su vista, modelo, validador,
+   * almacenamiento y controlador de modal correspondientes.
+   *
+   * @param {LoginView} view - Instancia de la vista del formulario de login.
+   * @param {LoginModel} loginModel - Instancia del modelo para el login.
+   * @param {FieldsValidator} fieldsValidator - Instancia del validador de campos.
+   * @param {SessionStorage} storage - Instancia del almacenamiento de sesión.
+   * @param {ModalController|null} modalController - Instancia opcional del controlador de modal para errores.
+   * @returns {void}
+   * @example
+   * const controller = new LoginController(new LoginView(), new LoginModel(), new FieldsValidator(), new SessionStorage());
+   */
+  constructor(
+    view,
+    loginModel,
+    fieldsValidator,
+    storage,
+    modalController = null,
+  ) {
     this.view = view;
+    this.model = loginModel;
     this.validator = fieldsValidator;
+    this.storage = storage;
+    this.modalController = modalController;
   }
 
+  /**
+   * @method loginEventHandler
+   * @description
+   * Configura y gestiona los escuchadores de eventos para los elementos del formulario de login.
+   *
+   * @returns {void}
+   * @example
+   * loginController.loginEventHandler();
+   */
   loginEventHandler() {
     // Destructuring values from LoginElements
     const {
@@ -21,15 +54,41 @@ export class LoginController {
       $passError,
     } = this.view.LoginElements;
 
+    /**
+     * @method handleLogoTitleClick
+     * @description
+     * Cambia el texto del título del logo al hacer clic.
+     *
+     * @param {PointerEvent} $logoTitle - El objeto del evento de clic.
+     * @example
+     * $logoTitle.addEventListener("click", ($logoTitle) => { ... });
+     */
     $logoTitle.addEventListener("click", ($logoTitle) => {
       $logoTitle.target.innerText = "Obligatorio usar Target";
       console.log($logoTitle.target.innerText);
     });
 
+    /**
+     * @method handleTogglePassClick
+     * @description
+     * Alterna la visibilidad de la contraseña entre texto plano y asteriscos.
+     *
+     * @example
+     * $togglePassBtn.addEventListener("click", () => { ... });
+     */
     $togglePassBtn.addEventListener("click", () => {
       this.view.togglePasswordType($passInput, $togglePassBtn);
     });
 
+    /**
+     * @method handleRecoverPassClick
+     * @description
+     * Redirige al usuario a la página de recuperación de contraseña.
+     *
+     * @param {PointerEvent} e - El objeto del evento de clic.
+     * @example
+     * $recoverPassLink.addEventListener("click", (e) => { ... });
+     */
     $recoverPassLink.addEventListener("click", (e) => {
       e.preventDefault();
       const recoveryLink = import.meta.env.VITE_FORGOTPASS_LINK;
@@ -37,27 +96,160 @@ export class LoginController {
     });
 
     // Validación del campo usuario en blur
-    $userInput.addEventListener("blur", (element) => {
-      const userField = element.target.value;
-      const validation = this.validator.validateField(userField, "user");
-      
-      if (!validation.isValid) {
-        this.view.showValidationError($userInput, $userError, validation.message);
-      } else {
-        this.view.hideValidationError($userInput, $userError);
-      }
+    /**
+     * @method handleUserBlur
+     * @description
+     * Valida el campo de usuario cuando pierde el foco.
+     *
+     * @example
+     * $userInput.addEventListener("blur", () => { ... });
+     */
+    $userInput.addEventListener("blur", () => {
+      const validation = this.validator.validateField($userInput);
+
+      this.loginInputsPopUp(validation, $userInput, $userError);
     });
 
     // Validación del campo contraseña en blur
-    $passInput.addEventListener("blur", (element) => {
-      const passField = element.target.value;
-      const validation = this.validator.validateField(passField, "password");
-      
-      if (!validation.isValid) {
-        this.view.showValidationError($passInput, $passError, validation.message);
-      } else {
-        this.view.hideValidationError($passInput, $passError);
-      }
+    /**
+     * @method handlePassBlur
+     * @description
+     * Valida el campo de contraseña cuando pierde el foco.
+     *
+     * @example
+     * $passInput.addEventListener("blur", () => { ... });
+     */
+    $passInput.addEventListener("blur", () => {
+      const validation = this.validator.validateField($passInput);
+
+      this.loginInputsPopUp(validation, $passInput, $passError);
     });
+
+    // Submit Form
+    /**
+     * @method handleLoginClick
+     * @description
+     * Procesa el intento de inicio de sesión validando los campos y enviando el formulario.
+     *
+     * @param {PointerEvent} e - El objeto del evento de clic.
+     * @example
+     * $loginBtn.addEventListener("click", (e) => { ... });
+     */
+    $loginBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const validationUser = this.validator.validateField($userInput);
+      const validationPass = this.validator.validateField($passInput);
+
+      const userPopUp = this.loginInputsPopUp(
+        validationUser,
+        $userInput,
+        $userError,
+      );
+      const passPopUp = this.loginInputsPopUp(
+        validationPass,
+        $passInput,
+        $passError,
+      );
+
+      if (!userPopUp || !passPopUp) return;
+
+      // Model service for Login
+      this.handleModelLogin($userInput, $passInput);
+    });
+  }
+
+  /**
+   * @method loginInputsPopUp
+   * @description
+   * Gestiona la visualización de mensajes de error en los inputs basándose en el resultado de la validación.
+   *
+   * @param {Object} validatorObject - Objeto que contiene el estado de validación (isValid y message).
+   * @param {HTMLElement} inputElement - El elemento input del DOM que se está validando.
+   * @param {HTMLElement} errElement - El elemento del DOM donde se mostrará el error.
+   * @returns {boolean} - Retorna true si el campo es válido, false en caso contrario.
+   * @example
+   * const isValid = loginController.loginInputsPopUp(validation, $userInput, $userError);
+   */
+  loginInputsPopUp(validatorObject, inputElement, errElement) {
+    if (!validatorObject.isValid) {
+      this.view.showValidationError(
+        inputElement,
+        errElement,
+        validatorObject.message,
+      );
+      return false;
+    } else {
+      this.view.hideValidationError(inputElement, errElement);
+      return true;
+    }
+  }
+
+  /**
+   * @async
+   * @method handleModelLogin
+   * @description
+   * Procesa el inicio de sesión enviando las credenciales al modelo y manejando la respuesta.
+   *
+   * @param {HTMLElement} userInput - El elemento input del DOM que contiene el usuario.
+   * @param {HTMLElement} passInput - El elemento input del DOM que contiene la contraseña.
+   * @returns {Promise<Object>} - Promesa que resuelve con los datos del usuario logueado incluyendo el token.
+   * @throws {Error} - Error si las credenciales son inválidas o hay problemas de conexión.
+   * @example
+   * await controller.handleModelLogin($userInput, $passInput);
+   */
+  async handleModelLogin(userInput, passInput) {
+    // Get user and password
+    const userData = userInput.value;
+    const passData = passInput.value;
+
+    try {
+      const data = await this.model.login(userData, passData);
+
+      //Save token, user in the storage
+      this.storage.Token = data.token;
+      this.storage.UserName = data.user;
+      this.storage.Role = data.role;
+      this.storage.saveSessionStorage();
+
+      //Clear Inputs
+      this.clearInputs();
+
+      //DEBUG
+      //console.log(this.storage.sessionData);
+
+      //Redirect user <--------------------------------------
+      if (window.router) {
+        window.router.navigate("/dashboard");
+      } else {
+        window.history.pushState({}, "", "/dashboard");
+        window.dispatchEvent(new PopStateEvent("popstate"));
+      }
+    } catch (error) {
+      if (this.modalController) {
+        this.modalController.showError(error.message);
+        //Clear Inputs
+        this.clearInputs();
+      } else {
+        console.log(error.message);
+      }
+    }
+  }
+
+  /**
+   * @method clearInputs
+   * @description
+   * Limpia los valores de los campos de entrada del formulario de login.
+   *
+   * @returns {void}
+   * @example
+   * this.clearInputs();
+   */
+  clearInputs() {
+    // Destructure
+    const { $userInput, $passInput } = this.view.LoginElements;
+
+    $userInput.value = "";
+    $passInput.value = "";
   }
 }
