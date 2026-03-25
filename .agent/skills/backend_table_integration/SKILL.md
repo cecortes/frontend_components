@@ -55,9 +55,11 @@ El Componente del Modelo es el encargado de interactuar con el endpoint. NO DEBE
 1. **Constructor:** Modifica el constructor para inicializar `this.storage = storage`.
 2. **Variable Endpoint:** Declara la url consumiendo la variable de entorno: `const url = import.meta.env.VITE_NOMBRE_VARIABLE`.
 3. **Obtener el token:** Consume el token desde el getter encapsulado: `const token = this.storage.Token`.
-4. **Fetch:** Haz la solicitud `fetch` usando el método dictado por el backend, adjuntando la cabecera `Authorization: Bearer ${token}`.
+4. **Fetch:** Haz la solicitud `fetch` usando el método dictado por el backend (ej. `GET` o `POST`). **IMPORTANTE:** Nunca asumas el método por el nombre del endpoint (p. ej. `/get/all` podría requerir `POST`), siempre verifícalo. Adjunta la cabecera `Authorization: Bearer ${token}`.
 5. **Manejo de Errores Backend:** Valida respuesta. Si `!response.ok` o el json de éxito es falso, **arroja** (`throw`) un objeto `Error` formulado con el Código de Estado HTTP y el mensaje devuelto por el servidor (con base a tu análisis previo).
-6. **Mapeo:** Devuelve un arreglo de objetos realizando una **traducción o mapeo** desde la estructura original de variables del backend (ej. `user_id`) hacia los keys exactos que espera la vista frontend (ej. `id`), de modo que la vista no se quebre.
+6. **Mapeo y Fallbacks:** Devuelve el arreglo de objetos realizando un mapeo desde la respuesta del backend hacia las llaves esperadas por la vista frontend. Toma en cuenta lo siguiente:
+   - **Fallbacks:** Si el componente visual _requiere_ variables que el backend no retorna (como `estado`), el Modelo debe mapearlas artificialmente (ej. `estado: ""`) para que DataTables no quiebre por variables indefinidas.
+   - **Variables Ocultas:** Las llaves esenciales de lógica (como los `id` primarios) DEBEN seguir siendo mapeadas en este objeto, incluso si la columna respectiva no va a ser mostrada textualmente al usuario. Así se garantiza que la vista pueda usar `row.id` en el renderizado de botones.
 
 ### Paso 4: Capturar Errores en el Controlador
 
@@ -65,6 +67,12 @@ El Componente del Modelo es el encargado de interactuar con el endpoint. NO DEBE
 
 - En la función que detona la carga de los datos (`bindEvents()` u otra), el llamado a `this.model.fetchData()` debe estar envuelto en un `try...catch`.
 - **En el `catch (error)`**: Inmortaliza el error HTTP arrojado previamente por el modelo. Imprímelo de manera explícita en consola con `console.error()`, informando plenamente del error del backend (ej. `[TablaController] Error HTTP 500: Server disconnected`).
+
+### Paso 5: Congruencia Vista HTML vs DataTables
+
+Es fundamental mantener estricta paridad arquitectónica:
+
+- **Paridad de Columnas:** Asegúrate de que la cantidad y el orden de los elementos estáticos `<th>` en el HTML de la Vista (.renderTable) coincidan con precisión absoluta con la cantidad de objetos definidos en el arreglo `columns: [{ data: ... }]` de la inicialización de DataTables. Si necesitas omitir una variable mapeada como el `ID` de la interfaz visual, asegúrate de no incluirla en el HTML ni en el arreglo `columns`, o DataTables arrojará un error fatal de desajuste.
 
 ### Post-implementación
 

@@ -245,3 +245,18 @@
 - [x] **Creación de Nueva Skill y Reglas Automáticas de Desarrollo**:
   - [x] Se documentó un archivo de `SKILL.md` (`.agent/skills/backend_table_integration/SKILL.md`) con las prácticas aprendidas como un protocolo obligatorio futuro para peticiones a backend renderizadas a tablas en DataTables, ordenando variables en `.env`.
   - [x] Se escribió una Regla Automática condicional (Workflow/Rule) dictando a la IA que aplique dicha Skill inevitablemente siempre que deba diseñar componentes MVC que impliquen tablas con datos de conexión real, previniendo bugs e inconsistencias estructurales.
+
+---
+
+## 24-03-26 - Integración de Backend a Tabla Clientes y Evolución de Skill
+
+- [x] **Integración Real del Backend para Tabla Clientes**:
+  - [x] Se analizó la estructura del backend para consumirlo desde el endpoint `/clients/get/all` e integrarlo al componente de `TablaClientes`, aplicando estrictamente la regla y skill de `backend_table_integration`.
+  - [x] Se refactorizó la arquitectura MVC (`tablaClientesModel.js`, `tablaClientesView.js`, `tablaClientesController.js`) y su factoría para inyectar `SessionStorage` y consumir de forma segura mediante asincronía y headers autorizados (`Bearer`).
+  - [x] Se estandarizó visualmente la tabla replicando los estilos, manejo de estado vacío ("") y botones dinámicos ('Editar' y 'Borrar') presentes en `TablaUsuarios`.
+  - [x] Se ajustó el mapeo JSON desde el backend para extraer y renderizar únicamente 5 columnas requeridas visualmente (`Nombre del Cliente`, `Correo`, `Teléfono`, `Estado`, `Acciones`), filtrando datos sobrantes pero preservando el `id` oculto internamente para su uso lógico con los botones de acción.
+- [x] **Evolución y Enriquecimiento de la Skill `backend_table_integration`**:
+  - [x] **Verificación HTTP**: Se añadió directiva para nunca asumir peticiones 'GET' basadas en sintaxis de endpoints y validar obligatoriamente (ej. `POST` requerido).
+  - [x] **Fallbacks Nulos**: Se documentó el protocolo para rellenar variables de UI requeridas con `strings` vacíos cuando el backend las omita, protegiendo DataTables.
+  - [x] **Aislamiento de Llaves Lógicas**: Se reforzó la retención de `id`s primarios en el mapeo incluso cuando una columna se oculte textualmente, salvaguardando la operatividad.
+  - [x] **Congruencia HTML y JS**: Se estableció una sección explícita que demanda paridad milimétrica de columnas entre los elementos estáticos `<th>` y los arreglos interactivos de `columns:` en DataTables.

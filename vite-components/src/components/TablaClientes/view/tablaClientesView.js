@@ -25,9 +25,9 @@ export class TablaClientesView {
               <table id="clientes-table" class="display" style="width:100%">
                 <thead>
                   <tr>
-                    <th>ID</th>
                     <th>Nombre del Cliente</th>
-                    <th>Ubicación</th>
+                    <th>Correo</th>
+                    <th>Teléfono</th>
                     <th>Estado</th>
                     <th>Acciones</th>
                   </tr>
@@ -54,17 +54,19 @@ export class TablaClientesView {
       scrollY: "50vh",
       scrollCollapse: true,
       columns: [
-        { data: "id" },
         { data: "nombre" },
-        { data: "ubicacion" },
+        { data: "correo" },
+        { data: "telefono" },
         {
           data: "estado",
           render: function (data, type, row) {
             // Replicar los badges estéticos originales de Activo/Inactivo
             if (data === "Activo") {
               return `<span class="badge badge-high">Activo</span>`;
-            } else {
+            } else if (data === "Inactivo") {
               return `<span class="badge badge-low">Inactivo</span>`;
+            } else {
+              return "";
             }
           },
         },
@@ -74,13 +76,10 @@ export class TablaClientesView {
           searchable: false, // Evita que busque atributos del HTML del botón
           render: function (data, type, row) {
             return `
-              <button
-                class="btn btn-secondary btn-view"
-                data-id="${row.id}"
-                style="padding: 4px 8px; font-size: 0.75rem"
-              >
-                Ver
-              </button>
+              <div style="display: flex; gap: 8px; justify-content: center;">
+                <button class="btn btn-primary btn-edit" data-id="${row.id}" style="padding: 4px 8px; font-size: 0.75rem">Editar</button>
+                <button class="btn btn-danger btn-delete" data-id="${row.id}" style="padding: 4px 8px; font-size: 0.75rem">Borrar</button>
+              </div>
             `;
           },
         },

@@ -7,9 +7,18 @@ export class TablaClientesController {
   }
 
   async init() {
-    // Si se inyecta desde la fábrica global, el dashboard controlará cuándo llamar a bindEvents()
-    // Retornamos de inmediato el layout base.
-    return this.view.renderTable();
+    try {
+      // 1. Renderizar la vista (cascarón HTML vacío)
+      const html = this.view.renderTable();
+
+      return html;
+    } catch (error) {
+      console.error(
+        "[TablaUsuariosController] Error initializing component:",
+        error,
+      );
+      return `<div class="card"><p class="text-error">Error cargando la tabla de usuarios.</p></div>`;
+    }
   }
 
   async bindEvents() {
@@ -28,14 +37,30 @@ export class TablaClientesController {
 
           // Escuchar eventos dinámicos renderizados por la tabla
           tableEl.addEventListener("click", (e) => {
-            const btnView = e.target.closest(".btn-view");
-            if (btnView) {
-              const clienteId = btnView.dataset.id;
-              console.log("Acción: Ver Cliente ID ->", clienteId);
+            const btnEdit = e.target.closest(".btn-edit");
+            const btnDelete = e.target.closest(".btn-delete");
+
+            if (btnEdit) {
+              const clienteId = btnEdit.dataset.id;
+              console.log(
+                "[TablaClientesController] Editar click en cliente:",
+                clienteId,
+              );
+            }
+
+            if (btnDelete) {
+              const clienteId = btnDelete.dataset.id;
+              console.log(
+                "[TablaClientesController] Borrar click en cliente:",
+                clienteId,
+              );
             }
           });
         } catch (error) {
-          console.error("Error inicializando DataTables de Clientes:", error);
+          console.error(
+            "[TablaClientesController] Error HTTP al cargar clientes:",
+            error.message,
+          );
         }
       }
     }, 50);
