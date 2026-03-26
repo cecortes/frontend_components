@@ -1,9 +1,10 @@
 "use strict";
 
 export class TablaUsuariosController {
-  constructor(view, model) {
+  constructor(view, model, modalEditarController) {
     this.view = view;
     this.model = model;
+    this.modalEditarController = modalEditarController;
   }
 
   /**
@@ -60,7 +61,20 @@ export class TablaUsuariosController {
                 "[TablaUsuariosController] Editar click en usuario:",
                 userId,
               );
-              // Lógica para enviar al formulario / modal
+              // Buscar información del usuario en test/data
+              const userData = data.find((user) => user.usuario === userId);
+              if (userData && this.modalEditarController) {
+                this.modalEditarController.showModal(
+                  userData,
+                  (updatedUser) => {
+                    console.log(
+                      "[TablaUsuariosController] Usuario modificado:",
+                      updatedUser,
+                    );
+                    // Implementar recarga o actualización de fila aquí en el futuro
+                  },
+                );
+              }
             }
 
             if (btnDelete) {

@@ -11,6 +11,7 @@ import { SidebarFactory } from "./sidebar_factory.js";
 import { TablaUsuariosFactory } from "./tabla_usuarios_factory.js";
 import { TablaClientesFactory } from "./tabla_clientes_factory.js";
 import { icons } from "../components/Dashboard/icons/svg_icons.js";
+import { ModalEditarUsuarioFactory } from "./modal_editar_usuario_factory.js";
 
 export class DashboardFactory {
   /**
@@ -26,11 +27,15 @@ export class DashboardFactory {
    * const { element, modal, controller } = await DashboardFactory.dashComponent();
    */
   static async dashComponent() {
-    const { element: modalElement, controller: modalController } =
+    const { element: modalErrorElement, controller: modalErrorController } =
       ModalFactory.modalComponent();
 
+    const { element: modalEditElement, controller: modalEditController } =
+      ModalEditarUsuarioFactory.createModal();
+
     const sidebarController = SidebarFactory.createSidebar();
-    const tablaUsuariosController = TablaUsuariosFactory.createTablaUsuarios();
+    const tablaUsuariosController =
+      TablaUsuariosFactory.createTablaUsuarios(modalEditController);
     const tablaClientesController = TablaClientesFactory.createTablaClientes();
 
     const view = new DashboardView(icons);
@@ -42,13 +47,18 @@ export class DashboardFactory {
       model,
       storage,
       auth,
-      modalController,
+      modalErrorController,
       sidebarController,
       tablaUsuariosController,
       tablaClientesController,
     );
 
     const element = await controller.init();
-    return { element, modal: modalElement, controller };
+    return {
+      element,
+      modalError: modalErrorElement,
+      modalEdit: modalEditElement,
+      controller,
+    };
   }
 }

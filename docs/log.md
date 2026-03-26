@@ -260,3 +260,23 @@
   - [x] **Fallbacks Nulos**: Se documentó el protocolo para rellenar variables de UI requeridas con `strings` vacíos cuando el backend las omita, protegiendo DataTables.
   - [x] **Aislamiento de Llaves Lógicas**: Se reforzó la retención de `id`s primarios en el mapeo incluso cuando una columna se oculte textualmente, salvaguardando la operatividad.
   - [x] **Congruencia HTML y JS**: Se estableció una sección explícita que demanda paridad milimétrica de columnas entre los elementos estáticos `<th>` y los arreglos interactivos de `columns:` en DataTables.
+
+---
+
+## 25-03-26 - Implementación Modal de Edición de Usuarios y Generación de Skill
+
+- [x] **Arquitectura y Creación de Componente ModalEditarUsuario**:
+  - [x] Se analizó la estructura del `Dashboard`, `TablaUsuarios` y `ModalError` para diseñar una estrategia arquitectónica (MVC + Factory) que extendiera la funcionalidad de edición.
+  - [x] Se crearon los archivos base para el nuevo componente: `modalEditarUsuarioModel.js`, `modalEditarUsuarioView.js` y `modalEditarUsuarioController.js`.
+  - [x] Se desarrolló una UI consistente, reciclando los estilos globales del proyecto (`.modal-overlay`, `.modal-card`, `.modal-close-btn`). Se implementó un formulario con los campos "Nombre Completo", "Correo Electrónico", "Nombre de Usuario" (deshabilitado) y "Rol" (mediante un select dropdown).
+  - [x] Se afinó el diseño acortando el tamaño de los botones principales a `padding: 4px 16px; font-size: 1rem;` y reposicionando el layout (`justify-content: space-between`). El botón "Cancelar" adoptó el color institucional rojo (`btn-danger`) y el botón principal se renombró a "Aplicar".
+  - [x] Se eliminaron márgenes inferiores redundantes en los contenedores `.input-group` y se optimizó el interlineado visual de los textos en los selectores.
+  - [x] Se renombró orgánicamente el archivo local de iconos a `svg_icons.js` para converger con la convención estándar global del proyecto y se actualizaron las referencias cruzadas.
+- [x] **Integración Funcional e Inyección Dinámica (Dashboard)**:
+  - [x] Se creó la fábrica `modal_editar_usuario_factory.js`.
+  - [x] Se enlazó el modal en el orquestador principal (`dash_factory.js`) e inyectó su respectivo controlador como dependencia hacia la fábrica de la tabla (`TablaUsuariosFactory`).
+  - [x] En el enrutador `main.js`, se anexó el nodo del DOM del modal retornado (`modalEditElement`) para coexistir en el `document.body`.
+  - [x] Dentro de `tablaUsuariosController.js`, se implementó la lectura del evento click mediante _Event Delegation_ para la clase `.btn-edit`. Al recibir el trigger, extrae el identificador base, busca al usuario iterando el estado completo de la petición backend y despliega imperativamente el componente modal auto-poblando la información en sus entradas (`inputs`).
+- [x] **Generación de Skill y Reglas Obligatorias de Proyecto**:
+  - [x] Se compuso y expuso a revisión una nueva Antigravity Skill basada milimétricamente en el historial de este componente. Tras su validación humana, se provisionó firmemente en la ruta local `.agent/skills/modal_editar_integration/SKILL.md`. Documenta a rajatabla todo el patrón arquitectónico a reproducir en futuros formularios de edición orientados a tablas.
+  - [x] Se introdujo una regla ineludible en `.agent/rules/modal_editar_integration_rule.md` que fuerza a la IA a interrumpir ejecuciones automáticas injustificadas para priorizar firmemente la asimilación preventiva de la Skill referida antes de comenzar a trabajar en tablas y modales, blindando la pureza de la UI/UX actual.
