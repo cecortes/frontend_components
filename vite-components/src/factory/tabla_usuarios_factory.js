@@ -13,7 +13,7 @@ export class TablaUsuariosFactory {
    *
    * @returns {TablaUsuariosController} El controlador inicializado del componente.
    */
-  static createTablaUsuarios(modalEditarController) {
+  static createTablaUsuarios(modalEditarController, modalBorrarController) {
     const view = new TablaUsuariosView();
     const storage = new SessionStorage();
     storage.loadSessionStorage();
@@ -22,6 +22,7 @@ export class TablaUsuariosFactory {
       view,
       model,
       modalEditarController,
+      modalBorrarController,
     );
     return controller;
   }

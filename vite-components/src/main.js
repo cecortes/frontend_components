@@ -53,9 +53,11 @@ const routes = {
     return form;
   },
   "/dashboard": async () => {
-    const { element, modalError, modalEdit } =
+    const { element, modalError, modalEdit, modalDelete } =
       await DashboardFactory.dashComponent();
-    document.body.append(modalError, modalEdit);
+
+    document.body.append(modalError, modalEdit, modalDelete);
+
     return element;
   },
 };

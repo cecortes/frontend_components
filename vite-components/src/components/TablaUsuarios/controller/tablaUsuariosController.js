@@ -1,10 +1,11 @@
 "use strict";
 
 export class TablaUsuariosController {
-  constructor(view, model, modalEditarController) {
+  constructor(view, model, modalEditarController, modalBorrarController) {
     this.view = view;
     this.model = model;
     this.modalEditarController = modalEditarController;
+    this.modalBorrarController = modalBorrarController;
   }
 
   /**
@@ -83,7 +84,20 @@ export class TablaUsuariosController {
                 "[TablaUsuariosController] Borrar click en usuario:",
                 userId,
               );
-              // Lógica para eliminar el usuario
+              const userData = data.find((user) => user.usuario === userId);
+
+              if (userData && this.modalBorrarController) {
+                this.modalBorrarController.showModal(
+                  userData,
+                  (userToDelete) => {
+                    console.log(
+                      "[TablaUsuariosController] Petición de eliminación para el usuario:",
+                      userToDelete.usuario,
+                    );
+                    // Implementar eliminación HTTP aquí en el futuro
+                  },
+                );
+              }
             }
           });
         } catch (error) {
