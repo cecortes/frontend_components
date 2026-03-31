@@ -280,3 +280,22 @@
 - [x] **Generación de Skill y Reglas Obligatorias de Proyecto**:
   - [x] Se compuso y expuso a revisión una nueva Antigravity Skill basada milimétricamente en el historial de este componente. Tras su validación humana, se provisionó firmemente en la ruta local `.agent/skills/modal_editar_integration/SKILL.md`. Documenta a rajatabla todo el patrón arquitectónico a reproducir en futuros formularios de edición orientados a tablas.
   - [x] Se introdujo una regla ineludible en `.agent/rules/modal_editar_integration_rule.md` que fuerza a la IA a interrumpir ejecuciones automáticas injustificadas para priorizar firmemente la asimilación preventiva de la Skill referida antes de comenzar a trabajar en tablas y modales, blindando la pureza de la UI/UX actual.
+
+---
+
+## 26-03-26 - Implementación Modal de Borrado de Usuarios y Resolución de Bugs UI
+
+- [x] **Arquitectura y Creación de Componente ModalBorrarUsuario**:
+  - [x] Se replicó y adaptó la estructura arquitectónica (MVC + Factory) utilizada para la edición, creando los archivos `modalBorrarUsuarioModel.js`, `modalBorrarUsuarioView.js` y `modalBorrarUsuarioController.js`.
+  - [x] Se diseñó un layout enfocado en la confirmación destructiva, omitiendo formularios y presentando en el centro una advertencia gráfica dinámica resaltando el nombre o identificador del usuario en cuestión.
+- [x] **Corrección de Bugs Críticos en el Ciclo de Vida del DOM**:
+  - [x] **Bug de Referencia Nula (`TypeError`)**: Se solucionó un crash severo que ocurría durante la fase del _Factory_. La vista estaba generando el modal en crudo a través de un simple _template literal_, provocando que el controlador no pudiese ligar los eventos (`this.element.querySelector` leía `null`).
+  - [x] **Implementación de `DOMParser()`**: Se refactorizó la función `renderModal()` en la Vista para parsear limpiamente el texto HTML convirtiéndolo en un elemento tipo Nodo o _HTMLElement_ válido antes de regresarlo a la factoría.
+- [x] **Resolución de Bugs de Visibilidad (CSS vs Lógica)**:
+  - [x] **Modal Oculto**: Pese a que el componente de Borrar se integró exitosamente al DOM, este continuaba invisible al ojo (`opacity: 0`, `visibility: hidden`) heredado por la clase base del framework.
+  - [x] Se inyectaron dinámicamente las clases faltantes `.modal-visible` y los atributos ARIA pertinentes sobre el `overlay`, junto con la instrucción de anular el scroll documentando un bloqueo sobre el `body` (`.modal-open`).
+- [x] **Estandarización Visual de Iconos y Botones Corporativos**:
+  - [x] Los componentes de acción se alinearon al mismo estándar gráfico del componente de Edición, asignando las clases prefabricadas del proyecto (`.btn-danger` para Cancelar, `.btn-primary` para Eliminar).
+  - [x] Se corrigió el contenedor del Ícono central de advertencia, erradicando colores inventados (`var(--color-danger)`) e implementando el token real del _Design System_ del proyecto: `var(--color-critical-500)`. El icono SVG en sí heredó el estado blanco (`color: white`) sin clases tailwind adosadas (`text-warning` removido).
+- [x] **Generación de Skill de Proyecto (`modal_borrar_integration`)**:
+  - [x] Se documentó oficial y minuciosamente toda la odisea como un nuevo skill bajo `.agent/skills/modal_borrar_integration/SKILL.md`. La guía plasma el diseño paso a paso, layout, y las lecciones aprendidas sobre variables CSS y Shadow DOM para regir la lógica de todas las futuras tareas de componentes de eliminación del Dashboard.
