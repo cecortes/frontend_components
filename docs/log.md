@@ -299,3 +299,18 @@
   - [x] Se corrigió el contenedor del Ícono central de advertencia, erradicando colores inventados (`var(--color-danger)`) e implementando el token real del _Design System_ del proyecto: `var(--color-critical-500)`. El icono SVG en sí heredó el estado blanco (`color: white`) sin clases tailwind adosadas (`text-warning` removido).
 - [x] **Generación de Skill de Proyecto (`modal_borrar_integration`)**:
   - [x] Se documentó oficial y minuciosamente toda la odisea como un nuevo skill bajo `.agent/skills/modal_borrar_integration/SKILL.md`. La guía plasma el diseño paso a paso, layout, y las lecciones aprendidas sobre variables CSS y Shadow DOM para regir la lógica de todas las futuras tareas de componentes de eliminación del Dashboard.
+
+---
+
+## 30-03-26 - Integración Backend para Edición de Usuarios y Evolución de Skill
+
+- [x] **Conexión Real Backend en ModalEditarUsuario**:
+  - [x] Se analizó el endpoint `/users/upd/byId` y se configuró la variable de entorno `VITE_API_USERS_EDIT_BY_ID` con el protocolo correcto (`http://`).
+  - [x] **Modelo (`modalEditarUsuarioModel.js`)**: Se implementó el método asíncrono `updateUser` que recupera el token de `SessionStorage` (inyectado vía Factory) y envía un `POST` con la estructura exacta requerida por el backend: `{ id, updateData: { name, mail, user, role } }`.
+  - [x] **Controlador (`modalEditarUsuarioController.js`)**: Se transformó el evento `submit` en una función asíncrona con manejo robusto de `try...catch`, garantizando que el modal solo se cierre tras una confirmación exitosa (`success: true`) del servidor.
+- [x] **Sincronización de Datos y Corrección de "Stale Closures"**:
+  - [x] **Bug de Datos Obsoletos**: Se identificó un error donde abrir el modal por segunda vez mostraba datos viejos debido a una referencia `const data` inmutable en el controlador de la tabla.
+  - [x] **Refactorización de Tabla (`tablaUsuariosController.js`)**: Se cambió la declaración a `let data` y se implementó la reasignación de la variable local (`data = newData`) tras la recarga exitosa. Se integró la flag `destroy: true` en la vista de la tabla para permitir reinicializaciones limpias de DataTables sin errores de instancia previa.
+- [x] **Actualización de Skill Maestra (`modal_editar_integration`)**:
+  - [x] Se modificó `SKILL.md` para elevar a "Pre-requisito Imperativo" la solicitud de la variable de entorno y la estructura del payload antes de iniciar cualquier desarrollo de edición.
+  - [x] Se incorporaron formalmente las lecciones sobre inyección de `SessionStorage`, controladores asíncronos y técnicas de recarga de tablas tras edición exitosa para estandarizar futuros desarrollos.

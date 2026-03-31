@@ -4,6 +4,7 @@ import { icons } from "../components/ModalEditarUsuario/icons/svg_icons.js";
 import { ModalEditarUsuarioModel } from "../components/ModalEditarUsuario/model/modalEditarUsuarioModel.js";
 import { ModalEditarUsuarioView } from "../components/ModalEditarUsuario/view/modalEditarUsuarioView.js";
 import { ModalEditarUsuarioController } from "../components/ModalEditarUsuario/controller/modalEditarUsuarioController.js";
+import { SessionStorage } from "../components/Storage/storage.js";
 
 export class ModalEditarUsuarioFactory {
   /**
@@ -13,8 +14,12 @@ export class ModalEditarUsuarioFactory {
    * @returns {{ element: HTMLElement, controller: ModalEditarUsuarioController }}
    */
   static createModal() {
+    // 1. Inicializar almacenamiento de sesión
+    const storage = new SessionStorage();
+    storage.loadSessionStorage();
+
     const view = new ModalEditarUsuarioView(icons);
-    const model = new ModalEditarUsuarioModel();
+    const model = new ModalEditarUsuarioModel(storage);
     const controller = new ModalEditarUsuarioController(view, model);
 
     // Renderiza el HTML y obtiene la referencia DOM

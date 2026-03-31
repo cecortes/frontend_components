@@ -46,10 +46,9 @@ export class ModalEditarUsuarioView {
                 <div class="input-group" style="margin-bottom: 0;">
                     <label for="editRol" style="display: block; margin-bottom: 6px; font-size: 0.875rem; color: var(--color-text-secondary);">Rol</label>
                     <select id="editRol" class="input-field" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border: 1px solid var(--color-border-default); border-radius: 8px; background-color: var(--color-background-primary); color: var(--color-text-primary);">
-                        <option value="Administrador">Administrador</option>
-                        <option value="Usuario">Usuario</option>
-                        <option value="Supervisor">Supervisor</option>
-                        <option value="Consultor">Consultor</option>
+                        <option value="admin">admin</option>
+                        <option value="guess">guess</option>
+                        <option value="user">user</option>
                     </select>
                 </div>
 
@@ -104,7 +103,9 @@ export class ModalEditarUsuarioView {
     $inputUsuario.value = userData.usuario || "";
 
     if (userData.rol) {
-      $selectRol.value = userData.rol;
+      // Normalizamos el rol a minúsculas y sin espacios para que coincida con las opciones
+      const normalizedRol = String(userData.rol).trim().toLowerCase();
+      $selectRol.value = normalizedRol;
     }
 
     $overlay.classList.add("modal-visible");
