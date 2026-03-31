@@ -46,7 +46,7 @@ export class TablaUsuariosController {
 
         try {
           // 1. Obtener datos del modelo
-          const data = await this.model.fetchUsersData();
+          let data = await this.model.fetchUsersData();
 
           // 2. Pasarle los datos a la Vista para inicializar DataTables
           this.view.initDataTable(data);
@@ -67,12 +67,25 @@ export class TablaUsuariosController {
               if (userData && this.modalEditarController) {
                 this.modalEditarController.showModal(
                   userData,
-                  (updatedUser) => {
+                  async (updatedUser) => {
                     console.log(
                       "[TablaUsuariosController] Usuario modificado:",
                       updatedUser,
                     );
-                    // Implementar recarga o actualización de fila aquí en el futuro
+                    try {
+                      console.log(
+                        "[TablaUsuariosController] Recargando datos de la tabla...",
+                      );
+                      const newData = await this.model.fetchUsersData();
+                      // Actualizar referencia de datos local para futuros clicks
+                      data = newData;
+                      this.view.initDataTable(data);
+                    } catch (err) {
+                      console.error(
+                        "[TablaUsuariosController] Error recargando usuarios:",
+                        err,
+                      );
+                    }
                   },
                 );
               }

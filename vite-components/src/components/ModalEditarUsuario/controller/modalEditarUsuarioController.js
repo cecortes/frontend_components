@@ -36,7 +36,7 @@ export class ModalEditarUsuarioController {
     });
 
     // Previene el submit por defecto y maneja el guardado
-    $form.addEventListener("submit", (e) => {
+    $form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       const { $inputNombre, $inputMail, $inputUsuario, $selectRol } =
@@ -49,20 +49,38 @@ export class ModalEditarUsuarioController {
         rol: $selectRol.value,
       };
 
-      this.model.setUserData(updatedData);
+      try {
+        // Enviar datos al modelo para que los guarde en el backend
+        const userId = this.model.getUserData().id;
+        if (!userId) {
+          throw new Error(
+            "No se pudo obtener el ID del usuario para enviar al servidor.",
+          );
+        }
 
-      // Si existe un callback registrado para cuando se guarde (útil para el padre)
-      if (typeof this.onSaveCallback === "function") {
-        this.onSaveCallback(updatedData);
+        await this.model.updateUser(userId, updatedData);
+
+        console.log(
+          "[ModalEditarUsuario] OK: Usuario modificado exitosamente en el servidor.",
+          updatedData,
+        );
+
+        // Actualizar datos de forma local luego de confirmar éxito
+        this.model.setUserData(updatedData);
+
+        // Si existe un callback registrado para cuando se guarde (útil para el padre)
+        if (typeof this.onSaveCallback === "function") {
+          this.onSaveCallback(updatedData);
+        }
+
+        // Cerrar tras guardado exitoso
+        this.handleClose();
+      } catch (error) {
+        console.error(
+          "[ModalEditarUsuario] Error HTTP al actualizar usuario:",
+          error.message || error,
+        );
       }
-
-      console.log(
-        "[ModalEditarUsuario] Datos guardados localmente:",
-        updatedData,
-      );
-
-      // Cerrar tras simular guardado exitoso
-      this.handleClose();
     });
   }
 
