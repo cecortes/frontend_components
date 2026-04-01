@@ -30,12 +30,18 @@ export class ModalEditarUsuarioView {
                 
                 <div class="input-group" style="margin-bottom: 0;">
                     <label for="editNombre" style="display: block; margin-bottom: 6px; font-size: 0.875rem; color: var(--color-text-secondary);">Nombre Completo</label>
-                    <input type="text" id="editNombre" class="input-field" placeholder="Ej. Juan Pérez" required style="width: 100%; box-sizing: border-box; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 8px; background-color: var(--color-background-primary); color: var(--color-text-primary);" />
+                    <div class="input-wrapper" style="position: relative;">
+                        <input type="text" id="editNombre" class="input-field" placeholder="Ej. Juan Pérez" required style="width: 100%; box-sizing: border-box; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 8px; background-color: var(--color-background-primary); color: var(--color-text-primary);" />
+                        <div class="validation-tooltip" id="editNombreError" role="alert" aria-live="polite"></div>
+                    </div>
                 </div>
 
                 <div class="input-group" style="margin-bottom: 0;">
                     <label for="editMail" style="display: block; margin-bottom: 6px; font-size: 0.875rem; color: var(--color-text-secondary);">Correo Electrónico</label>
-                    <input type="email" id="editMail" class="input-field" placeholder="ejemplo@correo.com" required style="width: 100%; box-sizing: border-box; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 8px; background-color: var(--color-background-primary); color: var(--color-text-primary);" />
+                    <div class="input-wrapper" style="position: relative;">
+                        <input type="text" id="editMail" class="input-field" placeholder="ejemplo@correo.com" required style="width: 100%; box-sizing: border-box; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 8px; background-color: var(--color-background-primary); color: var(--color-text-primary);" />
+                        <div class="validation-tooltip" id="editMailError" role="alert" aria-live="polite"></div>
+                    </div>
                 </div>
 
                 <div class="input-group" style="margin-bottom: 0;">
@@ -87,6 +93,8 @@ export class ModalEditarUsuarioView {
       $inputMail: this.element.querySelector("#editMail"),
       $inputUsuario: this.element.querySelector("#editUsuario"),
       $selectRol: this.element.querySelector("#editRol"),
+      $nombreError: this.element.querySelector("#editNombreError"),
+      $mailError: this.element.querySelector("#editMailError"),
     };
   }
 
@@ -122,5 +130,17 @@ export class ModalEditarUsuarioView {
 
     // Opcional: limpiar el formulario al cerrar
     $form.reset();
+  }
+
+  showValidationError(inputElement, errorElement, message) {
+    inputElement.classList.add("input-error");
+    errorElement.textContent = message;
+    errorElement.classList.add("show");
+  }
+
+  hideValidationError(inputElement, errorElement) {
+    inputElement.classList.remove("input-error");
+    errorElement.textContent = "";
+    errorElement.classList.remove("show");
   }
 }

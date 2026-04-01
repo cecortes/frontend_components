@@ -1,15 +1,37 @@
 "use strict";
 
 export class ModalEditarUsuarioController {
-  constructor(view, model) {
+  constructor(view, model, validator) {
     this.view = view;
     this.model = model;
+    this.validator = validator;
     this.onSaveCallback = null;
   }
 
   modalEventHandler() {
-    const { $overlay, $card, $closeBtn, $cancelBtn, $form } =
-      this.view.ModalElements;
+    const {
+      $overlay,
+      $card,
+      $closeBtn,
+      $cancelBtn,
+      $form,
+      $inputNombre,
+      $inputMail,
+      $nombreError,
+      $mailError,
+    } = this.view.ModalElements;
+
+    // Validación del campo nombre en blur
+    $inputNombre.addEventListener("blur", () => {
+      const validation = this.validator.validateField($inputNombre);
+      this.validationPopUp(validation, $inputNombre, $nombreError);
+    });
+
+    // Validación del campo email en blur
+    $inputMail.addEventListener("blur", () => {
+      const validation = this.validator.validateField($inputMail);
+      this.validationPopUp(validation, $inputMail, $mailError);
+    });
 
     // Cierra el modal al hacer clic en el botón de cierre (X)
     $closeBtn.addEventListener("click", () => {
@@ -39,8 +61,30 @@ export class ModalEditarUsuarioController {
     $form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
-      const { $inputNombre, $inputMail, $inputUsuario, $selectRol } =
-        this.view.ModalElements;
+      const {
+        $inputNombre,
+        $inputMail,
+        $inputUsuario,
+        $selectRol,
+        $nombreError,
+        $mailError,
+      } = this.view.ModalElements;
+
+      const validationNombre = this.validator.validateField($inputNombre);
+      const validationMail = this.validator.validateField($inputMail);
+
+      const nombrePopUp = this.validationPopUp(
+        validationNombre,
+        $inputNombre,
+        $nombreError,
+      );
+      const mailPopUp = this.validationPopUp(
+        validationMail,
+        $inputMail,
+        $mailError,
+      );
+
+      if (!nombrePopUp || !mailPopUp) return;
 
       const updatedData = {
         nombre: $inputNombre.value,
@@ -101,5 +145,22 @@ export class ModalEditarUsuarioController {
 
     // Inyecta los datos a la vista y lo muestra
     this.view.show(userData);
+  }
+
+  /**
+   * Gestiona la visualización de mensajes de error en los inputs
+   */
+  validationPopUp(validatorObject, inputElement, errElement) {
+    if (!validatorObject.isValid) {
+      this.view.showValidationError(
+        inputElement,
+        errElement,
+        validatorObject.message,
+      );
+      return false;
+    } else {
+      this.view.hideValidationError(inputElement, errElement);
+      return true;
+    }
   }
 }

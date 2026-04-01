@@ -5,6 +5,7 @@ import { ModalEditarUsuarioModel } from "../components/ModalEditarUsuario/model/
 import { ModalEditarUsuarioView } from "../components/ModalEditarUsuario/view/modalEditarUsuarioView.js";
 import { ModalEditarUsuarioController } from "../components/ModalEditarUsuario/controller/modalEditarUsuarioController.js";
 import { SessionStorage } from "../components/Storage/storage.js";
+import { FieldsValidator } from "../components/Validator/fieldsValidator.js";
 
 export class ModalEditarUsuarioFactory {
   /**
@@ -20,7 +21,8 @@ export class ModalEditarUsuarioFactory {
 
     const view = new ModalEditarUsuarioView(icons);
     const model = new ModalEditarUsuarioModel(storage);
-    const controller = new ModalEditarUsuarioController(view, model);
+    const validator = new FieldsValidator();
+    const controller = new ModalEditarUsuarioController(view, model, validator);
 
     // Renderiza el HTML y obtiene la referencia DOM
     const element = view.renderModal();
