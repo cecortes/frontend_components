@@ -16,11 +16,18 @@ export class FieldsValidator {
    * validator.validateField(element);
    */
   validateField(element) {
-    if (element.name === "username") {
+    const fieldName = element.name || element.id;
+    if (fieldName === "username") {
       return this.validateUser(element);
     }
-    if (element.name === "password") {
+    if (fieldName === "password") {
       return this.validatePassword(element);
+    }
+    if (fieldName === "editNombre" || fieldName === "nombre") {
+      return this.validateName(element);
+    }
+    if (fieldName === "editMail" || fieldName === "mail") {
+      return this.validateEmail(element);
     }
     return { isValid: false, message: "Tipo de campo no válido" };
   }
@@ -51,6 +58,60 @@ export class FieldsValidator {
     return {
       isValid,
       message: isValid ? "" : "Usuario inválido",
+      id: element.id,
+    };
+  }
+
+  /**
+   * @method validateName
+   * @description
+   * Valida un nombre completo basado en reglas específicas:
+   * - Solo letras (incluyendo acentos y ñ/Ñ) y espacios.
+   * - Sin números ni caracteres especiales como '.,-+' etc.
+   * - Al menos 3 caracteres.
+   *
+   * @param {HTMLElement} element El elemento input a validar.
+   * @returns {Object} Objeto con {isValid: boolean, message: string, id: string}
+   */
+  validateName(element) {
+    if (!element.value || element.value.trim().length < 3) {
+      return { isValid: false, message: "Nombre inválido", id: element.id };
+    }
+
+    const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/;
+    const isValid = nameRegex.test(element.value);
+
+    return {
+      isValid,
+      message: isValid
+        ? ""
+        : "Nombre inválido. No se permiten números ni caracteres especiales.",
+      id: element.id,
+    };
+  }
+
+  /**
+   * @method validateEmail
+   * @description
+   * Valida una dirección de correo electrónico.
+   *
+   * @param {HTMLElement} element El elemento input a validar.
+   * @returns {Object} Objeto con {isValid: boolean, message: string, id: string}
+   */
+  validateEmail(element) {
+    const value = element.value ? element.value.trim() : "";
+
+    if (!value) {
+      return { isValid: false, message: "Correo inválido", id: element.id };
+    }
+
+    // Regex robusta para validación de email
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    const isValid = emailRegex.test(value);
+
+    return {
+      isValid,
+      message: isValid ? "" : "Dirección de correo electrónico inválida",
       id: element.id,
     };
   }

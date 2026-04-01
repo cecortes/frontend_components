@@ -314,3 +314,23 @@
 - [x] **Actualización de Skill Maestra (`modal_editar_integration`)**:
   - [x] Se modificó `SKILL.md` para elevar a "Pre-requisito Imperativo" la solicitud de la variable de entorno y la estructura del payload antes de iniciar cualquier desarrollo de edición.
   - [x] Se incorporaron formalmente las lecciones sobre inyección de `SessionStorage`, controladores asíncronos y técnicas de recarga de tablas tras edición exitosa para estandarizar futuros desarrollos.
+
+---
+
+## 31-03-26 - Integración de Validator en Modal de Edición, Refactorización Arquitectónica y Creación de Skill
+
+- [x] **Integración Visual y Lógica de Validator en ModalEditarUsuario**:
+  - [x] **Extensión de Validator (`fieldsValidator.js`)**: Se añadieron los métodos `validateName` y `validateEmail` diseñados con expresiones regulares estrictas (e.g., ignorando números y símbolos en nombres) para evaluar los campos `$inputNombre` y `$inputMail`.
+  - [x] **Vista (`modalEditarUsuarioView.js`)**: Se envolvieron los inputs dentro de contenedores `<div class="input-wrapper">` y se implementaron las burbujas personalizadas de error (`<div class="validation-tooltip">`). También se agregaron los métodos visuales `showValidationError` y `hideValidationError`.
+  - [x] **Conflictos con la Validación HTML5**: Se descubrió un bug persistente donde el submit se bloqueaba sin mostrar tooltips personalizados para correos electrónicos. Se solucionó modificando explícitamente el atributo `<input type="email">` a `type="text"`, permitiendo que el Event Listener atrape el submit manual y despliegue las animaciones CSS dictadas por JS en lugar del popup default del navegador.
+
+- [x] **Refactorización Arquitectónica (Protección del Patrón MVC & Factory)**:
+  - [x] Inicialmente, se detectó una importación directa de la clase utilitaria `FieldsValidator` dentro del archivo del Controlador, rompiendo los principios de Inyección de Dependencias.
+  - [x] Se trasladó la importación e instanciación estricta al archivo `modal_editar_usuario_factory.js`, pasándolo como argumento de inyección hacia el `ModalEditarUsuarioController`.
+  - [x] Dentro del Controlador, se programó la evaluación asíncrona validando campos en el evento `blur` y deteniendo prematuramente (bloqueo real) del evento `submit` cuando `validateField` retorna error.
+
+- [x] **Generación de Skill de Proyecto (`validator_integration`)**:
+  - [x] Se elaboró exhaustivamente una guía maestra documentada (`.agent/skills/validator_integration/SKILL.md`) detallando la estrategia de arquitectura paso por paso. Expone los fragmentos de código, resalta la regla de instanciación Factory Obligatoria y plasma las precauciones con el `type="email"`.
+
+- [x] **Implementación de Regla Automática Persistente (Workflow Rule)**:
+  - [x] Se inyectó una regla inquebrantable (`.agent/rules/validator_rule.md`) seteada con el 'trigger' de `always_on`, orquestando a la IA a leer obligatoriamente la nueva skill previamente mencionada siempre que reciba directivas para modificar interacciones de UI, validaciones de formularios y campos, protegiendo así al entorno ante malas prácticas o sobre-escritura funcional.
