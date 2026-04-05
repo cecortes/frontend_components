@@ -1,10 +1,11 @@
 "use strict";
 
 export class ModalEditarUsuarioController {
-  constructor(view, model, validator) {
+  constructor(view, model, validator, modalErrorController) {
     this.view = view;
     this.model = model;
     this.validator = validator;
+    this.modalErrorController = modalErrorController;
     this.onSaveCallback = null;
   }
 
@@ -120,9 +121,9 @@ export class ModalEditarUsuarioController {
         // Cerrar tras guardado exitoso
         this.handleClose();
       } catch (error) {
-        console.error(
-          "[ModalEditarUsuario] Error HTTP al actualizar usuario:",
-          error.message || error,
+        this.handleClose();
+        this.modalErrorController.showError(
+          error.message || "Error al actualizar usuario",
         );
       }
     });

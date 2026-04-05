@@ -32,7 +32,7 @@ export class DashboardFactory {
       ModalFactory.modalComponent();
 
     const { element: modalEditElement, controller: modalEditController } =
-      ModalEditarUsuarioFactory.createModal();
+      ModalEditarUsuarioFactory.createModal(modalErrorController);
 
     const { element: modalDeleteElement, controller: modalDeleteController } =
       ModalBorrarUsuarioFactory.createModal();
