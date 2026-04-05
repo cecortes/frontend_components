@@ -31,8 +31,14 @@ export class DashboardFactory {
     const { element: modalErrorElement, controller: modalErrorController } =
       ModalFactory.modalComponent();
 
+    const { element: modalOkElement, controller: modalOkController } =
+      ModalFactory.modalOkComponent();
+
     const { element: modalEditElement, controller: modalEditController } =
-      ModalEditarUsuarioFactory.createModal(modalErrorController);
+      ModalEditarUsuarioFactory.createModal(
+        modalErrorController,
+        modalOkController,
+      );
 
     const { element: modalDeleteElement, controller: modalDeleteController } =
       ModalBorrarUsuarioFactory.createModal();
@@ -63,6 +69,7 @@ export class DashboardFactory {
     return {
       element,
       modalError: modalErrorElement,
+      modalOk: modalOkElement,
       modalEdit: modalEditElement,
       modalDelete: modalDeleteElement,
       controller,

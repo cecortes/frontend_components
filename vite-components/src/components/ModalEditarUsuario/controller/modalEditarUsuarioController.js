@@ -1,11 +1,12 @@
 "use strict";
 
 export class ModalEditarUsuarioController {
-  constructor(view, model, validator, modalErrorController) {
+  constructor(view, model, validator, modalErrorController, modalOkController) {
     this.view = view;
     this.model = model;
     this.validator = validator;
     this.modalErrorController = modalErrorController;
+    this.modalOkController = modalOkController;
     this.onSaveCallback = null;
   }
 
@@ -105,11 +106,6 @@ export class ModalEditarUsuarioController {
 
         await this.model.updateUser(userId, updatedData);
 
-        console.log(
-          "[ModalEditarUsuario] OK: Usuario modificado exitosamente en el servidor.",
-          updatedData,
-        );
-
         // Actualizar datos de forma local luego de confirmar éxito
         this.model.setUserData(updatedData);
 
@@ -118,8 +114,9 @@ export class ModalEditarUsuarioController {
           this.onSaveCallback(updatedData);
         }
 
-        // Cerrar tras guardado exitoso
+        // Cerrar tras guardado exitoso y mostrar mensaje
         this.handleClose();
+        this.modalOkController.showOk("Usuario modificado exitosamente.");
       } catch (error) {
         this.handleClose();
         this.modalErrorController.showError(

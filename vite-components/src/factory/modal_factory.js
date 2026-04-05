@@ -5,6 +5,11 @@ import { ModalModel } from "../components/ModalError/model/modalModel.js";
 import { ModalView } from "../components/ModalError/view/modalView.js";
 import { ModalController } from "../components/ModalError/controller/modalController.js";
 
+import { modalIconsOk } from "../components/ModalOk/icons/modal_icons.js";
+import { OkModel } from "../components/ModalOk/model/okModel.js";
+import { OkView } from "../components/ModalOk/view/okView.js";
+import { OkController } from "../components/ModalOk/controller/okController.js";
+
 export class ModalFactory {
   /**
    * @method modalComponent
@@ -28,6 +33,25 @@ export class ModalFactory {
     const element = view.renderModal();
 
     // Binding Events
+    controller.modalEventHandler();
+
+    return { element, controller };
+  }
+
+  /**
+   * @method modalOkComponent
+   * @description
+   * Instancia y ensambla el componente ModalOk completo (MVC).
+   * Retorna el elemento DOM del modal y su controlador.
+   *
+   * @returns {{ element: HTMLElement, controller: OkController }}
+   */
+  static modalOkComponent() {
+    const view = new OkView(modalIconsOk);
+    const model = new OkModel();
+    const controller = new OkController(view, model);
+
+    const element = view.renderModal();
     controller.modalEventHandler();
 
     return { element, controller };

@@ -334,3 +334,25 @@
 
 - [x] **Implementación de Regla Automática Persistente (Workflow Rule)**:
   - [x] Se inyectó una regla inquebrantable (`.agent/rules/validator_rule.md`) seteada con el 'trigger' de `always_on`, orquestando a la IA a leer obligatoriamente la nueva skill previamente mencionada siempre que reciba directivas para modificar interacciones de UI, validaciones de formularios y campos, protegiendo así al entorno ante malas prácticas o sobre-escritura funcional.
+
+---
+
+## 05-04-26 - Integración de ModalOk en ModalEditarUsuario y Creación de Skill
+
+- [x] **Creación e Integración Arquitectónica de Componente ModalOk**:
+  - [x] Se crearon los archivos base para el nuevo componente visual de éxito (`okModel.js`, `okView.js`, `okController.js` e `modal_icons.js`) replicando con exactitud la arquitectura validada por `ModalError`.
+  - [x] Se personalizó el diseño de bordes e íconos adoptando la constante de éxito corporativa `--color-high-500` (verde) en el `style.css`.
+  - [x] Se orquestó su instancia en el factor intermedio `dash_factory.js` y se exportó al enrutador.
+
+- [x] **Inyección Dinámica de ModalOk sobre ModalEditarUsuario**:
+  - [x] Se propagó el controlador `modalOkController` mediante la inyección directa de dependencias a través de los métodos Factory (evitando el anti-patrón de instanciación global).
+  - [x] Al ser contactada la API del backend asíncronamente con un Success, el Controlador orquesta la destrucción de su propia vista (cerrar modal editar) e inicia el proceso visual de invocar la pre-carga del ModalOk en color verde.
+  - [x] El viejo indicio por `console.log()` ha sido erradicado del ecosistema de edición.
+
+- [x] **Depuración Intensiva de Sistema Front-End**:
+  - [x] **Nodos Huérfanos**: Se reparó una desconexión crítica donde el Array de Salida del Factory enviaba el Object, pero el enrutador en `main.js` no lo destructuraba, flotando en memoria vacía sin apender al `document.body` y previniendo que se mostrase de cara al cliente.
+  - [x] **Conflictos "Chrome Form Validator" vs DOM Framework**: Se extirpó el crasheo visual (`Invalid form control is not focusable`) causado por mantener etiquetas `required` dentro de `HTML inputs` invisibles operados por JS estricto. La validación ahora reposa orgánicamente en `FieldsValidator`.
+
+- [x] **Expansión de Antigravity Skills y Reglas Persistentes de IA**:
+  - [x] Se transcribió el historial de fallos documentados y patrones obligados a la skill local `.agent/skills/modal_ok_integration/SKILL.md`.
+  - [x] Se generó y blindó el documento de reglas global `.agent/rules/modal_ok_rule.md` que se ejecuta perpetuamente evaluando intenciones para forzar al agente a la lectura previa de las precauciones antes de proponer código sobre el ModalOk.

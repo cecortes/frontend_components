@@ -14,7 +14,7 @@ export class ModalEditarUsuarioFactory {
    *
    * @returns {{ element: HTMLElement, controller: ModalEditarUsuarioController }}
    */
-  static createModal(modalErrorController) {
+  static createModal(modalErrorController, modalOkController) {
     // 1. Inicializar almacenamiento de sesión
     const storage = new SessionStorage();
     storage.loadSessionStorage();
@@ -27,6 +27,7 @@ export class ModalEditarUsuarioFactory {
       model,
       validator,
       modalErrorController,
+      modalOkController,
     );
 
     // Renderiza el HTML y obtiene la referencia DOM

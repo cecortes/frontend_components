@@ -783,6 +783,32 @@ body.modal-open {
 }
 
 /* ============================================
+   MODAL OK COMPONENT
+   ============================================ */
+
+.modal-card-ok {
+  border-top: 3px solid var(--color-high-500);
+}
+
+.modal-icon-wrapper-ok {
+  color: var(--color-high-500);
+}
+
+.modal-action-btn-ok {
+  background-color: var(--color-high-500);
+  box-shadow: 0 2px 8px rgba(47, 184, 101, 0.3);
+}
+
+.modal-action-btn-ok:hover {
+  background-color: var(--color-high-600);
+  box-shadow: 0 4px 12px rgba(47, 184, 101, 0.4);
+}
+
+.modal-action-btn-ok:focus {
+  outline: 3px solid rgba(47, 184, 101, 0.4);
+}
+
+/* ============================================
    LOGIN ANIMATIONS
    ============================================ */
 
