@@ -245,3 +245,114 @@
 - [x] **Creación de Nueva Skill y Reglas Automáticas de Desarrollo**:
   - [x] Se documentó un archivo de `SKILL.md` (`.agent/skills/backend_table_integration/SKILL.md`) con las prácticas aprendidas como un protocolo obligatorio futuro para peticiones a backend renderizadas a tablas en DataTables, ordenando variables en `.env`.
   - [x] Se escribió una Regla Automática condicional (Workflow/Rule) dictando a la IA que aplique dicha Skill inevitablemente siempre que deba diseñar componentes MVC que impliquen tablas con datos de conexión real, previniendo bugs e inconsistencias estructurales.
+
+---
+
+## 24-03-26 - Integración de Backend a Tabla Clientes y Evolución de Skill
+
+- [x] **Integración Real del Backend para Tabla Clientes**:
+  - [x] Se analizó la estructura del backend para consumirlo desde el endpoint `/clients/get/all` e integrarlo al componente de `TablaClientes`, aplicando estrictamente la regla y skill de `backend_table_integration`.
+  - [x] Se refactorizó la arquitectura MVC (`tablaClientesModel.js`, `tablaClientesView.js`, `tablaClientesController.js`) y su factoría para inyectar `SessionStorage` y consumir de forma segura mediante asincronía y headers autorizados (`Bearer`).
+  - [x] Se estandarizó visualmente la tabla replicando los estilos, manejo de estado vacío ("") y botones dinámicos ('Editar' y 'Borrar') presentes en `TablaUsuarios`.
+  - [x] Se ajustó el mapeo JSON desde el backend para extraer y renderizar únicamente 5 columnas requeridas visualmente (`Nombre del Cliente`, `Correo`, `Teléfono`, `Estado`, `Acciones`), filtrando datos sobrantes pero preservando el `id` oculto internamente para su uso lógico con los botones de acción.
+- [x] **Evolución y Enriquecimiento de la Skill `backend_table_integration`**:
+  - [x] **Verificación HTTP**: Se añadió directiva para nunca asumir peticiones 'GET' basadas en sintaxis de endpoints y validar obligatoriamente (ej. `POST` requerido).
+  - [x] **Fallbacks Nulos**: Se documentó el protocolo para rellenar variables de UI requeridas con `strings` vacíos cuando el backend las omita, protegiendo DataTables.
+  - [x] **Aislamiento de Llaves Lógicas**: Se reforzó la retención de `id`s primarios en el mapeo incluso cuando una columna se oculte textualmente, salvaguardando la operatividad.
+  - [x] **Congruencia HTML y JS**: Se estableció una sección explícita que demanda paridad milimétrica de columnas entre los elementos estáticos `<th>` y los arreglos interactivos de `columns:` en DataTables.
+
+---
+
+## 25-03-26 - Implementación Modal de Edición de Usuarios y Generación de Skill
+
+- [x] **Arquitectura y Creación de Componente ModalEditarUsuario**:
+  - [x] Se analizó la estructura del `Dashboard`, `TablaUsuarios` y `ModalError` para diseñar una estrategia arquitectónica (MVC + Factory) que extendiera la funcionalidad de edición.
+  - [x] Se crearon los archivos base para el nuevo componente: `modalEditarUsuarioModel.js`, `modalEditarUsuarioView.js` y `modalEditarUsuarioController.js`.
+  - [x] Se desarrolló una UI consistente, reciclando los estilos globales del proyecto (`.modal-overlay`, `.modal-card`, `.modal-close-btn`). Se implementó un formulario con los campos "Nombre Completo", "Correo Electrónico", "Nombre de Usuario" (deshabilitado) y "Rol" (mediante un select dropdown).
+  - [x] Se afinó el diseño acortando el tamaño de los botones principales a `padding: 4px 16px; font-size: 1rem;` y reposicionando el layout (`justify-content: space-between`). El botón "Cancelar" adoptó el color institucional rojo (`btn-danger`) y el botón principal se renombró a "Aplicar".
+  - [x] Se eliminaron márgenes inferiores redundantes en los contenedores `.input-group` y se optimizó el interlineado visual de los textos en los selectores.
+  - [x] Se renombró orgánicamente el archivo local de iconos a `svg_icons.js` para converger con la convención estándar global del proyecto y se actualizaron las referencias cruzadas.
+- [x] **Integración Funcional e Inyección Dinámica (Dashboard)**:
+  - [x] Se creó la fábrica `modal_editar_usuario_factory.js`.
+  - [x] Se enlazó el modal en el orquestador principal (`dash_factory.js`) e inyectó su respectivo controlador como dependencia hacia la fábrica de la tabla (`TablaUsuariosFactory`).
+  - [x] En el enrutador `main.js`, se anexó el nodo del DOM del modal retornado (`modalEditElement`) para coexistir en el `document.body`.
+  - [x] Dentro de `tablaUsuariosController.js`, se implementó la lectura del evento click mediante _Event Delegation_ para la clase `.btn-edit`. Al recibir el trigger, extrae el identificador base, busca al usuario iterando el estado completo de la petición backend y despliega imperativamente el componente modal auto-poblando la información en sus entradas (`inputs`).
+- [x] **Generación de Skill y Reglas Obligatorias de Proyecto**:
+  - [x] Se compuso y expuso a revisión una nueva Antigravity Skill basada milimétricamente en el historial de este componente. Tras su validación humana, se provisionó firmemente en la ruta local `.agent/skills/modal_editar_integration/SKILL.md`. Documenta a rajatabla todo el patrón arquitectónico a reproducir en futuros formularios de edición orientados a tablas.
+  - [x] Se introdujo una regla ineludible en `.agent/rules/modal_editar_integration_rule.md` que fuerza a la IA a interrumpir ejecuciones automáticas injustificadas para priorizar firmemente la asimilación preventiva de la Skill referida antes de comenzar a trabajar en tablas y modales, blindando la pureza de la UI/UX actual.
+
+---
+
+## 26-03-26 - Implementación Modal de Borrado de Usuarios y Resolución de Bugs UI
+
+- [x] **Arquitectura y Creación de Componente ModalBorrarUsuario**:
+  - [x] Se replicó y adaptó la estructura arquitectónica (MVC + Factory) utilizada para la edición, creando los archivos `modalBorrarUsuarioModel.js`, `modalBorrarUsuarioView.js` y `modalBorrarUsuarioController.js`.
+  - [x] Se diseñó un layout enfocado en la confirmación destructiva, omitiendo formularios y presentando en el centro una advertencia gráfica dinámica resaltando el nombre o identificador del usuario en cuestión.
+- [x] **Corrección de Bugs Críticos en el Ciclo de Vida del DOM**:
+  - [x] **Bug de Referencia Nula (`TypeError`)**: Se solucionó un crash severo que ocurría durante la fase del _Factory_. La vista estaba generando el modal en crudo a través de un simple _template literal_, provocando que el controlador no pudiese ligar los eventos (`this.element.querySelector` leía `null`).
+  - [x] **Implementación de `DOMParser()`**: Se refactorizó la función `renderModal()` en la Vista para parsear limpiamente el texto HTML convirtiéndolo en un elemento tipo Nodo o _HTMLElement_ válido antes de regresarlo a la factoría.
+- [x] **Resolución de Bugs de Visibilidad (CSS vs Lógica)**:
+  - [x] **Modal Oculto**: Pese a que el componente de Borrar se integró exitosamente al DOM, este continuaba invisible al ojo (`opacity: 0`, `visibility: hidden`) heredado por la clase base del framework.
+  - [x] Se inyectaron dinámicamente las clases faltantes `.modal-visible` y los atributos ARIA pertinentes sobre el `overlay`, junto con la instrucción de anular el scroll documentando un bloqueo sobre el `body` (`.modal-open`).
+- [x] **Estandarización Visual de Iconos y Botones Corporativos**:
+  - [x] Los componentes de acción se alinearon al mismo estándar gráfico del componente de Edición, asignando las clases prefabricadas del proyecto (`.btn-danger` para Cancelar, `.btn-primary` para Eliminar).
+  - [x] Se corrigió el contenedor del Ícono central de advertencia, erradicando colores inventados (`var(--color-danger)`) e implementando el token real del _Design System_ del proyecto: `var(--color-critical-500)`. El icono SVG en sí heredó el estado blanco (`color: white`) sin clases tailwind adosadas (`text-warning` removido).
+- [x] **Generación de Skill de Proyecto (`modal_borrar_integration`)**:
+  - [x] Se documentó oficial y minuciosamente toda la odisea como un nuevo skill bajo `.agent/skills/modal_borrar_integration/SKILL.md`. La guía plasma el diseño paso a paso, layout, y las lecciones aprendidas sobre variables CSS y Shadow DOM para regir la lógica de todas las futuras tareas de componentes de eliminación del Dashboard.
+
+---
+
+## 30-03-26 - Integración Backend para Edición de Usuarios y Evolución de Skill
+
+- [x] **Conexión Real Backend en ModalEditarUsuario**:
+  - [x] Se analizó el endpoint `/users/upd/byId` y se configuró la variable de entorno `VITE_API_USERS_EDIT_BY_ID` con el protocolo correcto (`http://`).
+  - [x] **Modelo (`modalEditarUsuarioModel.js`)**: Se implementó el método asíncrono `updateUser` que recupera el token de `SessionStorage` (inyectado vía Factory) y envía un `POST` con la estructura exacta requerida por el backend: `{ id, updateData: { name, mail, user, role } }`.
+  - [x] **Controlador (`modalEditarUsuarioController.js`)**: Se transformó el evento `submit` en una función asíncrona con manejo robusto de `try...catch`, garantizando que el modal solo se cierre tras una confirmación exitosa (`success: true`) del servidor.
+- [x] **Sincronización de Datos y Corrección de "Stale Closures"**:
+  - [x] **Bug de Datos Obsoletos**: Se identificó un error donde abrir el modal por segunda vez mostraba datos viejos debido a una referencia `const data` inmutable en el controlador de la tabla.
+  - [x] **Refactorización de Tabla (`tablaUsuariosController.js`)**: Se cambió la declaración a `let data` y se implementó la reasignación de la variable local (`data = newData`) tras la recarga exitosa. Se integró la flag `destroy: true` en la vista de la tabla para permitir reinicializaciones limpias de DataTables sin errores de instancia previa.
+- [x] **Actualización de Skill Maestra (`modal_editar_integration`)**:
+  - [x] Se modificó `SKILL.md` para elevar a "Pre-requisito Imperativo" la solicitud de la variable de entorno y la estructura del payload antes de iniciar cualquier desarrollo de edición.
+  - [x] Se incorporaron formalmente las lecciones sobre inyección de `SessionStorage`, controladores asíncronos y técnicas de recarga de tablas tras edición exitosa para estandarizar futuros desarrollos.
+
+---
+
+## 31-03-26 - Integración de Validator en Modal de Edición, Refactorización Arquitectónica y Creación de Skill
+
+- [x] **Integración Visual y Lógica de Validator en ModalEditarUsuario**:
+  - [x] **Extensión de Validator (`fieldsValidator.js`)**: Se añadieron los métodos `validateName` y `validateEmail` diseñados con expresiones regulares estrictas (e.g., ignorando números y símbolos en nombres) para evaluar los campos `$inputNombre` y `$inputMail`.
+  - [x] **Vista (`modalEditarUsuarioView.js`)**: Se envolvieron los inputs dentro de contenedores `<div class="input-wrapper">` y se implementaron las burbujas personalizadas de error (`<div class="validation-tooltip">`). También se agregaron los métodos visuales `showValidationError` y `hideValidationError`.
+  - [x] **Conflictos con la Validación HTML5**: Se descubrió un bug persistente donde el submit se bloqueaba sin mostrar tooltips personalizados para correos electrónicos. Se solucionó modificando explícitamente el atributo `<input type="email">` a `type="text"`, permitiendo que el Event Listener atrape el submit manual y despliegue las animaciones CSS dictadas por JS en lugar del popup default del navegador.
+
+- [x] **Refactorización Arquitectónica (Protección del Patrón MVC & Factory)**:
+  - [x] Inicialmente, se detectó una importación directa de la clase utilitaria `FieldsValidator` dentro del archivo del Controlador, rompiendo los principios de Inyección de Dependencias.
+  - [x] Se trasladó la importación e instanciación estricta al archivo `modal_editar_usuario_factory.js`, pasándolo como argumento de inyección hacia el `ModalEditarUsuarioController`.
+  - [x] Dentro del Controlador, se programó la evaluación asíncrona validando campos en el evento `blur` y deteniendo prematuramente (bloqueo real) del evento `submit` cuando `validateField` retorna error.
+
+- [x] **Generación de Skill de Proyecto (`validator_integration`)**:
+  - [x] Se elaboró exhaustivamente una guía maestra documentada (`.agent/skills/validator_integration/SKILL.md`) detallando la estrategia de arquitectura paso por paso. Expone los fragmentos de código, resalta la regla de instanciación Factory Obligatoria y plasma las precauciones con el `type="email"`.
+
+- [x] **Implementación de Regla Automática Persistente (Workflow Rule)**:
+  - [x] Se inyectó una regla inquebrantable (`.agent/rules/validator_rule.md`) seteada con el 'trigger' de `always_on`, orquestando a la IA a leer obligatoriamente la nueva skill previamente mencionada siempre que reciba directivas para modificar interacciones de UI, validaciones de formularios y campos, protegiendo así al entorno ante malas prácticas o sobre-escritura funcional.
+
+---
+
+## 05-04-26 - Integración de ModalOk en ModalEditarUsuario y Creación de Skill
+
+- [x] **Creación e Integración Arquitectónica de Componente ModalOk**:
+  - [x] Se crearon los archivos base para el nuevo componente visual de éxito (`okModel.js`, `okView.js`, `okController.js` e `modal_icons.js`) replicando con exactitud la arquitectura validada por `ModalError`.
+  - [x] Se personalizó el diseño de bordes e íconos adoptando la constante de éxito corporativa `--color-high-500` (verde) en el `style.css`.
+  - [x] Se orquestó su instancia en el factor intermedio `dash_factory.js` y se exportó al enrutador.
+
+- [x] **Inyección Dinámica de ModalOk sobre ModalEditarUsuario**:
+  - [x] Se propagó el controlador `modalOkController` mediante la inyección directa de dependencias a través de los métodos Factory (evitando el anti-patrón de instanciación global).
+  - [x] Al ser contactada la API del backend asíncronamente con un Success, el Controlador orquesta la destrucción de su propia vista (cerrar modal editar) e inicia el proceso visual de invocar la pre-carga del ModalOk en color verde.
+  - [x] El viejo indicio por `console.log()` ha sido erradicado del ecosistema de edición.
+
+- [x] **Depuración Intensiva de Sistema Front-End**:
+  - [x] **Nodos Huérfanos**: Se reparó una desconexión crítica donde el Array de Salida del Factory enviaba el Object, pero el enrutador en `main.js` no lo destructuraba, flotando en memoria vacía sin apender al `document.body` y previniendo que se mostrase de cara al cliente.
+  - [x] **Conflictos "Chrome Form Validator" vs DOM Framework**: Se extirpó el crasheo visual (`Invalid form control is not focusable`) causado por mantener etiquetas `required` dentro de `HTML inputs` invisibles operados por JS estricto. La validación ahora reposa orgánicamente en `FieldsValidator`.
+
+- [x] **Expansión de Antigravity Skills y Reglas Persistentes de IA**:
+  - [x] Se transcribió el historial de fallos documentados y patrones obligados a la skill local `.agent/skills/modal_ok_integration/SKILL.md`.
+  - [x] Se generó y blindó el documento de reglas global `.agent/rules/modal_ok_rule.md` que se ejecuta perpetuamente evaluando intenciones para forzar al agente a la lectura previa de las precauciones antes de proponer código sobre el ModalOk.

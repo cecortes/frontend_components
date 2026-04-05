@@ -9,8 +9,10 @@ import { AuthController } from "../components/Auth/controller/authController.js"
 import { ModalFactory } from "./modal_factory.js";
 import { SidebarFactory } from "./sidebar_factory.js";
 import { TablaUsuariosFactory } from "./tabla_usuarios_factory.js";
-import { createTablaClientes } from "../components/TablaClientes/tabla_clientes_factory.js";
+import { TablaClientesFactory } from "./tabla_clientes_factory.js";
 import { icons } from "../components/Dashboard/icons/svg_icons.js";
+import { ModalEditarUsuarioFactory } from "./modal_editar_usuario_factory.js";
+import { ModalBorrarUsuarioFactory } from "./modal_borrar_usuario_factory.js";
 
 export class DashboardFactory {
   /**
@@ -26,12 +28,27 @@ export class DashboardFactory {
    * const { element, modal, controller } = await DashboardFactory.dashComponent();
    */
   static async dashComponent() {
-    const { element: modalElement, controller: modalController } =
+    const { element: modalErrorElement, controller: modalErrorController } =
       ModalFactory.modalComponent();
 
+    const { element: modalOkElement, controller: modalOkController } =
+      ModalFactory.modalOkComponent();
+
+    const { element: modalEditElement, controller: modalEditController } =
+      ModalEditarUsuarioFactory.createModal(
+        modalErrorController,
+        modalOkController,
+      );
+
+    const { element: modalDeleteElement, controller: modalDeleteController } =
+      ModalBorrarUsuarioFactory.createModal();
+
     const sidebarController = SidebarFactory.createSidebar();
-    const tablaUsuariosController = TablaUsuariosFactory.createTablaUsuarios();
-    const tablaClientesController = createTablaClientes().controller;
+    const tablaUsuariosController = TablaUsuariosFactory.createTablaUsuarios(
+      modalEditController,
+      modalDeleteController,
+    );
+    const tablaClientesController = TablaClientesFactory.createTablaClientes();
 
     const view = new DashboardView(icons);
     const model = new DashboardModel();
@@ -42,13 +59,20 @@ export class DashboardFactory {
       model,
       storage,
       auth,
-      modalController,
+      modalErrorController,
       sidebarController,
       tablaUsuariosController,
       tablaClientesController,
     );
 
     const element = await controller.init();
-    return { element, modal: modalElement, controller };
+    return {
+      element,
+      modalError: modalErrorElement,
+      modalOk: modalOkElement,
+      modalEdit: modalEditElement,
+      modalDelete: modalDeleteElement,
+      controller,
+    };
   }
 }

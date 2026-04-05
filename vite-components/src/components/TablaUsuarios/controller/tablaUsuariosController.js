@@ -1,9 +1,11 @@
 "use strict";
 
 export class TablaUsuariosController {
-  constructor(view, model) {
+  constructor(view, model, modalEditarController, modalBorrarController) {
     this.view = view;
     this.model = model;
+    this.modalEditarController = modalEditarController;
+    this.modalBorrarController = modalBorrarController;
   }
 
   /**
@@ -44,7 +46,7 @@ export class TablaUsuariosController {
 
         try {
           // 1. Obtener datos del modelo
-          const data = await this.model.fetchUsersData();
+          let data = await this.model.fetchUsersData();
 
           // 2. Pasarle los datos a la Vista para inicializar DataTables
           this.view.initDataTable(data);
@@ -60,7 +62,33 @@ export class TablaUsuariosController {
                 "[TablaUsuariosController] Editar click en usuario:",
                 userId,
               );
-              // Lógica para enviar al formulario / modal
+              // Buscar información del usuario en test/data
+              const userData = data.find((user) => user.usuario === userId);
+              if (userData && this.modalEditarController) {
+                this.modalEditarController.showModal(
+                  userData,
+                  async (updatedUser) => {
+                    console.log(
+                      "[TablaUsuariosController] Usuario modificado:",
+                      updatedUser,
+                    );
+                    try {
+                      console.log(
+                        "[TablaUsuariosController] Recargando datos de la tabla...",
+                      );
+                      const newData = await this.model.fetchUsersData();
+                      // Actualizar referencia de datos local para futuros clicks
+                      data = newData;
+                      this.view.initDataTable(data);
+                    } catch (err) {
+                      console.error(
+                        "[TablaUsuariosController] Error recargando usuarios:",
+                        err,
+                      );
+                    }
+                  },
+                );
+              }
             }
 
             if (btnDelete) {
@@ -69,7 +97,20 @@ export class TablaUsuariosController {
                 "[TablaUsuariosController] Borrar click en usuario:",
                 userId,
               );
-              // Lógica para eliminar el usuario
+              const userData = data.find((user) => user.usuario === userId);
+
+              if (userData && this.modalBorrarController) {
+                this.modalBorrarController.showModal(
+                  userData,
+                  (userToDelete) => {
+                    console.log(
+                      "[TablaUsuariosController] Petición de eliminación para el usuario:",
+                      userToDelete.usuario,
+                    );
+                    // Implementar eliminación HTTP aquí en el futuro
+                  },
+                );
+              }
             }
           });
         } catch (error) {

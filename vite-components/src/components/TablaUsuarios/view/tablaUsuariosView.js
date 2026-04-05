@@ -47,6 +47,7 @@ export class TablaUsuariosView {
   initDataTable(usersData) {
     const config = {
       data: usersData,
+      destroy: true,
       info: false,
       paging: false,
       scrollY: "50vh",
