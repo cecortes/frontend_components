@@ -41,7 +41,10 @@ export class DashboardFactory {
       );
 
     const { element: modalDeleteElement, controller: modalDeleteController } =
-      ModalBorrarUsuarioFactory.createModal();
+      ModalBorrarUsuarioFactory.createModal(
+        modalErrorController,
+        modalOkController,
+      );
 
     const sidebarController = SidebarFactory.createSidebar();
     const tablaUsuariosController = TablaUsuariosFactory.createTablaUsuarios(

@@ -356,3 +356,22 @@
 - [x] **Expansión de Antigravity Skills y Reglas Persistentes de IA**:
   - [x] Se transcribió el historial de fallos documentados y patrones obligados a la skill local `.agent/skills/modal_ok_integration/SKILL.md`.
   - [x] Se generó y blindó el documento de reglas global `.agent/rules/modal_ok_rule.md` que se ejecuta perpetuamente evaluando intenciones para forzar al agente a la lectura previa de las precauciones antes de proponer código sobre el ModalOk.
+
+---
+
+## 06-04-26 - Integración Asíncrona de ModalBorrarUsuario y Evolución de Skill
+
+- [x] **Conexión Real Backend en ModalBorrarUsuario**:
+  - [x] Se analizó y adaptó el endpoint dictado en `.env` bajo la variable `VITE_API_USERS_DEL_BY_ID`.
+  - [x] **Modelo (`modalBorrarUsuarioModel.js`)**: Se integró inyección de dependencias recuperando el token (`SessionStorage`) en el constructor. Se implementó la resolución del método asíncrono para enviar el `POST` esperado con la estructura `{"id": id}`.
+  - [x] **Controlador (`modalBorrarUsuarioController.js`)**: Se refactorizó la acción a asíncrona (try...catch). Al resolver favorablemente, el flujo destruye la visibilidad del modal de borrado e invoca exitosamente `modalOkController`. Si la asincronía reporta caídas, invoca a `modalErrorController`.
+
+- [x] **Depuración Intensiva y Solución de Crash de Dependencias (Factory)**:
+  - [x] **Nulidad de Callbacks**: Se detectó un error arquitectónico mayor al integrar la visualización del ModalOk. Javascript resolvía `"Cannot read properties of undefined (reading 'showOk/Error')"` originado por un Factory ausente.
+  - [x] **Sincronización `dash_factory.js`**: Se refactorizó el ensamblador origen `dash_factory.js` permitiendo que `ModalBorrarUsuarioFactory.createModal(...)` recibiera directamente los controladores `modalErrorController` y `modalOkController` globales, reestableciendo la armonía del software.
+
+- [x] **Interactividad Reactiva Local DataTables (Recarga en Caliente)**:
+  - [x] Se sobreescribió el listener inyectado (`this.onConfirmCallback`) dentro del controlador de la Tabla (`tablaUsuariosController.js`). Al destruir con éxito un registro, la promesa aguarda un refresh mediante lógica asíncrona que vuelve a pedir todos los datos llamando al modelo, evitando vistas falsas persistentes.
+
+- [x] **Reescritura Definitiva de Antigravity Skill (`modal_borrar_integration`)**:
+  - [x] Se sobrescribió exhaustivamente la guía obligando terminantemente a pedir los endpoints, métodos, body target y pasos a inyecciones. Los casos descubiertos de nulidad arquitectónica y problemas de UI pasaron a nutrir la guía garantizando la no repetición de dicho error en todo WARESmart.

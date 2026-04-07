@@ -1,9 +1,11 @@
 "use strict";
 
 export class ModalBorrarUsuarioController {
-  constructor(view, model) {
+  constructor(view, model, modalErrorController, modalOkController) {
     this.view = view;
     this.model = model;
+    this.modalErrorController = modalErrorController;
+    this.modalOkController = modalOkController;
     this.onConfirmCallback = null;
   }
 
@@ -36,23 +38,41 @@ export class ModalBorrarUsuarioController {
     });
 
     // Maneja la confirmación de la eliminación
-    $confirmBtn.addEventListener("click", (e) => {
+    $confirmBtn.addEventListener("click", async (e) => {
       e.preventDefault();
 
       const userData = this.model.getUserData();
 
-      // Si existe un callback registrado para la confirmación
-      if (typeof this.onConfirmCallback === "function") {
-        this.onConfirmCallback(userData);
+      try {
+        const userId = userData.id;
+        if (!userId) {
+          throw new Error(
+            "No se pudo obtener el ID del usuario para enviar al servidor.",
+          );
+        }
+
+        await this.model.deleteUser(userId);
+
+        // Si existe un callback registrado para la confirmación
+        if (typeof this.onConfirmCallback === "function") {
+          this.onConfirmCallback(userData);
+        }
+
+        console.log(
+          "[ModalBorrarUsuario] Usuario eliminado localmente:",
+          userData,
+        );
+
+        // Cerrar tras confirmar
+        this.handleClose();
+        this.modalOkController.showOk("Usuario eliminado exitosamente.");
+      } catch (error) {
+        // Cerrar el modal y mostrar el error
+        this.handleClose();
+        this.modalErrorController.showError(
+          error.message || "Error al eliminar usuario",
+        );
       }
-
-      console.log(
-        "[ModalBorrarUsuario] Usuario eliminado localmente:",
-        userData,
-      );
-
-      // Cerrar tras confirmar
-      this.handleClose();
     });
   }
 

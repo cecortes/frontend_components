@@ -102,12 +102,25 @@ export class TablaUsuariosController {
               if (userData && this.modalBorrarController) {
                 this.modalBorrarController.showModal(
                   userData,
-                  (userToDelete) => {
+                  async (userToDelete) => {
                     console.log(
-                      "[TablaUsuariosController] Petición de eliminación para el usuario:",
+                      "[TablaUsuariosController] Usuario eliminado:",
                       userToDelete.usuario,
                     );
-                    // Implementar eliminación HTTP aquí en el futuro
+                    try {
+                      console.log(
+                        "[TablaUsuariosController] Recargando datos de la tabla tras eliminar...",
+                      );
+                      const newData = await this.model.fetchUsersData();
+                      // Actualizar referencia de datos local para futuros clicks
+                      data = newData;
+                      this.view.initDataTable(data);
+                    } catch (err) {
+                      console.error(
+                        "[TablaUsuariosController] Error recargando usuarios:",
+                        err,
+                      );
+                    }
                   },
                 );
               }
