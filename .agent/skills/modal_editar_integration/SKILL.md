@@ -73,3 +73,13 @@ Para cada nuevo modal de edición (ej. `ModalEditarUsuario`, `ModalEditarCliente
 - **Nombres de Archivos Estándar:** La carpeta de iconos debe crear estrictamente el archivo `svg_icons.js` exportando la constante `icons`.
 - **Botones Optimizados:** Asegurarse de mantener la reducción geométrica (`4px 16px`) y los colores (`btn-danger` a la izquierda, `btn-primary` a la derecha) indicados arriba sin excepción, adaptándose al layout WARESmart.
 - **Fuentes de Datos Restantes:** La mutación base del Array general ante un callback "Aplicar" es decisión de cada tabla, este scope se limita a abrir el Modal y enviar las peticiones.
+
+## Anexo de Errores Críticos (Basado en Histórico)
+
+1. **Fallo Crítico DOM: "Cannot read properties of null (reading 'querySelector')"**
+   - **Causa:** Durante la arquitectura en el Factory del modal, instanciar pasivamente la vista asigna su nodo a `null`. Si saltas pedirle a la Vista que renderice el parseo HTML (`view.renderModal()`) antes de ejecutar enlazadores, el controlador intentará leer inputs ciegamente reventando el motor principal e inhabilitando el frontend por completo.
+   - **Solución Preventiva:** Inmediatamente **antes** de ejecutar la conexión principal `controller.modalEventHandler()` dentro de tu archivo `factory.js`, es obligatorio detonar visualmente la lógica inyectando `const element = view.renderModal();`.
+
+2. **Bloqueo Transaccional: Error DataTables "Cannot reinitialise DataTable"**
+   - **Causa:** Después de captar exitosamente una señal de guardado aprobatorio del Modal y backend, la tabla padre tratará de descargar la base fresca sobreescribiendo visualmente invocando un nuevo `initDataTable(data)`. La librería DataTable se niega abruptamente a instanciarse dos veces sobre la misma ancla anulando tu esfuerzo.
+   - **Solución Preventiva:** El objeto de configuración de instanciación que pasas a los _Views_ de tablas principales **debe contener obligatoriamente** la llave `destroy: true` (ejemplo: `const config = { data, destroy: true, ... }`), de este modo la librería permite flujos de reemplazo de datos infinitos sin crashear.

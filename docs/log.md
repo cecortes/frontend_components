@@ -373,5 +373,26 @@
 - [x] **Interactividad Reactiva Local DataTables (Recarga en Caliente)**:
   - [x] Se sobreescribió el listener inyectado (`this.onConfirmCallback`) dentro del controlador de la Tabla (`tablaUsuariosController.js`). Al destruir con éxito un registro, la promesa aguarda un refresh mediante lógica asíncrona que vuelve a pedir todos los datos llamando al modelo, evitando vistas falsas persistentes.
 
-- [x] **Reescritura Definitiva de Antigravity Skill (`modal_borrar_integration`)**:
   - [x] Se sobrescribió exhaustivamente la guía obligando terminantemente a pedir los endpoints, métodos, body target y pasos a inyecciones. Los casos descubiertos de nulidad arquitectónica y problemas de UI pasaron a nutrir la guía garantizando la no repetición de dicho error en todo WARESmart.
+
+---
+
+## 13-04-26 - Implementación Modal Editar Cliente, Extensión de UI y Troubleshooting Crítico de DataTables
+
+- [x] **Arquitectura y Creación de Componente ModalEditarCliente**:
+  - [x] Se aplicó la guía `modal_editar_integration` para crear la vista, el modelo y el controlador que permiten modificar información de los clientes (Nombre, Correo, Teléfono, RFC, Dirección, Contacto).
+  - [x] Se inyectó global y exitosamente al DOM a través de la factoría concentradora `dash_factory.js` y el enrutador `main.js`.
+
+- [x] **Refactorización Visual y de Negocio en Tabla Clientes**:
+  - [x] Se sustituyó la columna genérica de estado a favor de mapear y mostrar "RFC", "Dirección" y "Contacto", adaptando tanto la vista HTML (sus _headers_) como la resolución del JSON extraído por `fetchClientsData()` en el modelo.
+
+- [x] **Extensión y Re-adaptación de Validadores Globales (`fieldsValidator.js`)**:
+  - [x] Se corrigió una barrera sistémica donde campos no contemplados originariamente reportaban siempre invalidez. Se integró el soporte para `editClienteNombre`, `editClienteContacto`, `editClienteCorreo` apuntándolos a reglas de Regex existentes.
+  - [x] Se generó y habilitó `validateGenericText()` permitiendo aprobar de forma obligatoria inputs de texto libre que deban alojar números permitidos (Ej. Teléfonos, Códigos Postales, Direcciones con numerales).
+
+- [x] **Depuración Crítica (Troubleshooting) del Ciclo MVC y DataTables**:
+  - [x] **Fallo Crítico por Referencia Nula (Aviso Temprano)**: Se extirpó y diagnosticó profundamente el error `Cannot read properties of null (reading 'querySelector')` derivado al intentar atar lógicas a un DOM Virtual que aún no había sido ordenado a "parsearse" por el Factory (omisión de `view.renderModal()`).
+  - [x] **Atascamiento de Reactividad (Cannot reinitialise DataTable)**: Se descubrió que la librería prohibe montar un dataTable nuevo sobre otro ya incrustado cuando le hacíamos el "refresh". Se mitigó permanentemente integrando la bandera `destroy: true` dentro de las variables de configuración nativas de estas vistas.
+
+- [x] **Maduración de la Antigravity Skill Maestra (`modal_editar_integration/SKILL.md`)**:
+  - [x] Todo el aprendizaje extraído del Crash Visual de DOM Parsing y el bloqueo de DataTables al repopularse, pasaron a grabarse exitosamente como el Anexo Final de las directivas, dictaminando reglas arquitectónicas preventivas para todo el ciclo de iteraciones futuro WARESmart sin mutilar ningún canon pre-existente.

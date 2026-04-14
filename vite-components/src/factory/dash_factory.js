@@ -13,6 +13,7 @@ import { TablaClientesFactory } from "./tabla_clientes_factory.js";
 import { icons } from "../components/Dashboard/icons/svg_icons.js";
 import { ModalEditarUsuarioFactory } from "./modal_editar_usuario_factory.js";
 import { ModalBorrarUsuarioFactory } from "./modal_borrar_usuario_factory.js";
+import { ModalEditarClienteFactory } from "./modal_editar_cliente_factory.js";
 
 export class DashboardFactory {
   /**
@@ -46,12 +47,22 @@ export class DashboardFactory {
         modalOkController,
       );
 
+    const {
+      element: modalEditClientElement,
+      controller: modalEditClientController,
+    } = ModalEditarClienteFactory.createModal(
+      modalErrorController,
+      modalOkController,
+    );
+
     const sidebarController = SidebarFactory.createSidebar();
     const tablaUsuariosController = TablaUsuariosFactory.createTablaUsuarios(
       modalEditController,
       modalDeleteController,
     );
-    const tablaClientesController = TablaClientesFactory.createTablaClientes();
+    const tablaClientesController = TablaClientesFactory.createTablaClientes(
+      modalEditClientController,
+    );
 
     const view = new DashboardView(icons);
     const model = new DashboardModel();
@@ -75,6 +86,7 @@ export class DashboardFactory {
       modalOk: modalOkElement,
       modalEdit: modalEditElement,
       modalDelete: modalDeleteElement,
+      modalEditClient: modalEditClientElement,
       controller,
     };
   }

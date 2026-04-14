@@ -23,13 +23,49 @@ export class FieldsValidator {
     if (fieldName === "password") {
       return this.validatePassword(element);
     }
-    if (fieldName === "editNombre" || fieldName === "nombre") {
+    if (
+      fieldName === "editNombre" ||
+      fieldName === "nombre" ||
+      fieldName === "editClienteNombre" ||
+      fieldName === "editClienteContacto"
+    ) {
       return this.validateName(element);
     }
-    if (fieldName === "editMail" || fieldName === "mail") {
+    if (
+      fieldName === "editMail" ||
+      fieldName === "mail" ||
+      fieldName === "editClienteCorreo"
+    ) {
       return this.validateEmail(element);
     }
+    if (
+      fieldName === "editClienteTelefono" ||
+      fieldName === "editClienteRfc" ||
+      fieldName === "editClienteDireccion"
+    ) {
+      return this.validateGenericText(element);
+    }
     return { isValid: false, message: "Tipo de campo no válido" };
+  }
+
+  /**
+   * @method validateGenericText
+   * @description
+   * Validación genérica para campos requeridos sin regex estricto (aceptan números, letras, etc).
+   *
+   * @param {HTMLElement} element El elemento input a validar.
+   * @returns {Object} Objeto con {isValid: boolean, message: string, id: string}
+   */
+  validateGenericText(element) {
+    const value = element.value ? element.value.trim() : "";
+    if (!value) {
+      return {
+        isValid: false,
+        message: "Este campo es obligatorio",
+        id: element.id,
+      };
+    }
+    return { isValid: true, message: "", id: element.id };
   }
 
   /**
