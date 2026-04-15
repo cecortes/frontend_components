@@ -10,7 +10,10 @@ import { SessionStorage } from "../components/Storage/storage.js";
  * @description Crea e inyecta las dependencias necesarias de la tabla de clientes devolviendo la instancia en controlador.
  */
 export class TablaClientesFactory {
-  static createTablaClientes(modalEditarClienteController = null) {
+  static createTablaClientes(
+    modalEditarClienteController = null,
+    modalBorrarClienteController = null,
+  ) {
     const view = new TablaClientesView();
     const storage = new SessionStorage();
     storage.loadSessionStorage();
@@ -19,6 +22,7 @@ export class TablaClientesFactory {
       model,
       view,
       modalEditarClienteController,
+      modalBorrarClienteController,
     );
     return controller;
   }

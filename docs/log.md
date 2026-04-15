@@ -396,3 +396,24 @@
 
 - [x] **Maduración de la Antigravity Skill Maestra (`modal_editar_integration/SKILL.md`)**:
   - [x] Todo el aprendizaje extraído del Crash Visual de DOM Parsing y el bloqueo de DataTables al repopularse, pasaron a grabarse exitosamente como el Anexo Final de las directivas, dictaminando reglas arquitectónicas preventivas para todo el ciclo de iteraciones futuro WARESmart sin mutilar ningún canon pre-existente.
+
+---
+
+## 14-04-26 - Implementación Modal Borrar Cliente, Integración de Backend y Resolución de Nodo Huérfano
+
+- [x] **Arquitectura y Creación de Componente ModalBorrarCliente**:
+  - [x] Se aplicó la guía `modal_borrar_integration` para crear el nuevo componente MVC que permite la eliminación asíncrona de clientes.
+  - [x] **Modelo (`modalBorrarClienteModel.js`)**: Configurado para consumir el endpoint `VITE_API_CLIENTS_DEL_BY_ID` mediante peticiones `POST` enviando el ID del cliente y autorizando con el token de `SessionStorage`.
+  - [x] **Vista (`modalBorrarClienteView.js`)**: Implementada con `DOMParser` para renderizar un modal de advertencia visualmente coherente con el Design System, incluyendo iconos SVG dinámicos.
+  - [x] **Controlador (`modalBorrarClienteController.js`)**: Maneja la confirmación de borrado, vincula el éxito con `ModalOk` y el error con `ModalError`, cerrando el flujo asíncrono limpiamente.
+
+- [x] **Integración y Reactividad en Tabla Clientes**:
+  - [x] Se modificó `TablaClientesFactory` y `TablaClientesController` para recibir e inyectar el nuevo controlador de borrado.
+  - [x] Se implementó un callback de confirmación reactivo que, tras un borrado exitoso, realiza un nuevo fetch al modelo y actualiza la grilla de DataTables mediante `this.view.initDataTable(data)`, logrando una actualización en vivo sin refrescar el navegador.
+
+- [x] **Depuración de Inyección en el DOM (Bug del Nodo Huérfano)**:
+  - [x] **Diagnóstico**: Se identificó un error donde el botón de borrar no mostraba el modal pese a que el código se ejecutaba. La causa fue que el elemento Node retornado por la factoría no estaba siendo adjuntado al `document.body` en `main.js`.
+  - [x] **Solución**: Se actualizó el router principal en `main.js` para extraer el `modalDeleteClientElement` del dashboard y añadirlo formalmente al DOM mediante `append`.
+
+- [x] **Evolución de Skills Maestras**:
+  - [x] Se enriqueció la skill `.agent/skills/modal_borrar_integration/SKILL.md` con un nuevo apartado de troubleshooting sobre "Inyección de Nodo Huérfano", documentando el síntoma y la solución para prevenir su repetición en futuros componentes del dashboard.

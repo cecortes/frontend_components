@@ -65,3 +65,8 @@ Para cada nuevo modal de borrado (ej. `ModalBorrarUsuario`), se debe replicar la
 - **Fallo de Actualización Dinámica del DOM (Data Persistence):**
   - _Síntoma:_ El registro se elimina íntegramente de la base de datos (se refleja un estatus Network en 200 HTTP) pero visualmente sobrevive en la vista `DataTables` provocando comportamientos erróneos.
   - _Solución:_ Emplear una reconstrucción asíncrona dentro de la subscripción de `onConfirmCallback`. Hacer un `fetch`, actualizar la referencia let que provee al Array inicial y redibujar con `.initDataTable(nuevaData)`.
+
+- **Inyección de Nodo Huérfano en el Router Principal (`main.js`):**
+  - _Síntoma:_ Al disparar el evento del botón asignado, la consola no marca errores y el código del controlador se ejecuta debidamente, pero el modal jamás se muestra en la pantalla (permanece invisible).
+  - _Causa:_ En el árbol de fábricas de dependencias (Factories), si bien el elemento Node se empaquetó (`element`) y devolvió correctamente desde local a `dash_factory.js`, fue olvidado/omitido en el archivo renderizador final `main.js`. El modal existe operativamente en la memoria pero nunca es adjuntado físicamente a la interfaz debido a que faltó realizar el `document.body.append()`.
+  - _Solución:_ Modificar el bloque del layout maestro en `main.js` (o en su debido router), garantizando la destructuración formal del Node Element retornado por la factoría asíncrona, e incluirlo explícitamente en el conjunto inyectado de `document.body.append(..., nuevoElementoModal)`.

@@ -1,10 +1,16 @@
 "use strict";
 
 export class TablaClientesController {
-  constructor(model, view, modalEditarClienteController) {
+  constructor(
+    model,
+    view,
+    modalEditarClienteController,
+    modalBorrarClienteController,
+  ) {
     this.model = model;
     this.view = view;
     this.modalEditarClienteController = modalEditarClienteController;
+    this.modalBorrarClienteController = modalBorrarClienteController;
   }
 
   async init() {
@@ -72,6 +78,36 @@ export class TablaClientesController {
                 "[TablaClientesController] Borrar click en cliente:",
                 clienteId,
               );
+
+              const clientData = data.find(
+                (client) => String(client.id) === String(clienteId),
+              );
+
+              if (clientData && this.modalBorrarClienteController) {
+                this.modalBorrarClienteController.showModal(
+                  clientData,
+                  async (deletedClient) => {
+                    console.log(
+                      "[TablaClientesController] Cliente eliminado:",
+                      deletedClient.id,
+                    );
+                    try {
+                      console.log(
+                        "[TablaClientesController] Recargando datos de la tabla tras eliminar...",
+                      );
+                      const newData = await this.model.fetchClientsData();
+                      // Actualizar referencia local
+                      data = newData;
+                      this.view.initDataTable(data);
+                    } catch (err) {
+                      console.error(
+                        "[TablaClientesController] Error recargando clientes:",
+                        err,
+                      );
+                    }
+                  },
+                );
+              }
             }
           });
         } catch (error) {

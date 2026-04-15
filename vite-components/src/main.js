@@ -60,6 +60,7 @@ const routes = {
       modalEdit,
       modalDelete,
       modalEditClient,
+      modalDeleteClient,
     } = await DashboardFactory.dashComponent();
 
     document.body.append(
@@ -68,6 +69,7 @@ const routes = {
       modalEdit,
       modalDelete,
       modalEditClient,
+      modalDeleteClient,
     );
 
     return element;
