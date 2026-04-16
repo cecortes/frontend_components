@@ -17,6 +17,7 @@ import "./style.css";
 import { Router } from "./router/router.js";
 import { LoginFactory } from "./factory/login_factory.js";
 import { DashboardFactory } from "./factory/dash_factory.js";
+import { UsuariosFactory } from "./factory/usuarios_factory.js";
 
 /*
 const loginElement = document.querySelector("#LoginForm");
@@ -72,6 +73,13 @@ const routes = {
       modalDeleteClient,
     );
 
+    return element;
+  },
+  "/usuarios": async () => {
+    const { element, modalError } = await UsuariosFactory.usuariosComponent();
+    if (modalError) {
+      document.body.append(modalError);
+    }
     return element;
   },
 };

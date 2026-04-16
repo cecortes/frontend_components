@@ -417,3 +417,23 @@
 
 - [x] **Evolución de Skills Maestras**:
   - [x] Se enriqueció la skill `.agent/skills/modal_borrar_integration/SKILL.md` con un nuevo apartado de troubleshooting sobre "Inyección de Nodo Huérfano", documentando el síntoma y la solución para prevenir su repetición en futuros componentes del dashboard.
+
+---
+
+## 15-04-26 - Generación de Página Usuarios, Navegación SPA y Nueva Skill de Vistas
+
+- [x] **Creación del Componente de Página Usuarios (MVC)**:
+  - [x] Se diseñó el nuevo componente maestro `Usuarios` siguiendo la arquitectura del Dashboard pero enfocado exclusivamente en la administración de personal.
+  - [x] **Vista (`usuariosView.js`)**: Implementada para mantener la paridad visual con la cabecera institucional (`top-bar`) y el menú lateral, dejando el área central preparada para futuras inyecciones de tablas de datos.
+  - [x] **Controlador (`usuariosController.js`)**: Se mejoró el patrón de inicialización. Ahora delega la validación de sesión directamente al `AuthController` inyectado, protegiendo contra errores de renderizado `undefined` ante fallas de auth.
+  - [x] **Factoría (`usuarios_factory.js`)**: Se configuró para proveer todas las dependencias globales (modales, auth, sidebar) de forma encapsulada.
+- [x] **Optimización de Navegación SPA y Router**:
+  - [x] Se integró la ruta `/usuarios` en el enrutador central `main.js`.
+  - [x] **Sidebar Dinámico**: Se añadió el método `bindNavigation` al `SidebarController`. Este intercepta los clics en los enlaces del menú y utiliza `window.router.navigate()` en lugar de recargas de página completas, logrando una experiencia fluida de Single Page Application.
+  - [x] Se configuró el resaltado automático (`class="active"`) del botón "Usuarios" cuando el usuario se encuentra en dicha ruta.
+- [x] **Creación de nueva Skill Maestra (`sidebar_view_integration`)**:
+  - [x] Se documentó y formalizó una guía crítica (`.agent/skills/sidebar_view_integration/SKILL.md`) que establece el protocolo obligatorio para crear cualquier vista nueva desde el Sidebar (Clientes, Productos, etc.).
+  - [x] La skill obliga a interrogar al usuario sobre el nombre de la vista antes de proceder (no negociable) y plasma las lecciones aprendidas sobre el manejo de auth inyectada para prevenir bloqueos del router.
+- [x] **Corrección de Bugs Críticos de Renderizado**:
+  - [x] **Diagnóstico `router.js:88 undefined`**: Se resolvió un bug donde el ruteo fallaba al intentar acceder a propiedades de sesión inexistentes (`Token` vs `token`). La solución fue estandarizar el uso de `auth.init()` en todos los controladores de visualización.
+  - [x] **Inyección de Modales**: Se aseguró que los modales de error devueltos por las factorías de páginas nuevas se adjunten correctamente al `document.body` de forma global.

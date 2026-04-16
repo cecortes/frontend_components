@@ -27,4 +27,27 @@ export class SidebarController {
   getBurgerHTML() {
     return this.view.getBurgerTemplate();
   }
+
+  /**
+   * @method bindNavigation
+   * @description Enlaza los eventos de click en los enlaces del sidebar para usar el router SPA.
+   * @param {HTMLElement} element - El elemento DOM contenedor principal (vista padre).
+   * @returns {void}
+   */
+  bindNavigation(element) {
+    const links = element.querySelectorAll(".sidebar-nav a");
+    links.forEach((link) => {
+      link.addEventListener("click", (e) => {
+        e.preventDefault();
+        const text = link.textContent.trim().toLowerCase();
+
+        if (text.includes("dashboard")) {
+          window.router.navigate("/dashboard");
+        } else if (text.includes("usuarios")) {
+          window.router.navigate("/usuarios");
+        }
+        // A futuro: añadir más rutas conforme se vayan creando
+      });
+    });
+  }
 }

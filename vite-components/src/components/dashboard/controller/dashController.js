@@ -73,6 +73,9 @@ export class DashboardController {
 
     // Bind events
     this.dashboardEventHandler();
+    if (this.sidebarController) {
+      this.sidebarController.bindNavigation(html);
+    }
     if (this.tablaUsuariosController) {
       this.tablaUsuariosController.bindEvents();
     }
