@@ -1,6 +1,6 @@
 "use strict";
 
-export class ModalBorrarUsuarioController {
+export class ModalBorrarClienteController {
   constructor(view, model, modalErrorController, modalOkController) {
     this.view = view;
     this.model = model;
@@ -41,36 +41,36 @@ export class ModalBorrarUsuarioController {
     $confirmBtn.addEventListener("click", async (e) => {
       e.preventDefault();
 
-      const userData = this.model.getUserData();
+      const clientData = this.model.getClientData();
 
       try {
-        const userId = userData.id;
-        if (!userId) {
+        const clientId = clientData.id;
+        if (!clientId) {
           throw new Error(
-            "No se pudo obtener el ID del usuario para enviar al servidor.",
+            "No se pudo obtener el ID del cliente para enviar al servidor.",
           );
         }
 
-        await this.model.deleteUser(userId);
+        await this.model.deleteClient(clientId);
 
         // Si existe un callback registrado para la confirmación
         if (typeof this.onConfirmCallback === "function") {
-          this.onConfirmCallback(userData);
+          this.onConfirmCallback(clientData);
         }
 
         console.log(
-          "[ModalBorrarUsuario] Usuario eliminado localmente:",
-          userData,
+          "[ModalBorrarCliente] Cliente eliminado localmente:",
+          clientData,
         );
 
         // Cerrar tras confirmar
         this.handleClose();
-        this.modalOkController.showOk("Usuario eliminado exitosamente.");
+        this.modalOkController.showOk("Cliente eliminado exitosamente.");
       } catch (error) {
         // Cerrar el modal y mostrar el error
         this.handleClose();
         this.modalErrorController.showError(
-          error.message || "Error al eliminar usuario",
+          error.message || "Error al eliminar cliente",
         );
       }
     });
@@ -83,15 +83,15 @@ export class ModalBorrarUsuarioController {
 
   /**
    * Muestra el modal asignando los datos y registrando el callback opcional.
-   * @param {Object} userData
+   * @param {Object} clientData
    * @param {Function} onConfirm
    */
-  showModal(userData, onConfirm = null) {
+  showModal(clientData, onConfirm = null) {
     this.onConfirmCallback = onConfirm;
-    this.model.setUserData(userData);
+    this.model.setClientData(clientData);
     this.model.setVisible(true);
 
     // Inyecta los datos a la vista y lo muestra
-    this.view.show(userData);
+    this.view.show(clientData);
   }
 }

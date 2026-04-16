@@ -356,3 +356,84 @@
 - [x] **Expansión de Antigravity Skills y Reglas Persistentes de IA**:
   - [x] Se transcribió el historial de fallos documentados y patrones obligados a la skill local `.agent/skills/modal_ok_integration/SKILL.md`.
   - [x] Se generó y blindó el documento de reglas global `.agent/rules/modal_ok_rule.md` que se ejecuta perpetuamente evaluando intenciones para forzar al agente a la lectura previa de las precauciones antes de proponer código sobre el ModalOk.
+
+---
+
+## 06-04-26 - Integración Asíncrona de ModalBorrarUsuario y Evolución de Skill
+
+- [x] **Conexión Real Backend en ModalBorrarUsuario**:
+  - [x] Se analizó y adaptó el endpoint dictado en `.env` bajo la variable `VITE_API_USERS_DEL_BY_ID`.
+  - [x] **Modelo (`modalBorrarUsuarioModel.js`)**: Se integró inyección de dependencias recuperando el token (`SessionStorage`) en el constructor. Se implementó la resolución del método asíncrono para enviar el `POST` esperado con la estructura `{"id": id}`.
+  - [x] **Controlador (`modalBorrarUsuarioController.js`)**: Se refactorizó la acción a asíncrona (try...catch). Al resolver favorablemente, el flujo destruye la visibilidad del modal de borrado e invoca exitosamente `modalOkController`. Si la asincronía reporta caídas, invoca a `modalErrorController`.
+
+- [x] **Depuración Intensiva y Solución de Crash de Dependencias (Factory)**:
+  - [x] **Nulidad de Callbacks**: Se detectó un error arquitectónico mayor al integrar la visualización del ModalOk. Javascript resolvía `"Cannot read properties of undefined (reading 'showOk/Error')"` originado por un Factory ausente.
+  - [x] **Sincronización `dash_factory.js`**: Se refactorizó el ensamblador origen `dash_factory.js` permitiendo que `ModalBorrarUsuarioFactory.createModal(...)` recibiera directamente los controladores `modalErrorController` y `modalOkController` globales, reestableciendo la armonía del software.
+
+- [x] **Interactividad Reactiva Local DataTables (Recarga en Caliente)**:
+  - [x] Se sobreescribió el listener inyectado (`this.onConfirmCallback`) dentro del controlador de la Tabla (`tablaUsuariosController.js`). Al destruir con éxito un registro, la promesa aguarda un refresh mediante lógica asíncrona que vuelve a pedir todos los datos llamando al modelo, evitando vistas falsas persistentes.
+
+  - [x] Se sobrescribió exhaustivamente la guía obligando terminantemente a pedir los endpoints, métodos, body target y pasos a inyecciones. Los casos descubiertos de nulidad arquitectónica y problemas de UI pasaron a nutrir la guía garantizando la no repetición de dicho error en todo WARESmart.
+
+---
+
+## 13-04-26 - Implementación Modal Editar Cliente, Extensión de UI y Troubleshooting Crítico de DataTables
+
+- [x] **Arquitectura y Creación de Componente ModalEditarCliente**:
+  - [x] Se aplicó la guía `modal_editar_integration` para crear la vista, el modelo y el controlador que permiten modificar información de los clientes (Nombre, Correo, Teléfono, RFC, Dirección, Contacto).
+  - [x] Se inyectó global y exitosamente al DOM a través de la factoría concentradora `dash_factory.js` y el enrutador `main.js`.
+
+- [x] **Refactorización Visual y de Negocio en Tabla Clientes**:
+  - [x] Se sustituyó la columna genérica de estado a favor de mapear y mostrar "RFC", "Dirección" y "Contacto", adaptando tanto la vista HTML (sus _headers_) como la resolución del JSON extraído por `fetchClientsData()` en el modelo.
+
+- [x] **Extensión y Re-adaptación de Validadores Globales (`fieldsValidator.js`)**:
+  - [x] Se corrigió una barrera sistémica donde campos no contemplados originariamente reportaban siempre invalidez. Se integró el soporte para `editClienteNombre`, `editClienteContacto`, `editClienteCorreo` apuntándolos a reglas de Regex existentes.
+  - [x] Se generó y habilitó `validateGenericText()` permitiendo aprobar de forma obligatoria inputs de texto libre que deban alojar números permitidos (Ej. Teléfonos, Códigos Postales, Direcciones con numerales).
+
+- [x] **Depuración Crítica (Troubleshooting) del Ciclo MVC y DataTables**:
+  - [x] **Fallo Crítico por Referencia Nula (Aviso Temprano)**: Se extirpó y diagnosticó profundamente el error `Cannot read properties of null (reading 'querySelector')` derivado al intentar atar lógicas a un DOM Virtual que aún no había sido ordenado a "parsearse" por el Factory (omisión de `view.renderModal()`).
+  - [x] **Atascamiento de Reactividad (Cannot reinitialise DataTable)**: Se descubrió que la librería prohibe montar un dataTable nuevo sobre otro ya incrustado cuando le hacíamos el "refresh". Se mitigó permanentemente integrando la bandera `destroy: true` dentro de las variables de configuración nativas de estas vistas.
+
+- [x] **Maduración de la Antigravity Skill Maestra (`modal_editar_integration/SKILL.md`)**:
+  - [x] Todo el aprendizaje extraído del Crash Visual de DOM Parsing y el bloqueo de DataTables al repopularse, pasaron a grabarse exitosamente como el Anexo Final de las directivas, dictaminando reglas arquitectónicas preventivas para todo el ciclo de iteraciones futuro WARESmart sin mutilar ningún canon pre-existente.
+
+---
+
+## 14-04-26 - Implementación Modal Borrar Cliente, Integración de Backend y Resolución de Nodo Huérfano
+
+- [x] **Arquitectura y Creación de Componente ModalBorrarCliente**:
+  - [x] Se aplicó la guía `modal_borrar_integration` para crear el nuevo componente MVC que permite la eliminación asíncrona de clientes.
+  - [x] **Modelo (`modalBorrarClienteModel.js`)**: Configurado para consumir el endpoint `VITE_API_CLIENTS_DEL_BY_ID` mediante peticiones `POST` enviando el ID del cliente y autorizando con el token de `SessionStorage`.
+  - [x] **Vista (`modalBorrarClienteView.js`)**: Implementada con `DOMParser` para renderizar un modal de advertencia visualmente coherente con el Design System, incluyendo iconos SVG dinámicos.
+  - [x] **Controlador (`modalBorrarClienteController.js`)**: Maneja la confirmación de borrado, vincula el éxito con `ModalOk` y el error con `ModalError`, cerrando el flujo asíncrono limpiamente.
+
+- [x] **Integración y Reactividad en Tabla Clientes**:
+  - [x] Se modificó `TablaClientesFactory` y `TablaClientesController` para recibir e inyectar el nuevo controlador de borrado.
+  - [x] Se implementó un callback de confirmación reactivo que, tras un borrado exitoso, realiza un nuevo fetch al modelo y actualiza la grilla de DataTables mediante `this.view.initDataTable(data)`, logrando una actualización en vivo sin refrescar el navegador.
+
+- [x] **Depuración de Inyección en el DOM (Bug del Nodo Huérfano)**:
+  - [x] **Diagnóstico**: Se identificó un error donde el botón de borrar no mostraba el modal pese a que el código se ejecutaba. La causa fue que el elemento Node retornado por la factoría no estaba siendo adjuntado al `document.body` en `main.js`.
+  - [x] **Solución**: Se actualizó el router principal en `main.js` para extraer el `modalDeleteClientElement` del dashboard y añadirlo formalmente al DOM mediante `append`.
+
+- [x] **Evolución de Skills Maestras**:
+  - [x] Se enriqueció la skill `.agent/skills/modal_borrar_integration/SKILL.md` con un nuevo apartado de troubleshooting sobre "Inyección de Nodo Huérfano", documentando el síntoma y la solución para prevenir su repetición en futuros componentes del dashboard.
+
+---
+
+## 15-04-26 - Generación de Página Usuarios, Navegación SPA y Nueva Skill de Vistas
+
+- [x] **Creación del Componente de Página Usuarios (MVC)**:
+  - [x] Se diseñó el nuevo componente maestro `Usuarios` siguiendo la arquitectura del Dashboard pero enfocado exclusivamente en la administración de personal.
+  - [x] **Vista (`usuariosView.js`)**: Implementada para mantener la paridad visual con la cabecera institucional (`top-bar`) y el menú lateral, dejando el área central preparada para futuras inyecciones de tablas de datos.
+  - [x] **Controlador (`usuariosController.js`)**: Se mejoró el patrón de inicialización. Ahora delega la validación de sesión directamente al `AuthController` inyectado, protegiendo contra errores de renderizado `undefined` ante fallas de auth.
+  - [x] **Factoría (`usuarios_factory.js`)**: Se configuró para proveer todas las dependencias globales (modales, auth, sidebar) de forma encapsulada.
+- [x] **Optimización de Navegación SPA y Router**:
+  - [x] Se integró la ruta `/usuarios` en el enrutador central `main.js`.
+  - [x] **Sidebar Dinámico**: Se añadió el método `bindNavigation` al `SidebarController`. Este intercepta los clics en los enlaces del menú y utiliza `window.router.navigate()` en lugar de recargas de página completas, logrando una experiencia fluida de Single Page Application.
+  - [x] Se configuró el resaltado automático (`class="active"`) del botón "Usuarios" cuando el usuario se encuentra en dicha ruta.
+- [x] **Creación de nueva Skill Maestra (`sidebar_view_integration`)**:
+  - [x] Se documentó y formalizó una guía crítica (`.agent/skills/sidebar_view_integration/SKILL.md`) que establece el protocolo obligatorio para crear cualquier vista nueva desde el Sidebar (Clientes, Productos, etc.).
+  - [x] La skill obliga a interrogar al usuario sobre el nombre de la vista antes de proceder (no negociable) y plasma las lecciones aprendidas sobre el manejo de auth inyectada para prevenir bloqueos del router.
+- [x] **Corrección de Bugs Críticos de Renderizado**:
+  - [x] **Diagnóstico `router.js:88 undefined`**: Se resolvió un bug donde el ruteo fallaba al intentar acceder a propiedades de sesión inexistentes (`Token` vs `token`). La solución fue estandarizar el uso de `auth.init()` en todos los controladores de visualización.
+  - [x] **Inyección de Modales**: Se aseguró que los modales de error devueltos por las factorías de páginas nuevas se adjunten correctamente al `document.body` de forma global.

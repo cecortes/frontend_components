@@ -1,9 +1,16 @@
 "use strict";
 
 export class TablaClientesController {
-  constructor(model, view) {
+  constructor(
+    model,
+    view,
+    modalEditarClienteController,
+    modalBorrarClienteController,
+  ) {
     this.model = model;
     this.view = view;
+    this.modalEditarClienteController = modalEditarClienteController;
+    this.modalBorrarClienteController = modalBorrarClienteController;
   }
 
   async init() {
@@ -30,7 +37,7 @@ export class TablaClientesController {
 
         try {
           // Obtener los datos mapeados del modelo (fetch simulación backend)
-          const data = await this.model.fetchClientsData();
+          let data = await this.model.fetchClientsData();
 
           // Desplegar la lógica de UI y plugin DataTables
           this.view.initDataTable(data);
@@ -42,10 +49,27 @@ export class TablaClientesController {
 
             if (btnEdit) {
               const clienteId = btnEdit.dataset.id;
-              console.log(
-                "[TablaClientesController] Editar click en cliente:",
-                clienteId,
+
+              const clientData = data.find(
+                (client) => String(client.id) === String(clienteId),
               );
+              if (clientData && this.modalEditarClienteController) {
+                this.modalEditarClienteController.showModal(
+                  clientData,
+                  async (updatedClient) => {
+                    try {
+                      const newData = await this.model.fetchClientsData();
+                      data = newData;
+                      this.view.initDataTable(data);
+                    } catch (err) {
+                      console.error(
+                        "[TablaClientesController] Error recargando clientes:",
+                        err,
+                      );
+                    }
+                  },
+                );
+              }
             }
 
             if (btnDelete) {
@@ -54,6 +78,36 @@ export class TablaClientesController {
                 "[TablaClientesController] Borrar click en cliente:",
                 clienteId,
               );
+
+              const clientData = data.find(
+                (client) => String(client.id) === String(clienteId),
+              );
+
+              if (clientData && this.modalBorrarClienteController) {
+                this.modalBorrarClienteController.showModal(
+                  clientData,
+                  async (deletedClient) => {
+                    console.log(
+                      "[TablaClientesController] Cliente eliminado:",
+                      deletedClient.id,
+                    );
+                    try {
+                      console.log(
+                        "[TablaClientesController] Recargando datos de la tabla tras eliminar...",
+                      );
+                      const newData = await this.model.fetchClientsData();
+                      // Actualizar referencia local
+                      data = newData;
+                      this.view.initDataTable(data);
+                    } catch (err) {
+                      console.error(
+                        "[TablaClientesController] Error recargando clientes:",
+                        err,
+                      );
+                    }
+                  },
+                );
+              }
             }
           });
         } catch (error) {

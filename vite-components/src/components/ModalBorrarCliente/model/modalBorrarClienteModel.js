@@ -1,10 +1,10 @@
 "use strict";
 
-export class ModalBorrarUsuarioModel {
+export class ModalBorrarClienteModel {
   constructor(storage) {
     this.storage = storage;
     this.visible = false;
-    this.userData = null;
+    this.clientData = null;
   }
 
   setVisible(state) {
@@ -15,26 +15,26 @@ export class ModalBorrarUsuarioModel {
     return this.visible;
   }
 
-  setUserData(data) {
-    this.userData = data;
+  setClientData(data) {
+    this.clientData = data;
   }
 
-  getUserData() {
-    return this.userData;
+  getClientData() {
+    return this.clientData;
   }
 
   /**
-   * Envía el ID del usuario a eliminar al backend.
-   * @param {number|string} userId - ID del usuario a eliminar.
+   * Envía el ID del cliente a eliminar al backend.
+   * @param {number|string} clientId - ID del cliente a eliminar.
    * @returns {Promise<Object>} Promesa que resuelve la respuesta del servidor en caso de éxito.
    */
-  async deleteUser(userId) {
+  async deleteClient(clientId) {
     try {
-      const url = import.meta.env.VITE_API_USERS_DEL_BY_ID;
+      const url = import.meta.env.VITE_API_CLIENTS_DEL_BY_ID;
       const token = this.storage.Token;
 
       const bodyData = {
-        id: userId,
+        id: parseInt(clientId, 10),
       };
 
       const response = await fetch(url, {

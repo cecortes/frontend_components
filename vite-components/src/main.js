@@ -17,6 +17,7 @@ import "./style.css";
 import { Router } from "./router/router.js";
 import { LoginFactory } from "./factory/login_factory.js";
 import { DashboardFactory } from "./factory/dash_factory.js";
+import { UsuariosFactory } from "./factory/usuarios_factory.js";
 
 /*
 const loginElement = document.querySelector("#LoginForm");
@@ -53,11 +54,32 @@ const routes = {
     return form;
   },
   "/dashboard": async () => {
-    const { element, modalError, modalOk, modalEdit, modalDelete } =
-      await DashboardFactory.dashComponent();
+    const {
+      element,
+      modalError,
+      modalOk,
+      modalEdit,
+      modalDelete,
+      modalEditClient,
+      modalDeleteClient,
+    } = await DashboardFactory.dashComponent();
 
-    document.body.append(modalError, modalOk, modalEdit, modalDelete);
+    document.body.append(
+      modalError,
+      modalOk,
+      modalEdit,
+      modalDelete,
+      modalEditClient,
+      modalDeleteClient,
+    );
 
+    return element;
+  },
+  "/usuarios": async () => {
+    const { element, modalError } = await UsuariosFactory.usuariosComponent();
+    if (modalError) {
+      document.body.append(modalError);
+    }
     return element;
   },
 };

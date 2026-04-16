@@ -40,7 +40,9 @@ export class TablaClientesModel {
         nombre: client.clients_name,
         correo: client.clients_mail,
         telefono: client.clients_phone,
-        estado: "",
+        rfc: client.clients_rfc || "",
+        direccion: client.clients_address || "",
+        contacto: client.clients_contact || "",
       }));
     } catch (error) {
       throw error;

@@ -25,10 +25,12 @@ export class TablaClientesView {
               <table id="clientes-table" class="display" style="width:100%">
                 <thead>
                   <tr>
-                    <th>Nombre del Cliente</th>
+                    <th>Nombre</th>
                     <th>Correo</th>
                     <th>Teléfono</th>
-                    <th>Estado</th>
+                    <th>RFC</th>
+                    <th>Dirección</th>
+                    <th>Contacto</th>
                     <th>Acciones</th>
                   </tr>
                 </thead>
@@ -49,6 +51,7 @@ export class TablaClientesView {
   initDataTable(clientsData) {
     const config = {
       data: clientsData,
+      destroy: true,
       info: false,
       paging: false,
       scrollY: "50vh",
@@ -57,23 +60,13 @@ export class TablaClientesView {
         { data: "nombre" },
         { data: "correo" },
         { data: "telefono" },
-        {
-          data: "estado",
-          render: function (data, type, row) {
-            // Replicar los badges estéticos originales de Activo/Inactivo
-            if (data === "Activo") {
-              return `<span class="badge badge-high">Activo</span>`;
-            } else if (data === "Inactivo") {
-              return `<span class="badge badge-low">Inactivo</span>`;
-            } else {
-              return "";
-            }
-          },
-        },
+        { data: "rfc" },
+        { data: "direccion" },
+        { data: "contacto" },
         {
           data: null,
-          orderable: false, // Fundamental para evitar que se ordene por HTML
-          searchable: false, // Evita que busque atributos del HTML del botón
+          orderable: false,
+          searchable: false,
           render: function (data, type, row) {
             return `
               <div style="display: flex; gap: 8px; justify-content: center;">
