@@ -45,6 +45,8 @@ export class SidebarController {
           window.router.navigate("/dashboard");
         } else if (text.includes("usuarios")) {
           window.router.navigate("/usuarios");
+        } else if (text.includes("clientes")) {
+          window.router.navigate("/clientes");
         }
         // A futuro: añadir más rutas conforme se vayan creando
       });

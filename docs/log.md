@@ -437,3 +437,19 @@
 - [x] **Corrección de Bugs Críticos de Renderizado**:
   - [x] **Diagnóstico `router.js:88 undefined`**: Se resolvió un bug donde el ruteo fallaba al intentar acceder a propiedades de sesión inexistentes (`Token` vs `token`). La solución fue estandarizar el uso de `auth.init()` en todos los controladores de visualización.
   - [x] **Inyección de Modales**: Se aseguró que los modales de error devueltos por las factorías de páginas nuevas se adjunten correctamente al `document.body` de forma global.
+
+---
+
+## 16-04-26 - Implementación Vista 'Clientes' y Configuración de Navegación SPA
+
+- [x] **Generación de Componente Clientes (MVC & Factory)**:
+  - [x] Se aplicó la nueva skill `sidebar_view_integration` para crear la arquitectura completa de la vista "Clientes".
+  - [x] **Modelo (`clientesModel.js`)**: Clase inicializada para albergar la futura lógica de negocio y consumo de APIs de clientes.
+  - [x] **Vista (`clientesView.js`)**: Implementada con el layout institucional, incluyendo la cabecera `top-bar` con el título "Administración de Clientes" y el contenedor para inyección de datos.
+  - [x] **Controlador (`clientesController.js`)**: Implementado con validación de sesión obligatoria via `AuthController` y activación del estado `clients` en el Sidebar.
+  - [x] **Factoría (`clientes_factory.js`)**: Centraliza la creación del componente y la inyección de dependencias (Auth, Sidebar, Storage, Modales).
+- [x] **Configuración de Enrutamiento y Navegación**:
+  - [x] **Sidebar (`sidebarController.js`)**: Se actualizó el método `bindNavigation` para interceptar el clic en "Clientes" y redirigir asíncronamente a `/clientes`.
+  - [x] **Main (`main.js`)**: Se registró la nueva ruta `/clientes` asociándola a la factoría correspondiente y asegurando la inyección de modales globales en el DOM.
+- [x] **Validación y Build**:
+  - [x] Se verificó que la aplicación compila correctamente (`npm run build`) sin errores de sintaxis o referencias nulas.
