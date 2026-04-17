@@ -8,6 +8,7 @@ export class UsuariosController {
     auth,
     modalErrorController,
     sidebarController = null,
+    modalAddController = null,
   ) {
     this.view = view;
     this.model = model;
@@ -15,6 +16,7 @@ export class UsuariosController {
     this.auth = auth;
     this.modalErrorController = modalErrorController;
     this.sidebarController = sidebarController;
+    this.modalAddController = modalAddController;
   }
 
   /**
@@ -57,6 +59,14 @@ export class UsuariosController {
     // Bind Navigation events para el Sidebar
     if (this.sidebarController) {
       this.sidebarController.bindNavigation(html);
+    }
+
+    // Activar Modal Agregar Usuario
+    const addUsrBtn = html.querySelector("#btnShowAddUsuario");
+    if (addUsrBtn && this.modalAddController) {
+      addUsrBtn.addEventListener("click", () => {
+        this.modalAddController.start();
+      });
     }
 
     // A futuro aquí iría la inyección de TablaUsuarios u otros eventos

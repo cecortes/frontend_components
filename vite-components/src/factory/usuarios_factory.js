@@ -8,6 +8,7 @@ import { AuthController } from "../components/Auth/controller/authController.js"
 import { SidebarFactory } from "./sidebar_factory.js";
 import { ModalFactory } from "./modal_factory.js";
 import { icons } from "../components/Dashboard/icons/svg_icons.js";
+import { ModalAgregarUsuarioFactory } from "./modal_agregar_usuario_factory.js";
 
 export class UsuariosFactory {
   /**
@@ -18,6 +19,18 @@ export class UsuariosFactory {
   static async usuariosComponent() {
     const { element: modalErrorElement, controller: modalErrorController } =
       ModalFactory.modalComponent();
+
+    // Rescatar ModalOk
+    const { element: modalOkElement, controller: modalOkController } =
+      ModalFactory.modalOkComponent();
+
+    // Ensamblar Modal Agregar Usuario (Inyectando globales)
+    const { element: modalAddElement, controller: modalAddController } =
+      ModalAgregarUsuarioFactory.createModal(
+        modalOkController,
+        modalErrorController,
+      );
+
     const sidebarController = SidebarFactory.createSidebar();
 
     const view = new UsuariosView(icons);
@@ -32,6 +45,7 @@ export class UsuariosFactory {
       auth,
       modalErrorController,
       sidebarController,
+      modalAddController,
     );
 
     const element = await controller.init();
@@ -39,6 +53,8 @@ export class UsuariosFactory {
     return {
       element,
       modalError: modalErrorElement,
+      modalOk: modalOkElement,
+      modalAdd: modalAddElement,
       controller,
     };
   }

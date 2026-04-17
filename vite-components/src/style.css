@@ -258,6 +258,18 @@
     transform: translateY(-1px);
   }
 
+  .btn-success {
+    background-color: var(--color-success-500);
+    color: white;
+    border-color: var(--color-success-600);
+  }
+
+  .btn-success:hover {
+    background-color: var(--color-success-600);
+    box-shadow: 0 4px 12px rgba(47, 184, 101, 0.3);
+    transform: translateY(-1px);
+  }
+
   /* Centrar títulos de las columnas de todas las tablas */
   th {
     text-align: center;

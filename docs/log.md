@@ -453,3 +453,23 @@
   - [x] **Main (`main.js`)**: Se registró la nueva ruta `/clientes` asociándola a la factoría correspondiente y asegurando la inyección de modales globales en el DOM.
 - [x] **Validación y Build**:
   - [x] Se verificó que la aplicación compila correctamente (`npm run build`) sin errores de sintaxis o referencias nulas.
+
+---
+
+## 17-04-26 - Implementación de ModalAgregarUsuario, Refinamiento Visual e Integración de Nueva Skill
+
+- [x] **Arquitectura y Creación de Componente ModalAgregarUsuario (MVC & Factory)**:
+  - [x] Se diseñó el componente completo siguiendo el patrón MVC: `modalAgregarUsuarioModel.js` (mock), `modalAgregarUsuarioView.js` (UI), `modalAgregarUsuarioController.js` (lógica) y `modal_agregar_usuario_factory.js`.
+  - [x] Se integró de manera proactiva el componente `FieldsValidator` para la validación de campos y los controladores `ModalOk`/`ModalError` para la retroalimentación de éxito o fracaso, respetando la inyección de dependencias.
+- [x] **Resolución de "Desconexión Arquitectónica" y Conectividad DOM**:
+  - [x] **Botón Disparador**: Se identificó un error donde la vista principal de `Usuarios` carecía del botón físico para lanzar el modal. Se inyectó el HTML primario `+ Agregar Usuario` con el id `#btnShowAddUsuario` en la cabecera.
+  - [x] **Hook de Controlador**: Se modificó `usuariosController.js` para recibir e interceptar el evento click mediante el método `.start()` del controlador del modal, cerrando el ciclo de vida del componente hijo.
+- [x] **Refinamiento Estético y Escalabilidad CSS (The Steel Ledger Style)**:
+  - [x] Se forzó el uso de las clases estructurales globales `.modal-overlay` y `.modal-card` del `style.css` original, garantizando efectos de desenfoque (*blur*) y elevación uniformes.
+  - [x] Se aplicó el sobreescrito de borde primario `border-top: 3px solid var(--color-primary-500);` para diferenciar visualmente los modales de "Agregado".
+  - [x] **Evolución del Design System**: Se detectó la falta de una clase de éxito global para botones. Se creó y persistió la clase `.btn-success` en `style.css` (usando `--color-success-500/600`), sustituyendo los estilos *inline* por una implementación CSS pura y escalable.
+- [x] **Creación de nueva Skill Maestra (`modal_agregar_integration`)**:
+  - [x] Se documentó y formalizó una guía técnica obligatoria (`.agent/skills/modal_agregar_integration/SKILL.md`) que establece el protocolo para crear e inyectar modales de creación. 
+  - [x] La skill cristaliza las lecciones aprendidas sobre el "Anclaje al Padre", la prohibición de *inline styles* profundos y el uso forzoso de tipos `text` en el DOM para ceder el control al validador JS.
+- [x] **Mantenimiento y Sincronización Factory**:
+    - [x] Se actualizó `usuarios_factory.js` para orquestar la generación de todos los modales requeridos y su inyección hacia el controlador principal, retornando finalmente los elementos para su inserción en el router SPA.
