@@ -1,22 +1,35 @@
 export class ModalAgregarUsuarioModel {
   constructor() {
-    // En una ejecución real, aquí se inyectaría un manejador de peticiones o storage
   }
 
   /**
-   * Simula la llamada asíncrona al API para guardar un nuevo usuario
+   * Guarda un nuevo usuario en la API.
    * @param {Object} userData
-   * @returns {Promise<boolean>}
+   * @returns {Promise<Object>}
    */
-  async saveUserMock(userData) {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        // Simulador de éxito después de 1 segundo
-        resolve(true);
+  async saveUser(userData) {
+    try {
+      const url = import.meta.env.VITE_API_USERS_REGISTER;
+      
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(userData),
+      });
 
-        // Si quisieramos probar el ModalError, descomentaríamos el reject:
-        // reject(new Error("Conexión perdida. El usuario no pudo ser agregado."));
-      }, 1000);
-    });
+      const json = await response.json();
+
+      if (!response.ok || !json.success) {
+        throw new Error(
+          json.message || `Error HTTP ${response.status}: ${response.statusText}`,
+        );
+      }
+
+      return json;
+    } catch (error) {
+      throw error;
+    }
   }
 }

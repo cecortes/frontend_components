@@ -17,24 +17,26 @@ export class FieldsValidator {
    */
   validateField(element) {
     const fieldName = element.name || element.id;
-    if (fieldName === "username") {
+    if (fieldName === "username" || fieldName === "addUsrUser") {
       return this.validateUser(element);
     }
-    if (fieldName === "password") {
+    if (fieldName === "password" || fieldName === "addUsrPassword") {
       return this.validatePassword(element);
     }
     if (
       fieldName === "editNombre" ||
       fieldName === "nombre" ||
       fieldName === "editClienteNombre" ||
-      fieldName === "editClienteContacto"
+      fieldName === "editClienteContacto" ||
+      fieldName === "addUsrName"
     ) {
       return this.validateName(element);
     }
     if (
       fieldName === "editMail" ||
       fieldName === "mail" ||
-      fieldName === "editClienteCorreo"
+      fieldName === "editClienteCorreo" ||
+      fieldName === "addUsrMail"
     ) {
       return this.validateEmail(element);
     }

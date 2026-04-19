@@ -103,11 +103,11 @@ export class ModalAgregarUsuarioController {
         };
 
         try {
-          await this.model.saveUserMock(data);
+          await this.model.saveUser(data);
 
           this.handleClose();
           this.modalOkController.showOk(
-            "El usuario ha sido creado exitosamente.",
+            "Usuario registrado exitosamente.",
           );
         } catch (error) {
           this.handleClose();

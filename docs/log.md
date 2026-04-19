@@ -465,14 +465,14 @@
   - [x] **Botón Disparador**: Se identificó un error donde la vista principal de `Usuarios` carecía del botón físico para lanzar el modal. Se inyectó el HTML primario `+ Agregar Usuario` con el id `#btnShowAddUsuario` en la cabecera.
   - [x] **Hook de Controlador**: Se modificó `usuariosController.js` para recibir e interceptar el evento click mediante el método `.start()` del controlador del modal, cerrando el ciclo de vida del componente hijo.
 - [x] **Refinamiento Estético y Escalabilidad CSS (The Steel Ledger Style)**:
-  - [x] Se forzó el uso de las clases estructurales globales `.modal-overlay` y `.modal-card` del `style.css` original, garantizando efectos de desenfoque (*blur*) y elevación uniformes.
+  - [x] Se forzó el uso de las clases estructurales globales `.modal-overlay` y `.modal-card` del `style.css` original, garantizando efectos de desenfoque (_blur_) y elevación uniformes.
   - [x] Se aplicó el sobreescrito de borde primario `border-top: 3px solid var(--color-primary-500);` para diferenciar visualmente los modales de "Agregado".
-  - [x] **Evolución del Design System**: Se detectó la falta de una clase de éxito global para botones. Se creó y persistió la clase `.btn-success` en `style.css` (usando `--color-success-500/600`), sustituyendo los estilos *inline* por una implementación CSS pura y escalable.
+  - [x] **Evolución del Design System**: Se detectó la falta de una clase de éxito global para botones. Se creó y persistió la clase `.btn-success` en `style.css` (usando `--color-success-500/600`), sustituyendo los estilos _inline_ por una implementación CSS pura y escalable.
 - [x] **Creación de nueva Skill Maestra (`modal_agregar_integration`)**:
-  - [x] Se documentó y formalizó una guía técnica obligatoria (`.agent/skills/modal_agregar_integration/SKILL.md`) que establece el protocolo para crear e inyectar modales de creación. 
-  - [x] La skill cristaliza las lecciones aprendidas sobre el "Anclaje al Padre", la prohibición de *inline styles* profundos y el uso forzoso de tipos `text` en el DOM para ceder el control al validador JS.
+  - [x] Se documentó y formalizó una guía técnica obligatoria (`.agent/skills/modal_agregar_integration/SKILL.md`) que establece el protocolo para crear e inyectar modales de creación.
+  - [x] La skill cristaliza las lecciones aprendidas sobre el "Anclaje al Padre", la prohibición de _inline styles_ profundos y el uso forzoso de tipos `text` en el DOM para ceder el control al validador JS.
 - [x] **Mantenimiento y Sincronización Factory**:
-    - [x] Se actualizó `usuarios_factory.js` para orquestar la generación de todos los modales requeridos y su inyección hacia el controlador principal, retornando finalmente los elementos para su inserción en el router SPA.
+  - [x] Se actualizó `usuarios_factory.js` para orquestar la generación de todos los modales requeridos y su inyección hacia el controlador principal, retornando finalmente los elementos para su inserción en el router SPA.
 
 ---
 
@@ -487,3 +487,9 @@
   - [x] **Controlador (`modalAgregarUsuarioController.js`)**:
     - Se actualizó el objeto `data` enviado al modelo para incluir las llaves: `user`, `mail`, `name`, `password` y `role`.
     - Se implementó la validación y el manejo de eventos (`blur`) para el nuevo campo de usuario.
+- [x] **Integración con Backend**:
+  - [x] Se configuró la variable de entorno `VITE_API_USERS_REGISTER` en `.env` y `.env.template`.
+  - [x] **Modelo (`modalAgregarUsuarioModel.js`)**: Se implementó el método `saveUser` para realizar una petición `POST` real al backend con el payload requerido, omitiendo el token de autenticación según requerimiento.
+  - [x] **Controlador (`modalAgregarUsuarioController.js`)**: Se conectó la lógica de guardado con el modelo real y se integró la respuesta visual mediante `ModalOk` y `ModalError`.
+- [x] **Corrección de Bug en Validación**:
+  - [x] **FieldsValidator (`fieldsValidator.js`)**: Se diagnosticó y resolvió un fallo donde los campos de `ModalAgregarUsuario` siempre reportaban error. Se agregaron los IDs de los inputs (`addUsrUser`, `addUsrName`, `addUsrMail`, `addUsrPassword`) al mapeo de validación del componente global.
