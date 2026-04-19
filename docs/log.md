@@ -492,4 +492,12 @@
   - [x] **Modelo (`modalAgregarUsuarioModel.js`)**: Se implementó el método `saveUser` para realizar una petición `POST` real al backend con el payload requerido, omitiendo el token de autenticación según requerimiento.
   - [x] **Controlador (`modalAgregarUsuarioController.js`)**: Se conectó la lógica de guardado con el modelo real y se integró la respuesta visual mediante `ModalOk` y `ModalError`.
 - [x] **Corrección de Bug en Validación**:
-  - [x] **FieldsValidator (`fieldsValidator.js`)**: Se diagnosticó y resolvió un fallo donde los campos de `ModalAgregarUsuario` siempre reportaban error. Se agregaron los IDs de los inputs (`addUsrUser`, `addUsrName`, `addUsrMail`, `addUsrPassword`) al mapeo de validación del componente global.
+  - [x] **Funcionalidad Mostrar/Ocultar Contraseña en ModalAgregarUsuario**:
+  - [x] **Análisis de Referencia**: Se analizó el componente `LoginForm` para replicar su lógica de alternancia de visibilidad de contraseña.
+  - [x] **Factory (`modal_agregar_usuario_factory.js`)**: Se integraron los iconos SVG `eye` y `eyeOff` en la configuración de dependencias.
+  - [x] **Vista (`modalAgregarUsuarioView.js`)**:
+    - Se insertó el botón interactivo `.toggle-password` dentro del `input-wrapper` de la contraseña.
+    - Se implementó el método `togglePasswordType` para gestionar el cambio de estado del input (`password` <-> `text`) y la actualización del icono.
+    - Se añadió la referencia `$togglePassBtn` al objeto `ModalElements`.
+  - [x] **Controlador (`modalAgregarUsuarioController.js`)**: Se vinculó el evento `click` del botón de toggle con la lógica de la vista, asegurando el funcionamiento asíncrono y la integridad del patrón MVC.
+  - [x] **Estandarización de Estilos**: Se utilizó la clase global `.toggle-password` definida en `style.css` para mantener la consistencia visual con el resto del proyecto sin recurrir a estilos inline complejos.

@@ -68,6 +68,9 @@ export class ModalAgregarUsuarioView {
                     <label for="addUsrPassword" style="display: block; margin-bottom: 6px; font-size: 0.875rem; color: var(--color-text-secondary);">Contraseña</label>
                     <div class="input-wrapper" style="position: relative;">
                         <input type="password" id="addUsrPassword" class="input-field" placeholder="Define una contraseña" style="width: 100%; box-sizing: border-box; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 8px; background-color: var(--color-background-primary); color: var(--color-text-primary);" />
+                        <button type="button" class="toggle-password" id="addUsrTogglePassword" aria-label="Mostrar contraseña">
+                          ${this.icons.eye}
+                        </button>
                         <div class="validation-tooltip" id="addUsrPasswordError" role="alert" aria-live="polite"></div>
                     </div>
                 </div>
@@ -107,6 +110,7 @@ export class ModalAgregarUsuarioView {
       $inputMail: this.element.querySelector("#addUsrMail"),
       $inputRole: this.element.querySelector("#addUsrRole"),
       $inputPassword: this.element.querySelector("#addUsrPassword"),
+      $togglePassBtn: this.element.querySelector("#addUsrTogglePassword"),
       $userError: this.element.querySelector("#addUsrUserError"),
       $nameError: this.element.querySelector("#addUsrNameError"),
       $mailError: this.element.querySelector("#addUsrMailError"),
@@ -127,6 +131,19 @@ export class ModalAgregarUsuarioView {
     $overlay.classList.remove("modal-visible");
     $overlay.setAttribute("aria-hidden", "true");
     document.body.classList.remove("modal-open");
+  }
+
+  togglePasswordType(toggleInput, toggleElement) {
+    const elementWithIcon = toggleElement;
+    const input = toggleInput;
+
+    if (input.type === "password") {
+      elementWithIcon.innerHTML = this.icons.eyeOff;
+      input.type = "text";
+    } else {
+      elementWithIcon.innerHTML = this.icons.eye;
+      input.type = "password";
+    }
   }
 
   showValidationError(inputElement, errorElement, message) {

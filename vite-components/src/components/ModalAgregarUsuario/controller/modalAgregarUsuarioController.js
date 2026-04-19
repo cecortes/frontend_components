@@ -24,10 +24,17 @@ export class ModalAgregarUsuarioController {
       $inputRole,
       $inputPassword,
       $passwordError,
+      $togglePassBtn,
       $form,
       $cancelBtn,
       $closeBtn,
     } = this.view.ModalElements;
+
+    if ($togglePassBtn) {
+      $togglePassBtn.addEventListener("click", () => {
+        this.view.togglePasswordType($inputPassword, $togglePassBtn);
+      });
+    }
 
     const validateAll = () => {
       let isValid = true;
