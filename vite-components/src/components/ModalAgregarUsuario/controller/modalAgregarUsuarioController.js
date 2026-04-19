@@ -15,6 +15,8 @@ export class ModalAgregarUsuarioController {
 
   bindEvents() {
     const {
+      $inputUser,
+      $userError,
       $inputName,
       $nameError,
       $inputMail,
@@ -29,6 +31,9 @@ export class ModalAgregarUsuarioController {
 
     const validateAll = () => {
       let isValid = true;
+
+      const vUser = this.validator.validateField($inputUser);
+      if (!this.validationPopUp(vUser, $inputUser, $userError)) isValid = false;
 
       const vName = this.validator.validateField($inputName);
       if (!this.validationPopUp(vName, $inputName, $nameError)) isValid = false;
@@ -50,6 +55,13 @@ export class ModalAgregarUsuarioController {
       return isValid;
     };
 
+    $inputUser.addEventListener("blur", () =>
+      this.validationPopUp(
+        this.validator.validateField($inputUser),
+        $inputUser,
+        $userError,
+      ),
+    );
     $inputName.addEventListener("blur", () =>
       this.validationPopUp(
         this.validator.validateField($inputName),
@@ -83,10 +95,11 @@ export class ModalAgregarUsuarioController {
         if (!validateAll()) return;
 
         const data = {
+          user: $inputUser.value,
+          mail: $inputMail.value,
           name: $inputName.value,
-          email: $inputMail.value,
-          role: $inputRole.value,
           password: $inputPassword.value,
+          role: $inputRole.value,
         };
 
         try {

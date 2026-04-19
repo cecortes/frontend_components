@@ -473,3 +473,17 @@
   - [x] La skill cristaliza las lecciones aprendidas sobre el "Anclaje al Padre", la prohibición de *inline styles* profundos y el uso forzoso de tipos `text` en el DOM para ceder el control al validador JS.
 - [x] **Mantenimiento y Sincronización Factory**:
     - [x] Se actualizó `usuarios_factory.js` para orquestar la generación de todos los modales requeridos y su inyección hacia el controlador principal, retornando finalmente los elementos para su inserción en el router SPA.
+
+---
+
+## 19-04-26 - Actualización de ModalAgregarUsuario y Ajuste de Payload
+
+- [x] **Modificación de campos en ModalAgregarUsuario**:
+  - [x] **Vista (`modalAgregarUsuarioView.js`)**:
+    - Se agregó el campo **"Usuario"** (`user`) al formulario para cumplir con los requerimientos del endpoint.
+    - Se actualizaron las opciones del select **"Rol"** a: `admin`, `user` y `guess`.
+    - Se renombró la etiqueta **"Contraseña Temporal"** a **"Contraseña"**.
+    - Se actualizó el getter `ModalElements` para incluir las referencias al nuevo input y su contenedor de error.
+  - [x] **Controlador (`modalAgregarUsuarioController.js`)**:
+    - Se actualizó el objeto `data` enviado al modelo para incluir las llaves: `user`, `mail`, `name`, `password` y `role`.
+    - Se implementó la validación y el manejo de eventos (`blur`) para el nuevo campo de usuario.

@@ -31,6 +31,14 @@ export class ModalAgregarUsuarioView {
             <form id="formAgregarUsuario" style="display: flex; flex-direction: column; gap: 1rem;" novalidate>
                 
                 <div class="input-group" style="margin-bottom: 0;">
+                    <label for="addUsrUser" style="display: block; margin-bottom: 6px; font-size: 0.875rem; color: var(--color-text-secondary);">Usuario</label>
+                    <div class="input-wrapper" style="position: relative;">
+                        <input type="text" id="addUsrUser" class="input-field" placeholder="Ej. aperez" style="width: 100%; box-sizing: border-box; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 8px; background-color: var(--color-background-primary); color: var(--color-text-primary);" />
+                        <div class="validation-tooltip" id="addUsrUserError" role="alert" aria-live="polite"></div>
+                    </div>
+                </div>
+
+                <div class="input-group" style="margin-bottom: 0;">
                     <label for="addUsrName" style="display: block; margin-bottom: 6px; font-size: 0.875rem; color: var(--color-text-secondary);">Nombre Completo</label>
                     <div class="input-wrapper" style="position: relative;">
                         <input type="text" id="addUsrName" class="input-field" placeholder="Ej. Ana Pérez" style="width: 100%; box-sizing: border-box; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 8px; background-color: var(--color-background-primary); color: var(--color-text-primary);" />
@@ -50,16 +58,16 @@ export class ModalAgregarUsuarioView {
                     <label for="addUsrRole" style="display: block; margin-bottom: 6px; font-size: 0.875rem; color: var(--color-text-secondary);">Rol</label>
                     <select id="addUsrRole" class="input-field" style="width: 100%; box-sizing: border-box; padding: 0.5rem 0.75rem; font-size: 0.875rem; border: 1px solid var(--color-border-default); border-radius: 8px; background-color: var(--color-background-primary); color: var(--color-text-primary);">
                         <option value="" disabled selected>Selecciona un rol</option>
-                        <option value="Administrador">Administrador</option>
-                        <option value="Manager">Manager</option>
-                        <option value="Lector">Lector</option>
+                        <option value="admin">admin</option>
+                        <option value="user">user</option>
+                        <option value="guess">guess</option>
                     </select>
                 </div>
 
                 <div class="input-group" style="margin-bottom: 0;">
-                    <label for="addUsrPassword" style="display: block; margin-bottom: 6px; font-size: 0.875rem; color: var(--color-text-secondary);">Contraseña Temporal</label>
+                    <label for="addUsrPassword" style="display: block; margin-bottom: 6px; font-size: 0.875rem; color: var(--color-text-secondary);">Contraseña</label>
                     <div class="input-wrapper" style="position: relative;">
-                        <input type="password" id="addUsrPassword" class="input-field" placeholder="Define una contraseña provisional" style="width: 100%; box-sizing: border-box; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 8px; background-color: var(--color-background-primary); color: var(--color-text-primary);" />
+                        <input type="password" id="addUsrPassword" class="input-field" placeholder="Define una contraseña" style="width: 100%; box-sizing: border-box; padding: 0.75rem; border: 1px solid var(--color-border-default); border-radius: 8px; background-color: var(--color-background-primary); color: var(--color-text-primary);" />
                         <div class="validation-tooltip" id="addUsrPasswordError" role="alert" aria-live="polite"></div>
                     </div>
                 </div>
@@ -94,10 +102,12 @@ export class ModalAgregarUsuarioView {
       $closeBtn: this.element.querySelector("#modalAddCloseBtn"),
       $cancelBtn: this.element.querySelector("#modalAddCancelBtn"),
       $form: this.element.querySelector("#formAgregarUsuario"),
+      $inputUser: this.element.querySelector("#addUsrUser"),
       $inputName: this.element.querySelector("#addUsrName"),
       $inputMail: this.element.querySelector("#addUsrMail"),
       $inputRole: this.element.querySelector("#addUsrRole"),
       $inputPassword: this.element.querySelector("#addUsrPassword"),
+      $userError: this.element.querySelector("#addUsrUserError"),
       $nameError: this.element.querySelector("#addUsrNameError"),
       $mailError: this.element.querySelector("#addUsrMailError"),
       $passwordError: this.element.querySelector("#addUsrPasswordError"),
