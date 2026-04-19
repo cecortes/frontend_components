@@ -501,3 +501,6 @@
     - Se añadió la referencia `$togglePassBtn` al objeto `ModalElements`.
   - [x] **Controlador (`modalAgregarUsuarioController.js`)**: Se vinculó el evento `click` del botón de toggle con la lógica de la vista, asegurando el funcionamiento asíncrono y la integridad del patrón MVC.
   - [x] **Estandarización de Estilos**: Se utilizó la clase global `.toggle-password` definida en `style.css` para mantener la consistencia visual con el resto del proyecto sin recurrir a estilos inline complejos.
+- [x] **Cierre de ModalAgregarUsuario por Eventos Externos**:
+  - [x] Se replicó la funcionalidad presente en `ModalEditarUsuario` para permitir el cierre del modal al hacer clic en el overlay (fondo oscuro fuera del contenedor) y al presionar la tecla `Escape`.
+  - [x] Se modificó el controlador `modalAgregarUsuarioController.js` para extraer las referencias `$overlay` y `$card` de la vista y vincular los eventos pertinentes de manera segura.

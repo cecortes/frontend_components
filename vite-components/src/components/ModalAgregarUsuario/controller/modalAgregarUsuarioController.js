@@ -15,6 +15,8 @@ export class ModalAgregarUsuarioController {
 
   bindEvents() {
     const {
+      $overlay,
+      $card,
       $inputUser,
       $userError,
       $inputName,
@@ -94,6 +96,22 @@ export class ModalAgregarUsuarioController {
     const handleCloseClick = () => this.handleClose();
     if ($cancelBtn) $cancelBtn.addEventListener("click", handleCloseClick);
     if ($closeBtn) $closeBtn.addEventListener("click", handleCloseClick);
+
+    // Cierra el modal al hacer clic fuera del card (overlay)
+    if ($overlay && $card) {
+      $overlay.addEventListener("click", (e) => {
+        if (!$card.contains(e.target)) {
+          this.handleClose();
+        }
+      });
+    }
+
+    // Cierra el modal con ESC
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && $overlay?.classList.contains("modal-visible")) {
+        this.handleClose();
+      }
+    });
 
     if ($form) {
       $form.addEventListener("submit", async (e) => {
