@@ -77,10 +77,12 @@ const routes = {
     return element;
   },
   "/usuarios": async () => {
-    const { element, modalError } = await UsuariosFactory.usuariosComponent();
-    if (modalError) {
-      document.body.append(modalError);
-    }
+    const { element, modalError, modalOk } = await UsuariosFactory.usuariosComponent();
+    
+    // Adjuntar los modales globales al body para que puedan ser mostrados
+    if (modalError) document.body.append(modalError);
+    if (modalOk) document.body.append(modalOk);
+    
     return element;
   },
   "/clientes": async () => {

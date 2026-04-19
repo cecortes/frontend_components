@@ -7,9 +7,11 @@ export class ModalAgregarUsuarioController {
     this.validator = validator;
     this.modalOkController = modalOkController;
     this.modalErrorController = modalErrorController;
+    this.onSaveCallback = null;
   }
 
-  start() {
+  start(onSave = null) {
+    this.onSaveCallback = onSave;
     this.view.show();
   }
 
@@ -33,7 +35,9 @@ export class ModalAgregarUsuarioController {
     } = this.view.ModalElements;
 
     if ($togglePassBtn) {
-      $togglePassBtn.addEventListener("click", () => {
+      $togglePassBtn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
         this.view.togglePasswordType($inputPassword, $togglePassBtn);
       });
     }
@@ -100,7 +104,7 @@ export class ModalAgregarUsuarioController {
     // Cierra el modal al hacer clic fuera del card (overlay)
     if ($overlay && $card) {
       $overlay.addEventListener("click", (e) => {
-        if (!$card.contains(e.target)) {
+        if (e.target === $overlay) {
           this.handleClose();
         }
       });
@@ -128,7 +132,11 @@ export class ModalAgregarUsuarioController {
         };
 
         try {
-          await this.model.saveUser(data);
+          const responseData = await this.model.saveUser(data);
+
+          if (typeof this.onSaveCallback === "function") {
+            this.onSaveCallback(responseData);
+          }
 
           this.handleClose();
           this.modalOkController.showOk(

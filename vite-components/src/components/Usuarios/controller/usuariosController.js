@@ -65,7 +65,11 @@ export class UsuariosController {
     const addUsrBtn = html.querySelector("#btnShowAddUsuario");
     if (addUsrBtn && this.modalAddController) {
       addUsrBtn.addEventListener("click", () => {
-        this.modalAddController.start();
+        this.modalAddController.start((newData) => {
+          // Callback para cuando se ha agregado el usuario exitosamente
+          console.log("Usuario agregado desde el modal:", newData);
+          // Opcional: Aquí se podría llamar a un método para recargar la tabla de usuarios
+        });
       });
     }
 

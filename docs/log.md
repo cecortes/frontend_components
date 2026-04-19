@@ -504,3 +504,10 @@
 - [x] **Cierre de ModalAgregarUsuario por Eventos Externos**:
   - [x] Se replicó la funcionalidad presente en `ModalEditarUsuario` para permitir el cierre del modal al hacer clic en el overlay (fondo oscuro fuera del contenedor) y al presionar la tecla `Escape`.
   - [x] Se modificó el controlador `modalAgregarUsuarioController.js` para extraer las referencias `$overlay` y `$card` de la vista y vincular los eventos pertinentes de manera segura.
+- [x] **Corrección de Bug Crítico: Cierre Inesperado de Modal al Alternar Contraseña**:
+  - [x] **Diagnóstico**: Se identificó un bug donde el `ModalAgregarUsuario` se cerraba al hacer clic en el ícono de "Mostrar Contraseña" si el resto de campos estaban llenos. La causa era la eliminación del elemento `<svg>` del DOM durante el evento de clic, lo que provocaba que la lógica de "clic fuera del modal" detectara erróneamente que el click fue externo al no encontrar el `e.target` dentro de la tarjeta del modal.
+  - [x] **Solución**: Se implementó `e.stopPropagation()` en el botón de toggle y se refinó la lógica del overlay en el controlador para validar estrictamente que `e.target === $overlay`.
+- [x] **Corrección de Bug de Inyección y Feedback Visual (ModalOk)**:
+  - [x] **Diagnóstico**: Se resolvió un error donde el `ModalOk` no se mostraba tras un registro exitoso. La causa fue un "Nodo Huérfano" en el enrutador `main.js`, donde la variable `modalOk` no era desestructurada ni adjuntada al DOM para la ruta `/usuarios`.
+  - [x] **Arquitectura y Estandarización**: Se replicó el patrón `onSaveCallback` del `ModalEditarUsuario` en el `ModalAgregarUsuario` para permitir la comunicación reactiva con el controlador padre (`UsuariosController`), preparando el terreno para la futura actualización automática de la tabla de usuarios.
+  - [x] **Sincronización del Router**: Se actualizó `main.js` para asegurar la inyección de `modalOk` y `modalError` en la ruta de usuarios.
