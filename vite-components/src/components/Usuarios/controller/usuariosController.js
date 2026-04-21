@@ -9,6 +9,7 @@ export class UsuariosController {
     modalErrorController,
     sidebarController = null,
     modalAddController = null,
+    tablaUsuariosController = null,
   ) {
     this.view = view;
     this.model = model;
@@ -17,6 +18,7 @@ export class UsuariosController {
     this.modalErrorController = modalErrorController;
     this.sidebarController = sidebarController;
     this.modalAddController = modalAddController;
+    this.tablaUsuariosController = tablaUsuariosController;
   }
 
   /**
@@ -53,8 +55,13 @@ export class UsuariosController {
       ? this.sidebarController.getBurgerHTML()
       : "";
 
+    // Inicializar TablaUsuarios Component
+    const tablaUsuariosHTML = this.tablaUsuariosController
+      ? await this.tablaUsuariosController.init()
+      : "";
+
     // Renderizar la vista principal
-    const html = this.view.renderUsuarios(sidebarHTML, burgerHTML);
+    const html = this.view.renderUsuarios(sidebarHTML, burgerHTML, tablaUsuariosHTML);
 
     // Bind Navigation events para el Sidebar
     if (this.sidebarController) {
@@ -65,15 +72,20 @@ export class UsuariosController {
     const addUsrBtn = html.querySelector("#btnShowAddUsuario");
     if (addUsrBtn && this.modalAddController) {
       addUsrBtn.addEventListener("click", () => {
-        this.modalAddController.start((newData) => {
+        this.modalAddController.start(async (newData) => {
           // Callback para cuando se ha agregado el usuario exitosamente
           console.log("Usuario agregado desde el modal:", newData);
-          // Opcional: Aquí se podría llamar a un método para recargar la tabla de usuarios
+          if (this.tablaUsuariosController) {
+            await this.tablaUsuariosController.reloadTable();
+          }
         });
       });
     }
 
     // A futuro aquí iría la inyección de TablaUsuarios u otros eventos
+    if (this.tablaUsuariosController) {
+      this.tablaUsuariosController.bindEvents();
+    }
 
     return html;
   }

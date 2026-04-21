@@ -8,7 +8,6 @@ export class DashboardController {
     auth,
     modalController = null,
     sidebarController = null,
-    tablaUsuariosController = null,
     tablaClientesController = null,
   ) {
     this.view = view;
@@ -17,7 +16,6 @@ export class DashboardController {
     this.auth = auth;
     this.modalController = modalController;
     this.sidebarController = sidebarController;
-    this.tablaUsuariosController = tablaUsuariosController;
     this.tablaClientesController = tablaClientesController;
   }
 
@@ -53,11 +51,6 @@ export class DashboardController {
       ? this.sidebarController.getBurgerHTML()
       : "";
 
-    // Inicializar TablaUsuarios Component
-    const tablaUsuariosHTML = this.tablaUsuariosController
-      ? await this.tablaUsuariosController.init()
-      : "";
-
     // Inicializar TablaClientes Component
     const tablaClientesHTML = this.tablaClientesController
       ? await this.tablaClientesController.init()
@@ -67,7 +60,6 @@ export class DashboardController {
     const html = this.view.renderDashboard(
       sidebarHTML,
       burgerHTML,
-      tablaUsuariosHTML,
       tablaClientesHTML,
     );
 
@@ -75,9 +67,6 @@ export class DashboardController {
     this.dashboardEventHandler();
     if (this.sidebarController) {
       this.sidebarController.bindNavigation(html);
-    }
-    if (this.tablaUsuariosController) {
-      this.tablaUsuariosController.bindEvents();
     }
     if (this.tablaClientesController) {
       this.tablaClientesController.bindEvents();

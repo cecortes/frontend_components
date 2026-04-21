@@ -515,7 +515,7 @@
 
 ---
 
-## 20-04-26 - Implementación de Protocolo de Estrategias y Nueva Skill Maestra
+## 20-04-26 - Implementación de Protocolo de Estrategias, Migración de TablaUsuarios e Interactividad Reactiva
 
 - [x] **Creación de Skill Maestra para Elaboración de Estrategias**:
   - [x] Se diseñó y documentó la guía obligatoria `.agent/skills/strategy_creation/SKILL.md` siguiendo las instrucciones directas del usuario.
@@ -523,3 +523,21 @@
 - [x] **Implementación de Regla de Proyecto Persistente**:
   - [x] Se creó la regla `.agent/rules/strategy_rule.md` configurada para dispararse automáticamente ante cualquier solicitud de generación de estrategias.
   - [x] Esta regla fuerza al agente a detenerse, leer la skill de estrategias y validar internamente una lista de verificación (checklist) antes de presentar cualquier propuesta al usuario.
+
+- [x] **Migración de Componente TablaUsuarios (MVC & Factory)**:
+  - [x] Se ejecutó con éxito el traslado del componente `TablaUsuarios` y sus dependencias (Modales de Edición y Borrado) desde el `Dashboard` hacia la vista de `Usuarios`.
+  - [x] **Factory (`usuarios_factory.js`)**: Se refactorizó para integrar la instanciación de la tabla y sus modales, inyectándolos en el controlador de la página.
+  - [x] **Controlador (`usuariosController.js`)**: Se implementó el ciclo de vida completo del componente hijo, orquestando su `init()` asíncrono y la vinculación de eventos (`bindEvents`).
+  - [x] **Vista (`usuariosView.js`)**: Se adaptó el layout para recibir e inyectar dinámicamente el HTML del componente, manteniendo la paridad visual absoluta.
+
+- [x] **Resolución de Bug Crítico de Enrutador ("undefinedundefined")**:
+  - [x] **Diagnóstico y Análisis**: Se detectó un error visual donde el Dashboard mostraba el texto `"undefinedundefined"` tras la migración. La causa fue una "fuga" en el enrutador central `main.js`, donde se intentaba deestructurar e inyectar variables de modales que ya no eran retornadas por la factoría del Dashboard. El navegador, al recibir `undefined` en `document.body.append()`, parseaba los valores como strings literales.
+  - [x] **Corrección en Router (`main.js`)**: Se limpió la ruta `/dashboard` eliminando las referencias muertas y se actualizó la ruta `/usuarios` para inyectar correctamente los nuevos modales migrados.
+  - [x] **Nueva Skill Maestra (`move_injected_table_component`)**: Se documentó formalmente todo el proceso y el análisis de este bug en `.agent/skills/move_injected_table_component/SKILL.md` como guía obligatoria para futuras migraciones de componentes inyectados.
+
+- [x] **Implementación de Recarga Automática (Reactividad)**:
+  - [x] **Análisis de Funcionalidad**: Se identificó que la `TablaUsuarios` no se actualizaba tras agregar un usuario nuevo, a diferencia de los flujos de edición y borrado. La causa era que el componente carecía de una API pública de actualización y el callback en `UsuariosController` estaba vacío.
+  - [x] **Refactorización de Tabla (`tablaUsuariosController.js`)**:
+    - Se expuso el método público `async reloadTable()` para encapsular la lógica de re-petición al modelo y actualización de DataTables.
+    - Se movió el estado de datos (`data`) al ámbito de instancia (`this.tableData`) para evitar cierres obsoletos (_stale closures_) y asegurar la integridad de la información tras múltiples actualizaciones.
+  - [x] **Sincronización en Usuarios**: Se actualizó el callback de éxito en `UsuariosController` para invocar de forma asíncrona a `this.tablaUsuariosController.reloadTable()`, logrando que la tabla se refresque automáticamente al cerrar el `ModalOk` tras una creación exitosa.

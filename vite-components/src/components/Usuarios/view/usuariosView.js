@@ -10,7 +10,7 @@ export class UsuariosView {
    * @method renderUsuarios
    * @description Genera el DOM principal para la vista de Usuarios.
    */
-  renderUsuarios(sidebarHTML = "", burgerHTML = "") {
+  renderUsuarios(sidebarHTML = "", burgerHTML = "", tablaUsuariosHTML = "") {
     const html = `
       <div class="dashboard-wrapper" style="display: flex; min-height: 100vh; width: 100%; overflow-x: hidden;">
         ${sidebarHTML}
@@ -35,7 +35,7 @@ export class UsuariosView {
 
           <!-- Área de Contenido -->
           <div class="dashboard-content">
-            <!-- Sección vacía reservada para implementaciones futuras -->
+            ${tablaUsuariosHTML}
           </div>
         </main>
       </div>

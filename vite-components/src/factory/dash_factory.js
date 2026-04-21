@@ -8,11 +8,8 @@ import { AuthController } from "../components/Auth/controller/authController.js"
 
 import { ModalFactory } from "./modal_factory.js";
 import { SidebarFactory } from "./sidebar_factory.js";
-import { TablaUsuariosFactory } from "./tabla_usuarios_factory.js";
 import { TablaClientesFactory } from "./tabla_clientes_factory.js";
 import { icons } from "../components/Dashboard/icons/svg_icons.js";
-import { ModalEditarUsuarioFactory } from "./modal_editar_usuario_factory.js";
-import { ModalBorrarUsuarioFactory } from "./modal_borrar_usuario_factory.js";
 import { ModalEditarClienteFactory } from "./modal_editar_cliente_factory.js";
 import { ModalBorrarClienteFactory } from "./modal_borrar_cliente_factory.js";
 
@@ -36,18 +33,6 @@ export class DashboardFactory {
     const { element: modalOkElement, controller: modalOkController } =
       ModalFactory.modalOkComponent();
 
-    const { element: modalEditElement, controller: modalEditController } =
-      ModalEditarUsuarioFactory.createModal(
-        modalErrorController,
-        modalOkController,
-      );
-
-    const { element: modalDeleteElement, controller: modalDeleteController } =
-      ModalBorrarUsuarioFactory.createModal(
-        modalErrorController,
-        modalOkController,
-      );
-
     const {
       element: modalEditClientElement,
       controller: modalEditClientController,
@@ -65,10 +50,6 @@ export class DashboardFactory {
     );
 
     const sidebarController = SidebarFactory.createSidebar();
-    const tablaUsuariosController = TablaUsuariosFactory.createTablaUsuarios(
-      modalEditController,
-      modalDeleteController,
-    );
     const tablaClientesController = TablaClientesFactory.createTablaClientes(
       modalEditClientController,
       modalDeleteClientController,
@@ -85,7 +66,6 @@ export class DashboardFactory {
       auth,
       modalErrorController,
       sidebarController,
-      tablaUsuariosController,
       tablaClientesController,
     );
 
@@ -94,8 +74,6 @@ export class DashboardFactory {
       element,
       modalError: modalErrorElement,
       modalOk: modalOkElement,
-      modalEdit: modalEditElement,
-      modalDelete: modalDeleteElement,
       modalEditClient: modalEditClientElement,
       modalDeleteClient: modalDeleteClientElement,
       controller,

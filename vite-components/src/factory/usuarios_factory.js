@@ -9,6 +9,9 @@ import { SidebarFactory } from "./sidebar_factory.js";
 import { ModalFactory } from "./modal_factory.js";
 import { icons } from "../components/Dashboard/icons/svg_icons.js";
 import { ModalAgregarUsuarioFactory } from "./modal_agregar_usuario_factory.js";
+import { TablaUsuariosFactory } from "./tabla_usuarios_factory.js";
+import { ModalEditarUsuarioFactory } from "./modal_editar_usuario_factory.js";
+import { ModalBorrarUsuarioFactory } from "./modal_borrar_usuario_factory.js";
 
 export class UsuariosFactory {
   /**
@@ -31,7 +34,24 @@ export class UsuariosFactory {
         modalErrorController,
       );
 
+    const { element: modalEditElement, controller: modalEditController } =
+      ModalEditarUsuarioFactory.createModal(
+        modalErrorController,
+        modalOkController,
+      );
+
+    const { element: modalDeleteElement, controller: modalDeleteController } =
+      ModalBorrarUsuarioFactory.createModal(
+        modalErrorController,
+        modalOkController,
+      );
+
     const sidebarController = SidebarFactory.createSidebar();
+    
+    const tablaUsuariosController = TablaUsuariosFactory.createTablaUsuarios(
+      modalEditController,
+      modalDeleteController,
+    );
 
     const view = new UsuariosView(icons);
     const model = new UsuariosModel();
@@ -46,6 +66,7 @@ export class UsuariosFactory {
       modalErrorController,
       sidebarController,
       modalAddController,
+      tablaUsuariosController,
     );
 
     const element = await controller.init();
@@ -55,6 +76,8 @@ export class UsuariosFactory {
       modalError: modalErrorElement,
       modalOk: modalOkElement,
       modalAdd: modalAddElement,
+      modalEdit: modalEditElement,
+      modalDelete: modalDeleteElement,
       controller,
     };
   }
