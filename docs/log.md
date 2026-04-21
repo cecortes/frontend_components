@@ -511,3 +511,15 @@
   - [x] **Diagnóstico**: Se resolvió un error donde el `ModalOk` no se mostraba tras un registro exitoso. La causa fue un "Nodo Huérfano" en el enrutador `main.js`, donde la variable `modalOk` no era desestructurada ni adjuntada al DOM para la ruta `/usuarios`.
   - [x] **Arquitectura y Estandarización**: Se replicó el patrón `onSaveCallback` del `ModalEditarUsuario` en el `ModalAgregarUsuario` para permitir la comunicación reactiva con el controlador padre (`UsuariosController`), preparando el terreno para la futura actualización automática de la tabla de usuarios.
   - [x] **Sincronización del Router**: Se actualizó `main.js` para asegurar la inyección de `modalOk` y `modalError` en la ruta de usuarios.
+- [x] **Sincronización del Router**: Se actualizó `main.js` para asegurar la inyección de `modalOk` y `modalError` en la ruta de usuarios.
+
+---
+
+## 20-04-26 - Implementación de Protocolo de Estrategias y Nueva Skill Maestra
+
+- [x] **Creación de Skill Maestra para Elaboración de Estrategias**:
+  - [x] Se diseñó y documentó la guía obligatoria `.agent/skills/strategy_creation/SKILL.md` siguiendo las instrucciones directas del usuario.
+  - [x] Establece un protocolo estricto de 5 puntos: inclusión exhaustiva de instrucciones, análisis profundo, validación de dudas previa, prohibición de alterar funcionalidades ajenas y espera obligatoria de aprobación del usuario.
+- [x] **Implementación de Regla de Proyecto Persistente**:
+  - [x] Se creó la regla `.agent/rules/strategy_rule.md` configurada para dispararse automáticamente ante cualquier solicitud de generación de estrategias.
+  - [x] Esta regla fuerza al agente a detenerse, leer la skill de estrategias y validar internamente una lista de verificación (checklist) antes de presentar cualquier propuesta al usuario.
