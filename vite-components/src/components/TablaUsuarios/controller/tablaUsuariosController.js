@@ -32,6 +32,26 @@ export class TablaUsuariosController {
   }
 
   /**
+   * @async
+   * @method reloadTable
+   * @description
+   * Vuelve a obtener los datos del modelo de manera asíncrona y reinicializa el DataTable
+   * en la vista para reflejar inmediatamente los cambios (creación, edición, borrado).
+   */
+  async reloadTable() {
+    try {
+      console.log("[TablaUsuariosController] Recargando datos de la tabla...");
+      this.tableData = await this.model.fetchUsersData();
+      this.view.initDataTable(this.tableData);
+    } catch (err) {
+      console.error(
+        "[TablaUsuariosController] Error recargando usuarios:",
+        err,
+      );
+    }
+  }
+
+  /**
    * @method bindEvents
    * @description
    * Espera a que la tabla exista en el DOM. Hace fetch de datos e inicializa DataTables.
@@ -46,10 +66,10 @@ export class TablaUsuariosController {
 
         try {
           // 1. Obtener datos del modelo
-          let data = await this.model.fetchUsersData();
+          this.tableData = await this.model.fetchUsersData();
 
           // 2. Pasarle los datos a la Vista para inicializar DataTables
-          this.view.initDataTable(data);
+          this.view.initDataTable(this.tableData);
 
           // 3. Event Delegation para botones de la tabla renderizados dinámicamente
           tableEl.addEventListener("click", (e) => {
@@ -63,7 +83,7 @@ export class TablaUsuariosController {
                 userId,
               );
               // Buscar información del usuario en test/data
-              const userData = data.find((user) => user.usuario === userId);
+              const userData = this.tableData.find((user) => user.usuario === userId);
               if (userData && this.modalEditarController) {
                 this.modalEditarController.showModal(
                   userData,
@@ -72,20 +92,7 @@ export class TablaUsuariosController {
                       "[TablaUsuariosController] Usuario modificado:",
                       updatedUser,
                     );
-                    try {
-                      console.log(
-                        "[TablaUsuariosController] Recargando datos de la tabla...",
-                      );
-                      const newData = await this.model.fetchUsersData();
-                      // Actualizar referencia de datos local para futuros clicks
-                      data = newData;
-                      this.view.initDataTable(data);
-                    } catch (err) {
-                      console.error(
-                        "[TablaUsuariosController] Error recargando usuarios:",
-                        err,
-                      );
-                    }
+                    await this.reloadTable();
                   },
                 );
               }
@@ -97,7 +104,7 @@ export class TablaUsuariosController {
                 "[TablaUsuariosController] Borrar click en usuario:",
                 userId,
               );
-              const userData = data.find((user) => user.usuario === userId);
+              const userData = this.tableData.find((user) => user.usuario === userId);
 
               if (userData && this.modalBorrarController) {
                 this.modalBorrarController.showModal(
@@ -107,20 +114,7 @@ export class TablaUsuariosController {
                       "[TablaUsuariosController] Usuario eliminado:",
                       userToDelete.usuario,
                     );
-                    try {
-                      console.log(
-                        "[TablaUsuariosController] Recargando datos de la tabla tras eliminar...",
-                      );
-                      const newData = await this.model.fetchUsersData();
-                      // Actualizar referencia de datos local para futuros clicks
-                      data = newData;
-                      this.view.initDataTable(data);
-                    } catch (err) {
-                      console.error(
-                        "[TablaUsuariosController] Error recargando usuarios:",
-                        err,
-                      );
-                    }
+                    await this.reloadTable();
                   },
                 );
               }

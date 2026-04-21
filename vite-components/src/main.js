@@ -59,8 +59,6 @@ const routes = {
       element,
       modalError,
       modalOk,
-      modalEdit,
-      modalDelete,
       modalEditClient,
       modalDeleteClient,
     } = await DashboardFactory.dashComponent();
@@ -68,8 +66,6 @@ const routes = {
     document.body.append(
       modalError,
       modalOk,
-      modalEdit,
-      modalDelete,
       modalEditClient,
       modalDeleteClient,
     );
@@ -77,11 +73,14 @@ const routes = {
     return element;
   },
   "/usuarios": async () => {
-    const { element, modalError, modalOk } = await UsuariosFactory.usuariosComponent();
+    const { element, modalError, modalOk, modalAdd, modalEdit, modalDelete } = await UsuariosFactory.usuariosComponent();
     
     // Adjuntar los modales globales al body para que puedan ser mostrados
     if (modalError) document.body.append(modalError);
     if (modalOk) document.body.append(modalOk);
+    if (modalAdd) document.body.append(modalAdd);
+    if (modalEdit) document.body.append(modalEdit);
+    if (modalDelete) document.body.append(modalDelete);
     
     return element;
   },
