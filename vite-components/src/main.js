@@ -55,20 +55,9 @@ const routes = {
     return form;
   },
   "/dashboard": async () => {
-    const {
-      element,
-      modalError,
-      modalOk,
-      modalEditClient,
-      modalDeleteClient,
-    } = await DashboardFactory.dashComponent();
+    const { element, modalError } = await DashboardFactory.dashComponent();
 
-    document.body.append(
-      modalError,
-      modalOk,
-      modalEditClient,
-      modalDeleteClient,
-    );
+    if (modalError) document.body.append(modalError);
 
     return element;
   },
@@ -85,10 +74,13 @@ const routes = {
     return element;
   },
   "/clientes": async () => {
-    const { element, modalError } = await ClientesFactory.clientesComponent();
-    if (modalError) {
-      document.body.append(modalError);
-    }
+    const { element, modalError, modalOk, modalEditClient, modalDeleteClient } = await ClientesFactory.clientesComponent();
+    
+    if (modalError) document.body.append(modalError);
+    if (modalOk) document.body.append(modalOk);
+    if (modalEditClient) document.body.append(modalEditClient);
+    if (modalDeleteClient) document.body.append(modalDeleteClient);
+
     return element;
   },
 };

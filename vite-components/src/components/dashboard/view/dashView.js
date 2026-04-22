@@ -37,11 +37,10 @@ export class DashboardView {
   renderDashboard(
     sidebarHTML = "",
     burgerHTML = "",
-    tablaClientesHTML = "",
   ) {
     const html = `
       <div class="dashboard-wrapper" style="display: flex; min-height: 100vh; width: 100%; overflow-x: hidden;">
-        ${this.getTemplate(sidebarHTML, burgerHTML, tablaClientesHTML)}
+        ${this.getTemplate(sidebarHTML, burgerHTML)}
       </div>
     `;
 
@@ -62,7 +61,6 @@ export class DashboardView {
   getTemplate(
     sidebarHTML = "",
     burgerHTML = "",
-    tablaClientesHTML = "",
   ) {
     return `
     ${sidebarHTML}
@@ -269,8 +267,6 @@ export class DashboardView {
               </table>
             </div>
           </div>
-
-          ${tablaClientesHTML}
         </section>
       </div>
     </main>

@@ -8,6 +8,7 @@ export class ClientesController {
     auth,
     modalErrorController,
     sidebarController = null,
+    tablaClientesController = null,
   ) {
     this.view = view;
     this.model = model;
@@ -15,6 +16,7 @@ export class ClientesController {
     this.auth = auth;
     this.modalErrorController = modalErrorController;
     this.sidebarController = sidebarController;
+    this.tablaClientesController = tablaClientesController;
   }
 
   /**
@@ -51,12 +53,19 @@ export class ClientesController {
       ? this.sidebarController.getBurgerHTML()
       : "";
 
+    const tablaClientesHTML = this.tablaClientesController
+      ? await this.tablaClientesController.init()
+      : "";
+
     // Renderizar la vista principal
-    const html = this.view.renderClientes(sidebarHTML, burgerHTML);
+    const html = this.view.renderClientes(sidebarHTML, burgerHTML, tablaClientesHTML);
 
     // Bind Navigation events para el Sidebar
     if (this.sidebarController) {
       this.sidebarController.bindNavigation(html);
+    }
+    if (this.tablaClientesController) {
+      this.tablaClientesController.bindEvents();
     }
 
     return html;

@@ -8,6 +8,9 @@ import { AuthController } from "../components/Auth/controller/authController.js"
 import { SidebarFactory } from "./sidebar_factory.js";
 import { ModalFactory } from "./modal_factory.js";
 import { icons } from "../components/Dashboard/icons/svg_icons.js";
+import { TablaClientesFactory } from "./tabla_clientes_factory.js";
+import { ModalEditarClienteFactory } from "./modal_editar_cliente_factory.js";
+import { ModalBorrarClienteFactory } from "./modal_borrar_cliente_factory.js";
 
 export class ClientesFactory {
   /**
@@ -18,7 +21,32 @@ export class ClientesFactory {
   static async clientesComponent() {
     const { element: modalErrorElement, controller: modalErrorController } =
       ModalFactory.modalComponent();
+
+    const { element: modalOkElement, controller: modalOkController } =
+      ModalFactory.modalOkComponent();
+
+    const {
+      element: modalEditClientElement,
+      controller: modalEditClientController,
+    } = ModalEditarClienteFactory.createModal(
+      modalErrorController,
+      modalOkController,
+    );
+
+    const {
+      element: modalDeleteClientElement,
+      controller: modalDeleteClientController,
+    } = ModalBorrarClienteFactory.createModal(
+      modalErrorController,
+      modalOkController,
+    );
+
     const sidebarController = SidebarFactory.createSidebar();
+
+    const tablaClientesController = TablaClientesFactory.createTablaClientes(
+      modalEditClientController,
+      modalDeleteClientController,
+    );
 
     const view = new ClientesView(icons);
     const model = new ClientesModel();
@@ -32,6 +60,7 @@ export class ClientesFactory {
       auth,
       modalErrorController,
       sidebarController,
+      tablaClientesController,
     );
 
     const element = await controller.init();
@@ -39,6 +68,9 @@ export class ClientesFactory {
     return {
       element,
       modalError: modalErrorElement,
+      modalOk: modalOkElement,
+      modalEditClient: modalEditClientElement,
+      modalDeleteClient: modalDeleteClientElement,
       controller,
     };
   }

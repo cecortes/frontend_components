@@ -14,6 +14,7 @@ Esta guía dicta el flujo de trabajo estándar, arquitectónico y preventivo par
 Para mover de forma limpia un componente MVC, el proceso se divide en 3 fases obligatorias:
 
 ### FASE 1: Inyección en el Entorno Destino (Target)
+
 1. **Modificar Factory Destino (`target_factory.js`)**:
    - Importar la factoría de la Tabla y las factorías de los Modales dependientes (ej. ModalEditar, ModalBorrar).
    - Instanciar los modales dependientes pasando los modales globales (`modalError`, `modalOk`).
@@ -32,6 +33,7 @@ Para mover de forma limpia un componente MVC, el proceso se divide en 3 fases ob
    - Interpolar `\${tablaHTML}` dinámicamente en el lugar del DOM donde debe mostrarse.
 
 ### FASE 2: Limpieza en el Entorno Origen (Source)
+
 1. **Limpiar Factory Origen (`source_factory.js`)**:
    - Remover las importaciones, instanciaciones e inyecciones asociadas al componente tabla y a sus modales.
    - Retirar del `return` final del factory las referencias a los elementos DOM de dichos modales.
@@ -52,19 +54,24 @@ Para mover de forma limpia un componente MVC, el proceso se divide en 3 fases ob
 **NUNCA OLVIDES LA FASE 3.** Durante migraciones de este tipo, el principal punto de quiebre recae en el **Enrutador Global (`main.js`)**, resultando en un texto visual bizarro en la pantalla de origen.
 
 ### El Síntoma
+
 Después de realizar la Fase 1 y Fase 2, en el Componente Origen (donde la tabla solía estar inyectada), aparece repentinamente el texto estático `"undefinedundefined"` adherido en la base del layout (o en el lugar que ocupaba el componente previo), arruinando la vista.
 
 ### Análisis y Causa Raíz
-El componente origen delegaba al `Router` (`main.js`) la inyección a nivel superior (body) de sus modales. Al completarse la Fase 2, la `source_factory.js` **dejó de retornar** los objetos de modales (`modalEdit`, `modalDelete`). 
+
+El componente origen delegaba al `Router` (`main.js`) la inyección a nivel superior (body) de sus modales. Al completarse la Fase 2, la `source_factory.js` **dejó de retornar** los objetos de modales (`modalEdit`, `modalDelete`).
 
 Sin embargo, el destructuring dentro del enrutador seguía intentando extraerlos para agregarlos al body:
+
 ```javascript
 // Causa del error en el Router (main.js)
-const { element, modalEdit, modalDelete } = await SourceFactory.sourceComponent();
+const { element, modalEdit, modalDelete } =
+  await SourceFactory.sourceComponent();
 
 // Si modalEdit y modalDelete ya no son retornados por la factoría, valdrán `undefined`
-document.body.append(modalEdit, modalDelete); 
+document.body.append(modalEdit, modalDelete);
 ```
+
 **Comportamiento de la API nativa:** Cuando le pasamos la primitiva `undefined` al método `document.body.append()`, el navegador hace una coerción de tipo y lo parsea como la cadena de texto literal `"undefined"`. Al adjuntar dos de estas, las pega como `"undefinedundefined"` al final del cuerpo del HTML, provocando el error visual.
 
 ### FASE 3: Corrección Crítica (Modificación del Router / `main.js`)
@@ -81,15 +88,69 @@ Para prevenir y solucionar este fenómeno, siempre que muevas un componente con 
 // Corrección obligatoria en el enrutador para la ruta DESTINO
 "/ruta-destino": async () => {
     const { element, modalError, modalOk, modalEdit, modalDelete } = await TargetFactory.targetComponent();
-    
+
     // Adjuntar los modales al body de forma segura:
     if (modalError) document.body.append(modalError);
     if (modalOk) document.body.append(modalOk);
     if (modalEdit) document.body.append(modalEdit);
     if (modalDelete) document.body.append(modalDelete);
-    
+
     return element;
 }
 ```
 
 > **Regla de Oro:** Siempre que extraigas un componente que dependa de modales u overlays globales, el enrutador principal (`main.js`) es el eslabón final que debe actualizarse. Las referencias huérfanas en el `append` generarán inyecciones de strings de texto (undefined) en tu aplicación.
+
+---
+
+## 3. El Error del Botón Inoperativo (Fallo Silencioso del Formulario)
+
+**NUNCA OLVIDES EL ENTORNO DE EJECUCIÓN DEL DOM.** Cuando mueves un componente con modales, es común arrastrar un bug silencioso y letal si los modales dependen de formularios HTML5 y la arquitectura no limpia el DOM.
+
+### El Síntoma
+
+Después de migrar exitosamente el componente hacia la nueva ruta, el modal se abre bien y luce perfecto. Sin embargo, al dar clic en el botón de "Guardar", "Aplicar" o hacer el `submit`, **no pasa absolutamente nada**. La consola no arroja errores y la petición al backend jamás ocurre.
+
+### Análisis y Causa Raíz
+
+Cuando se trabaja con SPAs (Single Page Applications) o entornos como Vite (Hot Module Replacement), el enrutador reemplaza el nodo de la vista (ej. `#app`), pero modales inyectados globalmente (como `document.body.append()`) **no se eliminan automáticamente del DOM** al cambiar de ruta.
+
+Si el componente origen inyectó un `<form id="miFormulario">`, y el componente destino inyecta nuevamente su propio `<form id="miFormulario">`, ahora existen **dos IDs duplicados** en el DOM.
+
+El bug ocurre cuando el botón de guardar está estructurado por fuera de la etiqueta `<form>` utilizando el atributo nativo `form`:
+
+```html
+<!-- Si el botón está fuera del form, usa el atributo form -->
+<button type="submit" form="miFormulario">Guardar</button>
+```
+
+El atributo `form="..."` realiza una **búsqueda global** en el navegador. Encontrará el **primer elemento en el DOM** que coincida (el modal viejo e invisible del componente origen) y disparará el evento `submit` hacia allá, dejando al controlador del nuevo modal ignorado por completo.
+
+### FASE 4: Corrección Estructural (Blindaje de Formularios)
+
+Para evitar que los eventos del modal se fuguen hacia componentes "zombies" del DOM, debes asegurar que los botones de acción dependan del flujo natural del componente local y no de resoluciones globales del navegador.
+
+**Modificación de la Vista del Modal:**
+Abre el archivo `View` de tu modal (ej. `modalEditarView.js`) y traslada el contenedor de las acciones (`div` con botones de Cancelar y Aplicar/Guardar) **hacia adentro de la etiqueta `<form>`**:
+
+```html
+<!-- ANTES: El botón dependía de la búsqueda global del atributo "form" -->
+<form id="miFormulario">
+  <input type="text" ... />
+</form>
+<div class="actions">
+  <button type="submit" form="miFormulario">Guardar</button>
+</div>
+
+<!-- DESPUÉS: Estructura blindada a nivel componente -->
+<form id="miFormulario">
+  <input type="text" ... />
+
+  <div class="actions">
+    <!-- Sin atributo "form", se asocia orgánicamente a su padre -->
+    <button type="submit">Guardar</button>
+  </div>
+</form>
+```
+
+> **Regla de Oro:** Siempre que inyectes formularios que puedan duplicarse visualmente en la misma página o arrastrar un historial del enrutador, encierra los botones `type="submit"` dentro de su etiqueta `<form>` contenedora. Elimina el atributo `form="..."` para evitar que el navegador envíe la orden de guardado a un elemento fantasma.

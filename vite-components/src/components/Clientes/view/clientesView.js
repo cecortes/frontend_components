@@ -10,7 +10,7 @@ export class ClientesView {
    * @method renderClientes
    * @description Genera el DOM principal para la vista de Clientes.
    */
-  renderClientes(sidebarHTML = "", burgerHTML = "") {
+  renderClientes(sidebarHTML = "", burgerHTML = "", tablaClientesHTML = "") {
     const html = `
       <div class="dashboard-wrapper" style="display: flex; min-height: 100vh; width: 100%; overflow-x: hidden;">
         ${sidebarHTML}
@@ -32,7 +32,7 @@ export class ClientesView {
 
           <!-- Área de Contenido -->
           <div class="dashboard-content">
-            <!-- Espacio en blanco para tablas/datos -->
+            ${tablaClientesHTML}
           </div>
         </main>
       </div>

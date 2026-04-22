@@ -544,7 +544,7 @@
 
 ---
 
-## 21-04-26 - Estandarización de Gestión de Logs y Creación de Skill de Registro
+## 21-04-26 - Estandarización de Logs, Migración de Tabla Clientes y Corrección de Bug de Submit
 
 - [x] **Estandarización de Gestión de Logs**:
   - [x] Se creó la skill maestra `.agent/skills/log_entry_generation/SKILL.md` para definir el protocolo obligatorio de creación y actualización de entradas en el log.
@@ -555,3 +555,13 @@
   - [x] La regla fuerza al agente a leer la skill de generación de logs antes de realizar cualquier modificación en `docs/log.md`.
 - [x] **Registro de Actividad**:
   - [x] Se aplicó la nueva skill para registrar los cambios de la sesión actual en el log del proyecto.
+- [x] **Migración del componente TablaClientes (MVC & Factory)**:
+  - [x] Se trasladó exitosamente `TablaClientes` y sus modales (`ModalEditarCliente`, `ModalBorrarCliente`) desde el `Dashboard` hacia la vista de `Clientes`.
+  - [x] Se actualizaron las factorías (`clientes_factory.js`, `dash_factory.js`) y controladores para manejar la nueva jerarquía de dependencias.
+  - [x] Se saneó el enrutador `main.js` para evitar el error de inyección `"undefinedundefined"` en la vista de origen.
+- [x] **Corrección de Bug Crítico en ModalEditarCliente**:
+  - [x] **Diagnóstico**: Se identificó un fallo donde el botón "Aplicar" no ejecutaba el submit. La causa fue la existencia de modales duplicados (zombies) en el DOM y la resolución global del atributo `form="formEditarCliente"` en el botón de acción situado fuera del formulario.
+  - [x] **Solución**: Se refactorizó `modalEditarClienteView.js` para encapsular los botones de acción dentro de la etiqueta `<form>`, eliminando la dependencia del atributo `form` y blindando el componente contra IDs duplicados en el DOM.
+- [x] **Evolución de Skill `move_injected_table_component`**:
+  - [x] Se agregó la **Sección 3** y la **FASE 4** a la skill de migración de componentes, documentando el "Error del Botón Inoperativo" y el protocolo de "Blindaje de Formularios" para prevenir este comportamiento en futuras integraciones.
+

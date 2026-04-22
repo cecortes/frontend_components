@@ -77,19 +77,17 @@ export class ModalEditarClienteView {
                     </div>
                 </div>
 
+                <!-- Actions -->
+                <div style="display: flex; justify-content: space-between; gap: 1rem; margin-top: 1rem;">
+                  <button type="button" class="btn btn-danger" id="modalEditClientCancelBtn" style="padding: 4px 16px; font-size: 1rem;">
+                      Cancelar
+                  </button>
+                  <button type="submit" class="btn btn-primary" id="modalEditClientSaveBtn" style="padding: 4px 16px; font-size: 1rem;">
+                      Aplicar
+                  </button>
+                </div>
             </form>
           </div>
-
-          <!-- Actions -->
-          <div style="display: flex; justify-content: space-between; gap: 1rem;">
-            <button type="button" class="btn btn-danger" id="modalEditClientCancelBtn" style="padding: 4px 16px; font-size: 1rem;">
-                Cancelar
-            </button>
-            <button type="submit" form="formEditarCliente" class="btn btn-primary" id="modalEditClientSaveBtn" style="padding: 4px 16px; font-size: 1rem;">
-                Aplicar
-            </button>
-          </div>
-
         </div>
       </div>
     `;
