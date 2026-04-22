@@ -11,6 +11,7 @@ import { icons } from "../components/Dashboard/icons/svg_icons.js";
 import { TablaClientesFactory } from "./tabla_clientes_factory.js";
 import { ModalEditarClienteFactory } from "./modal_editar_cliente_factory.js";
 import { ModalBorrarClienteFactory } from "./modal_borrar_cliente_factory.js";
+import { ModalAgregarClienteFactory } from "./modal_agregar_cliente_factory.js";
 
 export class ClientesFactory {
   /**
@@ -24,6 +25,12 @@ export class ClientesFactory {
 
     const { element: modalOkElement, controller: modalOkController } =
       ModalFactory.modalOkComponent();
+
+    const { element: modalAddClienteElement, controller: modalAddClienteController } =
+      ModalAgregarClienteFactory.createModal(
+        modalOkController,
+        modalErrorController,
+      );
 
     const {
       element: modalEditClientElement,
@@ -60,6 +67,7 @@ export class ClientesFactory {
       auth,
       modalErrorController,
       sidebarController,
+      modalAddClienteController,
       tablaClientesController,
     );
 
@@ -69,6 +77,7 @@ export class ClientesFactory {
       element,
       modalError: modalErrorElement,
       modalOk: modalOkElement,
+      modalAddCliente: modalAddClienteElement,
       modalEditClient: modalEditClientElement,
       modalDeleteClient: modalDeleteClientElement,
       controller,

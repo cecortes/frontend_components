@@ -544,7 +544,7 @@
 
 ---
 
-## 21-04-26 - Estandarización de Logs, Migración de Tabla Clientes y Corrección de Bug de Submit
+## 21-04-26 - Estandarización de Logs, Migración de Tabla Clientes e Implementación de ModalAgregarCliente
 
 - [x] **Estandarización de Gestión de Logs**:
   - [x] Se creó la skill maestra `.agent/skills/log_entry_generation/SKILL.md` para definir el protocolo obligatorio de creación y actualización de entradas en el log.
@@ -564,4 +564,10 @@
   - [x] **Solución**: Se refactorizó `modalEditarClienteView.js` para encapsular los botones de acción dentro de la etiqueta `<form>`, eliminando la dependencia del atributo `form` y blindando el componente contra IDs duplicados en el DOM.
 - [x] **Evolución de Skill `move_injected_table_component`**:
   - [x] Se agregó la **Sección 3** y la **FASE 4** a la skill de migración de componentes, documentando el "Error del Botón Inoperativo" y el protocolo de "Blindaje de Formularios" para prevenir este comportamiento en futuras integraciones.
+- [-] **Implementación de ModalAgregarCliente (En Progreso)**:
+  - [x] Creación de la estructura MVC y Factory para el nuevo componente.
+  - [x] Implementación de la vista con `input-wrapper` y `validation-tooltip` para todos los campos.
+  - [x] Corrección de bug estructural: se movieron los botones de acción dentro de la etiqueta `<form>` para asegurar el disparo del evento `submit` en el SPA.
+  - [x] Reforzamiento de `FieldsValidator.js` con validaciones específicas de formato para Teléfono (regex), RFC (regex) y Dirección (longitud mínima).
+  - [-] Pendiente: Depuración del endpoint de guardado y resolución de errores lógicos en la respuesta del servidor.
 

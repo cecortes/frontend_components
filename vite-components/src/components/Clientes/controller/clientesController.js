@@ -8,6 +8,7 @@ export class ClientesController {
     auth,
     modalErrorController,
     sidebarController = null,
+    modalAddClienteController = null,
     tablaClientesController = null,
   ) {
     this.view = view;
@@ -16,6 +17,7 @@ export class ClientesController {
     this.auth = auth;
     this.modalErrorController = modalErrorController;
     this.sidebarController = sidebarController;
+    this.modalAddClienteController = modalAddClienteController;
     this.tablaClientesController = tablaClientesController;
   }
 
@@ -64,6 +66,20 @@ export class ClientesController {
     if (this.sidebarController) {
       this.sidebarController.bindNavigation(html);
     }
+    
+    // Activar Modal Agregar Cliente
+    const addClientBtn = html.querySelector("#btnShowAddCliente");
+    if (addClientBtn && this.modalAddClienteController) {
+      addClientBtn.addEventListener("click", () => {
+        this.modalAddClienteController.start(async (newData) => {
+          console.log("Cliente agregado desde el modal:", newData);
+          if (this.tablaClientesController) {
+            await this.tablaClientesController.reloadTable();
+          }
+        });
+      });
+    }
+
     if (this.tablaClientesController) {
       this.tablaClientesController.bindEvents();
     }

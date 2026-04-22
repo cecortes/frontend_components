@@ -24,6 +24,9 @@ export class ClientesView {
             <h2 style="font-size: 1.25rem; margin: 0">Administración de Clientes</h2>
 
             <div style="display: flex; gap: 1rem">
+              <button class="btn btn-success" id="btnShowAddCliente" style="padding: 0.5rem 1rem">
+                + Agregar Cliente
+              </button>
               <button class="btn btn-secondary" style="padding: 0.5rem 1rem">
                 ${this.icons?.bell || ""}
               </button>
