@@ -541,3 +541,17 @@
     - Se expuso el método público `async reloadTable()` para encapsular la lógica de re-petición al modelo y actualización de DataTables.
     - Se movió el estado de datos (`data`) al ámbito de instancia (`this.tableData`) para evitar cierres obsoletos (_stale closures_) y asegurar la integridad de la información tras múltiples actualizaciones.
   - [x] **Sincronización en Usuarios**: Se actualizó el callback de éxito en `UsuariosController` para invocar de forma asíncrona a `this.tablaUsuariosController.reloadTable()`, logrando que la tabla se refresque automáticamente al cerrar el `ModalOk` tras una creación exitosa.
+
+---
+
+## 21-04-26 - Estandarización de Gestión de Logs y Creación de Skill de Registro
+
+- [x] **Estandarización de Gestión de Logs**:
+  - [x] Se creó la skill maestra `.agent/skills/log_entry_generation/SKILL.md` para definir el protocolo obligatorio de creación y actualización de entradas en el log.
+  - [x] Se estableció la regla inquebrantable de preservación de datos, impidiendo la sobrescritura de entradas con la misma fecha.
+  - [x] Se configuró el formato estricto de títulos `## DD-MM-YY - Título` y el uso de separadores `---`.
+- [x] **Implementación de Regla de Proyecto**:
+  - [x] Se generó la regla `.agent/rules/log_entry_rule.md` configurada con `always_on`.
+  - [x] La regla fuerza al agente a leer la skill de generación de logs antes de realizar cualquier modificación en `docs/log.md`.
+- [x] **Registro de Actividad**:
+  - [x] Se aplicó la nueva skill para registrar los cambios de la sesión actual en el log del proyecto.
