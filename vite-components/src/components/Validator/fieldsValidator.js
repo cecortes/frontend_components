@@ -28,7 +28,9 @@ export class FieldsValidator {
       fieldName === "nombre" ||
       fieldName === "editClienteNombre" ||
       fieldName === "editClienteContacto" ||
-      fieldName === "addUsrName"
+      fieldName === "addUsrName" ||
+      fieldName === "addClienteNombre" ||
+      fieldName === "addClienteContacto"
     ) {
       return this.validateName(element);
     }
@@ -36,28 +38,23 @@ export class FieldsValidator {
       fieldName === "editMail" ||
       fieldName === "mail" ||
       fieldName === "editClienteCorreo" ||
-      fieldName === "addUsrMail"
+      fieldName === "addUsrMail" ||
+      fieldName === "addClienteCorreo"
     ) {
       return this.validateEmail(element);
     }
-    if (
-      fieldName === "editClienteTelefono" ||
-      fieldName === "editClienteRfc" ||
-      fieldName === "editClienteDireccion"
-    ) {
-      return this.validateGenericText(element);
+    if (fieldName === "editClienteTelefono" || fieldName === "addClienteTelefono") {
+      return this.validatePhone(element);
+    }
+    if (fieldName === "editClienteRfc" || fieldName === "addClienteRfc") {
+      return this.validateRfc(element);
+    }
+    if (fieldName === "editClienteDireccion" || fieldName === "addClienteDireccion") {
+      return this.validateAddress(element);
     }
     return { isValid: false, message: "Tipo de campo no válido" };
   }
 
-  /**
-   * @method validateGenericText
-   * @description
-   * Validación genérica para campos requeridos sin regex estricto (aceptan números, letras, etc).
-   *
-   * @param {HTMLElement} element El elemento input a validar.
-   * @returns {Object} Objeto con {isValid: boolean, message: string, id: string}
-   */
   validateGenericText(element) {
     const value = element.value ? element.value.trim() : "";
     if (!value) {
@@ -66,6 +63,53 @@ export class FieldsValidator {
         message: "Este campo es obligatorio",
         id: element.id,
       };
+    }
+    return { isValid: true, message: "", id: element.id };
+  }
+
+  /**
+   * @method validatePhone
+   * @description Valida un número de teléfono.
+   */
+  validatePhone(element) {
+    const value = element.value ? element.value.trim() : "";
+    if (!value) {
+      return { isValid: false, message: "Este campo es obligatorio", id: element.id };
+    }
+    const phoneRegex = /^\d{10}$/;
+    if (!phoneRegex.test(value)) {
+      return { isValid: false, message: "Teléfono inválido (10 dígitos, ej. 5551234567)", id: element.id };
+    }
+    return { isValid: true, message: "", id: element.id };
+  }
+
+  /**
+   * @method validateRfc
+   * @description Valida un RFC (México).
+   */
+  validateRfc(element) {
+    const value = element.value ? element.value.trim() : "";
+    if (!value) {
+      return { isValid: false, message: "Este campo es obligatorio", id: element.id };
+    }
+    const rfcRegex = /^[A-Za-zñÑ&]{3,4}\d{6}[A-Za-z0-9]{3}$/;
+    if (!rfcRegex.test(value)) {
+      return { isValid: false, message: "Formato de RFC inválido", id: element.id };
+    }
+    return { isValid: true, message: "", id: element.id };
+  }
+
+  /**
+   * @method validateAddress
+   * @description Valida una dirección (mínimo de caracteres).
+   */
+  validateAddress(element) {
+    const value = element.value ? element.value.trim() : "";
+    if (!value) {
+      return { isValid: false, message: "Este campo es obligatorio", id: element.id };
+    }
+    if (value.length < 5) {
+      return { isValid: false, message: "La dirección es muy corta", id: element.id };
     }
     return { isValid: true, message: "", id: element.id };
   }

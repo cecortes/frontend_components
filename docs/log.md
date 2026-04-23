@@ -541,3 +541,49 @@
     - Se expuso el método público `async reloadTable()` para encapsular la lógica de re-petición al modelo y actualización de DataTables.
     - Se movió el estado de datos (`data`) al ámbito de instancia (`this.tableData`) para evitar cierres obsoletos (_stale closures_) y asegurar la integridad de la información tras múltiples actualizaciones.
   - [x] **Sincronización en Usuarios**: Se actualizó el callback de éxito en `UsuariosController` para invocar de forma asíncrona a `this.tablaUsuariosController.reloadTable()`, logrando que la tabla se refresque automáticamente al cerrar el `ModalOk` tras una creación exitosa.
+
+---
+
+## 21-04-26 - Estandarización de Logs, Migración de Tabla Clientes e Implementación de ModalAgregarCliente
+
+- [x] **Estandarización de Gestión de Logs**:
+  - [x] Se creó la skill maestra `.agent/skills/log_entry_generation/SKILL.md` para definir el protocolo obligatorio de creación y actualización de entradas en el log.
+  - [x] Se estableció la regla inquebrantable de preservación de datos, impidiendo la sobrescritura de entradas con la misma fecha.
+  - [x] Se configuró el formato estricto de títulos `## DD-MM-YY - Título` y el uso de separadores `---`.
+- [x] **Implementación de Regla de Proyecto**:
+  - [x] Se generó la regla `.agent/rules/log_entry_rule.md` configurada con `always_on`.
+  - [x] La regla fuerza al agente a leer la skill de generación de logs antes de realizar cualquier modificación en `docs/log.md`.
+- [x] **Registro de Actividad**:
+  - [x] Se aplicó la nueva skill para registrar los cambios de la sesión actual en el log del proyecto.
+- [x] **Migración del componente TablaClientes (MVC & Factory)**:
+  - [x] Se trasladó exitosamente `TablaClientes` y sus modales (`ModalEditarCliente`, `ModalBorrarCliente`) desde el `Dashboard` hacia la vista de `Clientes`.
+  - [x] Se actualizaron las factorías (`clientes_factory.js`, `dash_factory.js`) y controladores para manejar la nueva jerarquía de dependencias.
+  - [x] Se saneó el enrutador `main.js` para evitar el error de inyección `"undefinedundefined"` en la vista de origen.
+- [x] **Corrección de Bug Crítico en ModalEditarCliente**:
+  - [x] **Diagnóstico**: Se identificó un fallo donde el botón "Aplicar" no ejecutaba el submit. La causa fue la existencia de modales duplicados (zombies) en el DOM y la resolución global del atributo `form="formEditarCliente"` en el botón de acción situado fuera del formulario.
+  - [x] **Solución**: Se refactorizó `modalEditarClienteView.js` para encapsular los botones de acción dentro de la etiqueta `<form>`, eliminando la dependencia del atributo `form` y blindando el componente contra IDs duplicados en el DOM.
+- [x] **Evolución de Skill `move_injected_table_component`**:
+  - [x] Se agregó la **Sección 3** y la **FASE 4** a la skill de migración de componentes, documentando el "Error del Botón Inoperativo" y el protocolo de "Blindaje de Formularios" para prevenir este comportamiento en futuras integraciones.
+- [x] **Implementación de ModalAgregarCliente (Finalizado)**:
+  - [x] Creación de la estructura MVC y Factory para el nuevo componente.
+  - [x] Implementación de la vista con `input-wrapper` y `validation-tooltip` para todos los campos.
+  - [x] Corrección de bug estructural: se movieron los botones de acción dentro de la etiqueta `<form>` para asegurar el disparo del evento `submit` en el SPA.
+  - [x] Reforzamiento de `FieldsValidator.js` con validaciones específicas de formato para Teléfono (regex), RFC (regex) y Dirección (longitud mínima).
+
+---
+
+## 22-04-26 - Finalización de Gestión de Clientes, Migración de Base de Datos y Nueva Skill de Integración
+
+- [x] **Implementación Completa de "Agregar Cliente"**:
+  - [x] **Configuración de API**: Se habilitó el endpoint `VITE_API_CLIENTS_NEW` en los archivos de entorno.
+  - [x] **Modelo y Autenticación**: Se implementó el envío de datos mediante `POST` con `Bearer Token`. Se resolvió el error `401 Unauthorized` asegurando la carga de sesión (`storage.loadSessionStorage()`) en la factoría.
+  - [x] **Controlador**: Se integró el flujo de éxito con `ModalOk` y la redirección automática al Login ante fallas de sesión.
+- [x] **Resolución de Bugs Críticos de Reactividad y DOM**:
+  - [x] **Sincronización de Tabla**: Se corrigió el error `TypeError` al recargar la tabla. Se eliminó el uso de variables locales (`let data`) en favor de propiedades de instancia (`this.tableData`) para evitar que los `closures` rompieran los eventos de los botones tras actualizaciones asíncronas.
+  - [x] **Persistencia de Eventos**: Se solucionó el fallo donde el modal de edición dejaba de funcionar después de agregar un nuevo registro sin refrescar la página.
+- [x] **Integración de Datos y Corrección de Esquema (DB Migration)**:
+  - [x] **Diagnóstico de Integer Overflow**: Se identificó un error de truncamiento en MySQL donde los teléfonos de 10 dígitos excedían el límite de `INT(10)`.
+  - [x] **Migración de Base de Datos**: Se ejecutó exitosamente el script de alteración de tabla: `ALTER TABLE clients MODIFY clients_phone VARCHAR(20)`.
+  - [x] **Validación y Sanitización**: Se actualizó `fieldsValidator.js` para exigir exactamente 10 dígitos y se implementó limpieza de caracteres no numéricos en los modelos de creación y edición.
+- [x] **Documentación y Estandarización de Procesos**:
+  - [x] **Nueva Skill (`backend_add_entity_integration`)**: Se creó una guía maestra que documenta el flujo completo de integración con el backend, capturando las lecciones aprendidas sobre desbordamiento de datos, manejo de sesiones y recarga de componentes MVC.

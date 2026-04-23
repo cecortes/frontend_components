@@ -37,10 +37,10 @@ export class TablaClientesController {
 
         try {
           // Obtener los datos mapeados del modelo (fetch simulación backend)
-          let data = await this.model.fetchClientsData();
+          this.tableData = await this.model.fetchClientsData();
 
           // Desplegar la lógica de UI y plugin DataTables
-          this.view.initDataTable(data);
+          this.view.initDataTable(this.tableData);
 
           // Escuchar eventos dinámicos renderizados por la tabla
           tableEl.addEventListener("click", (e) => {
@@ -50,7 +50,7 @@ export class TablaClientesController {
             if (btnEdit) {
               const clienteId = btnEdit.dataset.id;
 
-              const clientData = data.find(
+              const clientData = this.tableData.find(
                 (client) => String(client.id) === String(clienteId),
               );
               if (clientData && this.modalEditarClienteController) {
@@ -58,9 +58,8 @@ export class TablaClientesController {
                   clientData,
                   async (updatedClient) => {
                     try {
-                      const newData = await this.model.fetchClientsData();
-                      data = newData;
-                      this.view.initDataTable(data);
+                      this.tableData = await this.model.fetchClientsData();
+                      this.view.initDataTable(this.tableData);
                     } catch (err) {
                       console.error(
                         "[TablaClientesController] Error recargando clientes:",
@@ -79,7 +78,7 @@ export class TablaClientesController {
                 clienteId,
               );
 
-              const clientData = data.find(
+              const clientData = this.tableData.find(
                 (client) => String(client.id) === String(clienteId),
               );
 
@@ -95,10 +94,8 @@ export class TablaClientesController {
                       console.log(
                         "[TablaClientesController] Recargando datos de la tabla tras eliminar...",
                       );
-                      const newData = await this.model.fetchClientsData();
-                      // Actualizar referencia local
-                      data = newData;
-                      this.view.initDataTable(data);
+                      this.tableData = await this.model.fetchClientsData();
+                      this.view.initDataTable(this.tableData);
                     } catch (err) {
                       console.error(
                         "[TablaClientesController] Error recargando clientes:",

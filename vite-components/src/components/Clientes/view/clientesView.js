@@ -10,7 +10,7 @@ export class ClientesView {
    * @method renderClientes
    * @description Genera el DOM principal para la vista de Clientes.
    */
-  renderClientes(sidebarHTML = "", burgerHTML = "") {
+  renderClientes(sidebarHTML = "", burgerHTML = "", tablaClientesHTML = "") {
     const html = `
       <div class="dashboard-wrapper" style="display: flex; min-height: 100vh; width: 100%; overflow-x: hidden;">
         ${sidebarHTML}
@@ -24,6 +24,9 @@ export class ClientesView {
             <h2 style="font-size: 1.25rem; margin: 0">Administración de Clientes</h2>
 
             <div style="display: flex; gap: 1rem">
+              <button class="btn btn-success" id="btnShowAddCliente" style="padding: 0.5rem 1rem">
+                + Agregar Cliente
+              </button>
               <button class="btn btn-secondary" style="padding: 0.5rem 1rem">
                 ${this.icons?.bell || ""}
               </button>
@@ -32,7 +35,7 @@ export class ClientesView {
 
           <!-- Área de Contenido -->
           <div class="dashboard-content">
-            <!-- Espacio en blanco para tablas/datos -->
+            ${tablaClientesHTML}
           </div>
         </main>
       </div>

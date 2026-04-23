@@ -8,6 +8,8 @@ export class ClientesController {
     auth,
     modalErrorController,
     sidebarController = null,
+    modalAddClienteController = null,
+    tablaClientesController = null,
   ) {
     this.view = view;
     this.model = model;
@@ -15,6 +17,8 @@ export class ClientesController {
     this.auth = auth;
     this.modalErrorController = modalErrorController;
     this.sidebarController = sidebarController;
+    this.modalAddClienteController = modalAddClienteController;
+    this.tablaClientesController = tablaClientesController;
   }
 
   /**
@@ -51,12 +55,38 @@ export class ClientesController {
       ? this.sidebarController.getBurgerHTML()
       : "";
 
+    const tablaClientesHTML = this.tablaClientesController
+      ? await this.tablaClientesController.init()
+      : "";
+
     // Renderizar la vista principal
-    const html = this.view.renderClientes(sidebarHTML, burgerHTML);
+    const html = this.view.renderClientes(sidebarHTML, burgerHTML, tablaClientesHTML);
 
     // Bind Navigation events para el Sidebar
     if (this.sidebarController) {
       this.sidebarController.bindNavigation(html);
+    }
+    
+    // Activar Modal Agregar Cliente
+    const addClientBtn = html.querySelector("#btnShowAddCliente");
+    if (addClientBtn && this.modalAddClienteController) {
+      addClientBtn.addEventListener("click", () => {
+        this.modalAddClienteController.start(async (newData) => {
+          console.log("Cliente agregado desde el modal:", newData);
+          if (this.tablaClientesController) {
+            try {
+              this.tablaClientesController.tableData = await this.tablaClientesController.model.fetchClientsData();
+              this.tablaClientesController.view.initDataTable(this.tablaClientesController.tableData);
+            } catch (err) {
+              console.error("[ClientesController] Error recargando tabla:", err);
+            }
+          }
+        });
+      });
+    }
+
+    if (this.tablaClientesController) {
+      this.tablaClientesController.bindEvents();
     }
 
     return html;
