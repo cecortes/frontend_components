@@ -61,7 +61,7 @@ export class ModalEditarClienteModel {
         updateData: {
           name: updateData.nombre,
           mail: updateData.correo,
-          phone: updateData.telefono,
+          phone: updateData.telefono ? updateData.telefono.replace(/\D/g, "") : "",
           rfc: updateData.rfc,
           address: updateData.direccion,
           contact: updateData.contacto,

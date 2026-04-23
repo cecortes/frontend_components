@@ -76,9 +76,9 @@ export class FieldsValidator {
     if (!value) {
       return { isValid: false, message: "Este campo es obligatorio", id: element.id };
     }
-    const phoneRegex = /^[0-9\s\-\+\(\)]{7,15}$/;
+    const phoneRegex = /^\d{10}$/;
     if (!phoneRegex.test(value)) {
-      return { isValid: false, message: "Teléfono inválido (ej. 555-1234)", id: element.id };
+      return { isValid: false, message: "Teléfono inválido (10 dígitos, ej. 5551234567)", id: element.id };
     }
     return { isValid: true, message: "", id: element.id };
   }

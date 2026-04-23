@@ -12,9 +12,17 @@ export class ModalAgregarClienteModel {
    */
   async saveCliente(clientData) {
     try {
-      // Usamos una variable de entorno hipotética o directa
-      const url = import.meta.env.VITE_API_CLIENTS_ADD || "http://localhost:3000/api/waresmart/clients/add";
+      const url = import.meta.env.VITE_API_CLIENTS_NEW;
       const token = this.storage ? this.storage.Token : "";
+
+      const bodyData = {
+        name: clientData.nombre,
+        mail: clientData.correo,
+        phone: clientData.telefono ? clientData.telefono.replace(/\D/g, "") : "",
+        rfc: clientData.rfc,
+        address: clientData.direccion,
+        contact: clientData.contacto,
+      };
 
       const response = await fetch(url, {
         method: "POST",
@@ -22,7 +30,7 @@ export class ModalAgregarClienteModel {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(clientData),
+        body: JSON.stringify(bodyData),
       });
 
       const json = await response.json();

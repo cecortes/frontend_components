@@ -127,8 +127,12 @@ export class ModalAgregarClienteController {
           );
         } catch (error) {
           this.handleClose();
+          const errorMessage = error.message || "Error al agregar cliente.";
+          const isAuthError = errorMessage.includes("401") || errorMessage.includes("403") || errorMessage.toLowerCase().includes("token");
+          
           this.modalErrorController.showError(
-            error.message || "Error al agregar cliente.",
+            errorMessage,
+            isAuthError ? () => { window.location.hash = "#/"; } : null
           );
         }
       });

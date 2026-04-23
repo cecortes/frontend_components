@@ -14,6 +14,7 @@ const ICONS = {
 export class ModalAgregarClienteFactory {
   static createModal(modalOkController, modalErrorController) {
     const storage = new SessionStorage();
+    storage.loadSessionStorage();
     const view = new ModalAgregarClienteView(ICONS);
     const model = new ModalAgregarClienteModel(storage);
     const validator = new FieldsValidator();

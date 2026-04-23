@@ -564,10 +564,26 @@
   - [x] **Solución**: Se refactorizó `modalEditarClienteView.js` para encapsular los botones de acción dentro de la etiqueta `<form>`, eliminando la dependencia del atributo `form` y blindando el componente contra IDs duplicados en el DOM.
 - [x] **Evolución de Skill `move_injected_table_component`**:
   - [x] Se agregó la **Sección 3** y la **FASE 4** a la skill de migración de componentes, documentando el "Error del Botón Inoperativo" y el protocolo de "Blindaje de Formularios" para prevenir este comportamiento en futuras integraciones.
-- [-] **Implementación de ModalAgregarCliente (En Progreso)**:
+- [x] **Implementación de ModalAgregarCliente (Finalizado)**:
   - [x] Creación de la estructura MVC y Factory para el nuevo componente.
   - [x] Implementación de la vista con `input-wrapper` y `validation-tooltip` para todos los campos.
   - [x] Corrección de bug estructural: se movieron los botones de acción dentro de la etiqueta `<form>` para asegurar el disparo del evento `submit` en el SPA.
   - [x] Reforzamiento de `FieldsValidator.js` con validaciones específicas de formato para Teléfono (regex), RFC (regex) y Dirección (longitud mínima).
-  - [-] Pendiente: Depuración del endpoint de guardado y resolución de errores lógicos en la respuesta del servidor.
 
+---
+
+## 22-04-26 - Finalización de Gestión de Clientes, Migración de Base de Datos y Nueva Skill de Integración
+
+- [x] **Implementación Completa de "Agregar Cliente"**:
+  - [x] **Configuración de API**: Se habilitó el endpoint `VITE_API_CLIENTS_NEW` en los archivos de entorno.
+  - [x] **Modelo y Autenticación**: Se implementó el envío de datos mediante `POST` con `Bearer Token`. Se resolvió el error `401 Unauthorized` asegurando la carga de sesión (`storage.loadSessionStorage()`) en la factoría.
+  - [x] **Controlador**: Se integró el flujo de éxito con `ModalOk` y la redirección automática al Login ante fallas de sesión.
+- [x] **Resolución de Bugs Críticos de Reactividad y DOM**:
+  - [x] **Sincronización de Tabla**: Se corrigió el error `TypeError` al recargar la tabla. Se eliminó el uso de variables locales (`let data`) en favor de propiedades de instancia (`this.tableData`) para evitar que los 'closures' rompieran los eventos de los botones tras actualizaciones asíncronas.
+  - [x] **Persistencia de Eventos**: Se solucionó el fallo donde el modal de edición dejaba de funcionar después de agregar un nuevo registro sin refrescar la página.
+- [x] **Integración de Datos y Corrección de Esquema (DB Migration)**:
+  - [x] **Diagnóstico de Integer Overflow**: Se identificó un error de truncamiento en MySQL donde los teléfonos de 10 dígitos excedían el límite de `INT(10)`.
+  - [x] **Migración de Base de Datos**: Se ejecutó exitosamente el script de alteración de tabla: `ALTER TABLE clients MODIFY clients_phone VARCHAR(20)`.
+  - [x] **Validación y Sanitización**: Se actualizó `fieldsValidator.js` para exigir exactamente 10 dígitos y se implementó limpieza de caracteres no numéricos en los modelos de creación y edición.
+- [x] **Documentación y Estandarización de Procesos**:
+  - [x] **Nueva Skill (`backend_add_entity_integration`)**: Se creó una guía maestra que documenta el flujo completo de integración con el backend, capturando las lecciones aprendidas sobre desbordamiento de datos, manejo de sesiones y recarga de componentes MVC.

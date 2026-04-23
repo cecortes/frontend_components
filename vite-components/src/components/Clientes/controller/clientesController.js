@@ -74,7 +74,12 @@ export class ClientesController {
         this.modalAddClienteController.start(async (newData) => {
           console.log("Cliente agregado desde el modal:", newData);
           if (this.tablaClientesController) {
-            await this.tablaClientesController.reloadTable();
+            try {
+              this.tablaClientesController.tableData = await this.tablaClientesController.model.fetchClientsData();
+              this.tablaClientesController.view.initDataTable(this.tablaClientesController.tableData);
+            } catch (err) {
+              console.error("[ClientesController] Error recargando tabla:", err);
+            }
           }
         });
       });
