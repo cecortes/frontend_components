@@ -579,7 +579,7 @@
   - [x] **Modelo y Autenticación**: Se implementó el envío de datos mediante `POST` con `Bearer Token`. Se resolvió el error `401 Unauthorized` asegurando la carga de sesión (`storage.loadSessionStorage()`) en la factoría.
   - [x] **Controlador**: Se integró el flujo de éxito con `ModalOk` y la redirección automática al Login ante fallas de sesión.
 - [x] **Resolución de Bugs Críticos de Reactividad y DOM**:
-  - [x] **Sincronización de Tabla**: Se corrigió el error `TypeError` al recargar la tabla. Se eliminó el uso de variables locales (`let data`) en favor de propiedades de instancia (`this.tableData`) para evitar que los 'closures' rompieran los eventos de los botones tras actualizaciones asíncronas.
+  - [x] **Sincronización de Tabla**: Se corrigió el error `TypeError` al recargar la tabla. Se eliminó el uso de variables locales (`let data`) en favor de propiedades de instancia (`this.tableData`) para evitar que los `closures` rompieran los eventos de los botones tras actualizaciones asíncronas.
   - [x] **Persistencia de Eventos**: Se solucionó el fallo donde el modal de edición dejaba de funcionar después de agregar un nuevo registro sin refrescar la página.
 - [x] **Integración de Datos y Corrección de Esquema (DB Migration)**:
   - [x] **Diagnóstico de Integer Overflow**: Se identificó un error de truncamiento en MySQL donde los teléfonos de 10 dígitos excedían el límite de `INT(10)`.
