@@ -19,6 +19,7 @@ import { LoginFactory } from "./factory/login_factory.js";
 import { DashboardFactory } from "./factory/dash_factory.js";
 import { UsuariosFactory } from "./factory/usuarios_factory.js";
 import { ClientesFactory } from "./factory/clientes_factory.js";
+import { ProductosFactory } from "./factory/productos_factory.js";
 
 /*
 const loginElement = document.querySelector("#LoginForm");
@@ -80,6 +81,15 @@ const routes = {
     if (modalOk) document.body.append(modalOk);
     if (modalEditClient) document.body.append(modalEditClient);
     if (modalDeleteClient) document.body.append(modalDeleteClient);
+
+    return element;
+  },
+  "/productos": async () => {
+    const { element, modalError, modalOk } = await ProductosFactory.productosComponent();
+    
+    if (modalError) document.body.append(modalError);
+    if (modalOk) document.body.append(modalOk);
+    // ModalEdit y Delete pendientes de añadir globalmente en factory cuando existan
 
     return element;
   },

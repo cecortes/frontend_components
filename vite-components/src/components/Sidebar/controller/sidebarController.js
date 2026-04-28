@@ -47,6 +47,8 @@ export class SidebarController {
           window.router.navigate("/usuarios");
         } else if (text.includes("clientes")) {
           window.router.navigate("/clientes");
+        } else if (text.includes("productos")) {
+          window.router.navigate("/productos");
         }
         // A futuro: añadir más rutas conforme se vayan creando
       });

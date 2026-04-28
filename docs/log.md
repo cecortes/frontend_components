@@ -590,10 +590,16 @@
 
 ---
 
-## 27-04-26 - Creación del Backend para Productos
+## 27-04-26 - Creación del Backend para Productos e Implementación Frontend de Vista Productos
 
 - [x] **Implementación de Arquitectura Backend para Gestión de Productos**:
   - [x] **Rutas (`rutas.js`)**: Se agregaron las rutas protegidas para las operaciones de productos (`/products/get/all`, `/products/get/byId`, `/products/new`, `/products/upd/byId`, `/products/del/byId`), aplicando el middleware de autenticación por token.
   - [x] **Controlador (`controller.js`)**: Se desarrollaron los controladores correspondientes para recibir y validar las peticiones, coordinar con la capa de servicio y devolver las respuestas HTTP estandarizadas.
   - [x] **Servicios (`service.js`)**: Se creó el servicio con las consultas SQL a la base de datos para realizar el CRUD completo de productos (`getAllProducts`, `getProductById`, `createNewProduct`, `updateProductById`, `deleteProductById`), manejando de manera asíncrona la conexión a la base de datos y la sanitización de inputs.
   - [x] Las modificaciones y endpoints fueron probados de manera exitosa utilizando POSTMAN.
+- [x] **Implementación Frontend de Vista Productos (MVC y SPA)**:
+  - [x] **Elaboración de Estrategia**: Se generó una estrategia detallada basándose en el componente de Clientes y la arquitectura actual para no alterar funcionalidad existente y mantener los patrones de diseño (Factory, MVC, Componentes SPA).
+  - [x] **Sub-componente `TablaProductos`**: Se extrajo la tabla estática de productos del Dashboard a un componente independiente con su propia arquitectura MVC, adaptado para manejar DataTables y asincronía (simulando fetch futuro).
+  - [x] **Componente Maestro `Productos`**: Se crearon las capas Model, View, Controller y Factory respetando el enrutamiento y aplicando el layout global (Sidebar/Header).
+  - [x] **Integración SPA y Menú Lateral**: Se importó la factoría en `main.js` bajo la ruta `/productos` y se ajustó `sidebarController.js` para asegurar la correcta navegación reactiva del menú.
+  - [x] **Resolución de Error 500 (Syntax Error)**: Se identificó y resolvió un fallo de sintaxis ocasionado por interpolaciones escapadas erróneamente en los *template strings* del callback de renderizado de la tabla, devolviendo la estabilidad a Vite.
