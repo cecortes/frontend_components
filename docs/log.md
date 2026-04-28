@@ -587,3 +587,13 @@
   - [x] **Validación y Sanitización**: Se actualizó `fieldsValidator.js` para exigir exactamente 10 dígitos y se implementó limpieza de caracteres no numéricos en los modelos de creación y edición.
 - [x] **Documentación y Estandarización de Procesos**:
   - [x] **Nueva Skill (`backend_add_entity_integration`)**: Se creó una guía maestra que documenta el flujo completo de integración con el backend, capturando las lecciones aprendidas sobre desbordamiento de datos, manejo de sesiones y recarga de componentes MVC.
+
+---
+
+## 27-04-26 - Creación del Backend para Productos
+
+- [x] **Implementación de Arquitectura Backend para Gestión de Productos**:
+  - [x] **Rutas (`rutas.js`)**: Se agregaron las rutas protegidas para las operaciones de productos (`/products/get/all`, `/products/get/byId`, `/products/new`, `/products/upd/byId`, `/products/del/byId`), aplicando el middleware de autenticación por token.
+  - [x] **Controlador (`controller.js`)**: Se desarrollaron los controladores correspondientes para recibir y validar las peticiones, coordinar con la capa de servicio y devolver las respuestas HTTP estandarizadas.
+  - [x] **Servicios (`service.js`)**: Se creó el servicio con las consultas SQL a la base de datos para realizar el CRUD completo de productos (`getAllProducts`, `getProductById`, `createNewProduct`, `updateProductById`, `deleteProductById`), manejando de manera asíncrona la conexión a la base de datos y la sanitización de inputs.
+  - [x] Las modificaciones y endpoints fueron probados de manera exitosa utilizando POSTMAN.

@@ -7,6 +7,7 @@ import { authenticateToken } from "../middlewares/auth.js";
 /* Importaciones de Controladores */
 import * as userControllers from "../controllers/users/controller.js";
 import * as clientControllers from "../controllers/clients/controller.js";
+import * as productControllers from "../controllers/products/controller.js";
 
 const router = express.Router();
 
@@ -16,6 +17,7 @@ router.use("/auth", authRoutes.default);
 // Aplicar middleware de autenticación a rutas protegidas
 router.use("/users", authenticateToken);
 router.use("/clients", authenticateToken);
+router.use("/products", authenticateToken);
 
 // --- Rutas de Usuarios ---
 router.post("/users/get/all", userControllers.getAll);
@@ -29,6 +31,13 @@ router.post("/clients/get/byId", clientControllers.getById);
 router.post("/clients/new", clientControllers.createNew);
 router.post("/clients/upd/byId", clientControllers.updateById);
 router.post("/clients/del/byId", clientControllers.deleteById);
+
+// --- Rutas de Productos ---
+router.post("/products/get/all", productControllers.getAll);
+router.post("/products/get/byId", productControllers.getById);
+router.post("/products/new", productControllers.createNew);
+router.post("/products/upd/byId", productControllers.updateById);
+router.post("/products/del/byId", productControllers.deleteById);
 
 // Exportación
 export default router;
