@@ -603,3 +603,13 @@
   - [x] **Componente Maestro `Productos`**: Se crearon las capas Model, View, Controller y Factory respetando el enrutamiento y aplicando el layout global (Sidebar/Header).
   - [x] **Integración SPA y Menú Lateral**: Se importó la factoría en `main.js` bajo la ruta `/productos` y se ajustó `sidebarController.js` para asegurar la correcta navegación reactiva del menú.
   - [x] **Resolución de Error 500 (Syntax Error)**: Se identificó y resolvió un fallo de sintaxis ocasionado por interpolaciones escapadas erróneamente en los *template strings* del callback de renderizado de la tabla, devolviendo la estabilidad a Vite.
+
+---
+
+## 04-05-26 - Integración de Link de Producción en el Sidebar
+
+- [x] **Implementación de Link de Navegación "Producción" en Sidebar**:
+  - [x] **Estrategia y Planificación**: Se elaboró y aprobó una estrategia detallada para añadir el nuevo link sin comprometer la arquitectura MVC ni la funcionalidad existente.
+  - [x] **Gestión de Activos (`svg_icons.js`)**: Se añadió el nuevo icono SVG para "Producción" siguiendo los estándares visuales del proyecto.
+  - [x] **Actualización de la Vista (`sidebarView.js`)**: Se inyectó el nuevo elemento de navegación en el template del sidebar, posicionándolo entre "Dashboard" y "Usuarios".
+  - [x] **Lógica del Controlador (`sidebarController.js`)**: Se actualizó el enlace de navegación para procesar el redireccionamiento a la ruta `/produccion` a través del router SPA.

@@ -43,6 +43,8 @@ export class SidebarController {
 
         if (text.includes("dashboard")) {
           window.router.navigate("/dashboard");
+        } else if (text.includes("producción") || text.includes("produccion")) {
+          window.router.navigate("/produccion");
         } else if (text.includes("usuarios")) {
           window.router.navigate("/usuarios");
         } else if (text.includes("clientes")) {

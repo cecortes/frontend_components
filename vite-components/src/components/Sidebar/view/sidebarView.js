@@ -42,6 +42,12 @@ export class SidebarView {
           </a>
         </li>
         <li class="nav-item">
+          <a href="#" ${isActive("produccion")}>
+            ${this.icons.produccion}
+            Producción
+          </a>
+        </li>
+        <li class="nav-item">
           <a href="#" ${isActive("users")}>
             ${this.icons.users}
             Usuarios
