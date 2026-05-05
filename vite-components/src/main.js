@@ -20,6 +20,7 @@ import { DashboardFactory } from "./factory/dash_factory.js";
 import { UsuariosFactory } from "./factory/usuarios_factory.js";
 import { ClientesFactory } from "./factory/clientes_factory.js";
 import { ProductosFactory } from "./factory/productos_factory.js";
+import { ProduccionFactory } from "./factory/produccion_factory.js";
 
 /*
 const loginElement = document.querySelector("#LoginForm");
@@ -60,6 +61,11 @@ const routes = {
 
     if (modalError) document.body.append(modalError);
 
+    return element;
+  },
+  "/produccion": async () => {
+    const { element, modalError } = await ProduccionFactory.produccionComponent();
+    if (modalError) document.body.append(modalError);
     return element;
   },
   "/usuarios": async () => {
