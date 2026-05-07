@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard de Producción - Prueba</title>
+    <!-- Incluir los estilos base del proyecto WARESmart (Versión compilada para soportar Tailwind v4) -->
+    <link
+      rel="stylesheet"
+      href="../vite-components/dist/assets/index-DrR2l9Vp.css"
+    />
+    <style>
+      /* Estilos específicos para el Dashboard de Producción usando variables nativas */
+      body {
+        padding: 2rem;
+      }
+
+      .dashboard-header {
+        margin-bottom: 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .dashboard-header h1 {
+        font-size: 2rem;
+        color: var(--color-text-primary);
+      }
+
+      /* Chart Section */
+      .chart-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid var(--color-border-subtle);
+      }
+
+      .chart-controls select {
+        background-color: var(--color-background-secondary);
+        color: var(--color-text-primary);
+        border: 1px solid var(--color-border-default);
+        padding: 0.5rem 1rem;
+        border-radius: 8px;
+        font-family: inherit;
+        font-size: 0.9rem;
+        outline: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .chart-controls select:focus {
+        border-color: var(--color-primary-500);
+        box-shadow: 0 0 0 2px rgba(59, 142, 194, 0.2);
+      }
+
+      .chart-container {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-around;
+        height: 300px;
+        padding-top: 1rem;
+        gap: 1rem;
+        position: relative;
+      }
+
+      /* Líneas de guía de fondo */
+      .chart-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 30px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        z-index: 0;
+        pointer-events: none;
+      }
+
+      .chart-grid-line {
+        width: 100%;
+        height: 1px;
+        background-color: var(--color-border-subtle);
+        opacity: 0.5;
+      }
+
+      .chart-day {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-end;
+        height: 100%;
+        width: 100%;
+        z-index: 1;
+      }
+
+      .bars-wrapper {
+        display: flex;
+        align-items: flex-end;
+        justify-content: center;
+        gap: 4px;
+        width: 100%;
+        height: calc(100% - 30px);
+      }
+
+      .bar {
+        width: 30px;
+        border-radius: 4px 4px 0 0;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+      }
+
+      .bar:hover {
+        filter: brightness(1.2);
+      }
+
+      .bar::after {
+        content: attr(data-value);
+        position: absolute;
+        top: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.75rem;
+        color: var(--color-text-secondary);
+        opacity: 0;
+        transition: opacity 0.2s ease;
+      }
+
+      .bar:hover::after {
+        opacity: 1;
+      }
+
+      .bar-ngr {
+        background: linear-gradient(
+          180deg,
+          var(--color-primary-400) 0%,
+          var(--color-primary-600) 100%
+        );
+        box-shadow: 0 0 10px rgba(59, 142, 194, 0.2);
+      }
+
+      .bar-blnc {
+        background: linear-gradient(
+          180deg,
+          var(--color-high-400) 0%,
+          var(--color-high-600) 100%
+        );
+        box-shadow: 0 0 10px rgba(47, 184, 101, 0.2);
+      }
+
+      .day-label {
+        margin-top: 10px;
+        font-size: 0.85rem;
+        color: var(--color-text-secondary);
+        font-weight: 500;
+      }
+
+      /* Totals Section */
+      .totals-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 2rem;
+        margin-top: 2rem;
+      }
+
+      .total-card {
+        background-color: var(--color-surface-elevated);
+        border-radius: 12px;
+        padding: 2rem;
+        text-align: center;
+        border: 1px solid var(--color-border-subtle);
+        transition: transform 0.3s ease;
+      }
+
+      .total-card:hover {
+        transform: translateY(-4px);
+      }
+
+      .total-number {
+        font-size: 3.5rem;
+        font-weight: 700;
+        line-height: 1;
+        margin-bottom: 0.5rem;
+        letter-spacing: -0.02em;
+      }
+
+      .total-number.ngr {
+        color: var(--color-primary-400);
+        text-shadow: 0 0 20px rgba(59, 142, 194, 0.3);
+      }
+
+      .total-number.blnc {
+        color: var(--color-high-400);
+        text-shadow: 0 0 20px rgba(47, 184, 101, 0.3);
+      }
+
+      .total-label {
+        font-size: 1.1rem;
+        color: var(--color-text-secondary);
+        font-weight: 500;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+      }
+
+      /* Helper Utilities */
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-header">
+      <h1>Control de Producción</h1>
+      <div class="badge badge-normal">Semana Actual</div>
+    </div>
+
+    <!-- TOTALS CARDS -->
+    <div class="card">
+      <h3
+        style="
+          border-bottom: 1px solid var(--color-border-subtle);
+          padding-bottom: 1rem;
+          margin-bottom: 1rem;
+        "
+      >
+        Totales Acumulados
+      </h3>
+      <div class="totals-section">
+        <div class="total-card">
+          <div class="total-number ngr" id="totalNGR">0</div>
+          <div class="total-label">Botella NGR</div>
+        </div>
+
+        <div class="total-card">
+          <div class="total-number blnc" id="totalBLNC">0</div>
+          <div class="total-label">Botella BLNC</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN CHART CARD -->
+    <div class="card" style="margin-bottom: 2rem">
+      <div class="chart-header">
+        <h3>Producción Diaria</h3>
+        <div class="chart-controls">
+          <select id="productFilter">
+            <option value="todos">Todos los Productos</option>
+            <option value="ngr">Botella NGR</option>
+            <option value="blnc">Botella BLNC</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="chart-container" id="chartContainer">
+        <div class="chart-grid">
+          <div class="chart-grid-line"></div>
+          <div class="chart-grid-line"></div>
+          <div class="chart-grid-line"></div>
+          <div class="chart-grid-line"></div>
+          <div class="chart-grid-line"></div>
+        </div>
+        <!-- Los días se inyectarán con JS -->
+      </div>
+    </div>
+
+    <script>
+      // Datos Harcodeados (Piezas diarias < 5000, Totales < 100000)
+      const weeklyData = [
+        { day: "Lun", ngr: 4200, blnc: 3100 },
+        { day: "Mar", ngr: 3800, blnc: 3500 },
+        { day: "Mié", ngr: 4500, blnc: 2900 },
+        { day: "Jue", ngr: 4100, blnc: 4000 },
+        { day: "Vie", ngr: 4800, blnc: 3800 },
+        { day: "Sáb", ngr: 2100, blnc: 1500 },
+        { day: "Dom", ngr: 0, blnc: 0 },
+      ];
+
+      // Calcular Totales
+      const totalNgrValue = weeklyData.reduce((acc, curr) => acc + curr.ngr, 0);
+      const totalBlncValue = weeklyData.reduce(
+        (acc, curr) => acc + curr.blnc,
+        0,
+      );
+
+      // Actualizar UI Totales (con formato de número)
+      document.getElementById("totalNGR").textContent =
+        totalNgrValue.toLocaleString();
+      document.getElementById("totalBLNC").textContent =
+        totalBlncValue.toLocaleString();
+
+      const MAX_PRODUCTION = 5000; // Valor máximo para escalar la gráfica al 100%
+
+      const chartContainer = document.getElementById("chartContainer");
+      const productFilter = document.getElementById("productFilter");
+
+      // Función para renderizar la gráfica
+      function renderChart(filterType) {
+        // Limpiar gráfica (manteniendo el grid background)
+        const gridLines = chartContainer.querySelector(".chart-grid");
+        chartContainer.innerHTML = "";
+        chartContainer.appendChild(gridLines);
+
+        weeklyData.forEach((data) => {
+          const dayWrapper = document.createElement("div");
+          dayWrapper.className = "chart-day";
+
+          const barsWrapper = document.createElement("div");
+          barsWrapper.className = "bars-wrapper";
+
+          // Calcular altura en porcentaje
+          const ngrHeight = (data.ngr / MAX_PRODUCTION) * 100;
+          const blncHeight = (data.blnc / MAX_PRODUCTION) * 100;
+
+          // Barra NGR
+          if (filterType === "todos" || filterType === "ngr") {
+            const barNgr = document.createElement("div");
+            barNgr.className = "bar bar-ngr";
+            barNgr.style.height = `${ngrHeight}%`;
+            barNgr.setAttribute("data-value", data.ngr.toLocaleString());
+            barsWrapper.appendChild(barNgr);
+          }
+
+          // Barra BLNC
+          if (filterType === "todos" || filterType === "blnc") {
+            const barBlnc = document.createElement("div");
+            barBlnc.className = "bar bar-blnc";
+            barBlnc.style.height = `${blncHeight}%`;
+            barBlnc.setAttribute("data-value", data.blnc.toLocaleString());
+            barsWrapper.appendChild(barBlnc);
+          }
+
+          const dayLabel = document.createElement("div");
+          dayLabel.className = "day-label";
+          dayLabel.textContent = data.day;
+
+          dayWrapper.appendChild(barsWrapper);
+          dayWrapper.appendChild(dayLabel);
+
+          chartContainer.appendChild(dayWrapper);
+        });
+      }
+
+      // Render inicial
+      renderChart("todos");
+
+      // Event listener para el selector
+      productFilter.addEventListener("change", (e) => {
+        renderChart(e.target.value);
+      });
+    </script>
+  </body>
+</html>

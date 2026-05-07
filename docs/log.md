@@ -627,3 +627,22 @@
 - [x] **Estandarización de Procesos (Skill & Rule)**:
   - [x] **Creación de Skill Específica**: Se documentó formalmente el proceso en `.agent/skills/navigation_page_integration/SKILL.md`, capturando las lecciones aprendidas sobre rutas de importación (`storage.js`) y sintaxis de renderizado.
   - [x] **Implementación de Regla de Control**: Se activó la regla `.agent/rules/navigation_page_integration_rule.md` para automatizar la consulta de la skill al crear nuevos componentes de navegación, blindando el proyecto contra errores recurrentes.
+
+---
+
+## 06-05-26 - Pre-diseño del Dashboard de Producción y Documentación Técnica
+
+- [x] Elaboración de la estrategia para el pre-diseño (mockup) del "Dashboard de Producción".
+- [x] Implementación del mockup funcional en `test/Produccion.html`.
+  - [x] Maquetación de gráfica de barras diaria (Lun-Dom) con animaciones y filtrado dinámico mediante JS Vanilla.
+  - [x] Creación de tarjetas de totales acumulados con formateo numérico.
+  - [x] Implementación de lógica de filtrado de productos (Todos, NGR, BLNC).
+- [x] Resolución de incidencia crítica de renderizado CSS.
+  - [x] Diagnóstico de incompatibilidad de la directiva `@theme` de Tailwind v4 en navegadores sin compilación.
+  - [x] Solución mediante el redireccionamiento del enlace de estilos al asset compilado `dist/assets/index-DrR2l9Vp.css`.
+- [x] Refinamiento visual del producto "Botella BLNC" migrando el color de Ámbar a Verde corporativo (`high-500`).
+- [x] Documentación técnica y administrativa del componente:
+  - [x] Redacción de la especificación técnica en `docs/specs/produccion_dashboard_spec.md` integrando el historial de la sesión y definiciones funcionales.
+  - [x] Creación del registro de decisión arquitectónica `docs/decisions/004_produccion_dashboard_ui_decision.md`.
+- [ ] Tareas Pendientes (Backlog):
+  - [ ] Crear los componentes necesarios (Model, View, Controller, Factory) dentro del módulo 'Produccion' integrando el código y estilos del pre-diseño creado.
