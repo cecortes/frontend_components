@@ -1242,3 +1242,195 @@ div.dt-container .dt-search .input-field:focus {
   background-color: var(--color-surface-elevated) !important;
   box-shadow: 0 0 0 3px rgba(59, 142, 194, 0.1) !important;
 }
+
+/* ============================================
+   Componentes de Producción
+   ============================================ */
+.dashboard-header {
+  margin-bottom: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dashboard-header h1 {
+  font-size: 2rem;
+  color: var(--color-text-primary);
+}
+
+/* Chart Section */
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--color-border-subtle);
+}
+
+.chart-controls select {
+  background-color: var(--color-background-secondary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-default);
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.chart-controls select:focus {
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 2px rgba(59, 142, 194, 0.2);
+}
+
+.chart-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  height: 300px;
+  padding-top: 1rem;
+  gap: 1rem;
+  position: relative;
+}
+
+/* Líneas de guía de fondo */
+.chart-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.chart-grid-line {
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-border-subtle);
+  opacity: 0.5;
+}
+
+.chart-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+.bars-wrapper {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 4px;
+  width: 100%;
+  height: calc(100% - 30px);
+}
+
+.bar {
+  width: 30px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.bar:hover {
+  filter: brightness(1.2);
+}
+
+.bar::after {
+  content: attr(data-value);
+  position: absolute;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.bar:hover::after {
+  opacity: 1;
+}
+
+.bar-ngr {
+  background: linear-gradient(
+    180deg,
+    var(--color-primary-400) 0%,
+    var(--color-primary-600) 100%
+  );
+  box-shadow: 0 0 10px rgba(59, 142, 194, 0.2);
+}
+
+.bar-blnc {
+  background: linear-gradient(
+    180deg,
+    var(--color-high-400) 0%,
+    var(--color-high-600) 100%
+  );
+  box-shadow: 0 0 10px rgba(47, 184, 101, 0.2);
+}
+
+.day-label {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+/* Totals Section */
+.totals-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.total-card {
+  background-color: var(--color-surface-elevated);
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  border: 1px solid var(--color-border-subtle);
+  transition: transform 0.3s ease;
+}
+
+.total-card:hover {
+  transform: translateY(-4px);
+}
+
+.total-number {
+  font-size: 3.5rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+.total-number.ngr {
+  color: var(--color-primary-400);
+  text-shadow: 0 0 20px rgba(59, 142, 194, 0.3);
+}
+
+.total-number.blnc {
+  color: var(--color-high-400);
+  text-shadow: 0 0 20px rgba(47, 184, 101, 0.3);
+}
+
+.total-label {
+  font-size: 1.1rem;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

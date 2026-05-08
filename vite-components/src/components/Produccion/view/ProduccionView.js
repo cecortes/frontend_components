@@ -10,7 +10,7 @@ export class ProduccionView {
    * @method renderProduccion
    * @description Genera el DOM principal para la vista de Producción.
    */
-  renderProduccion(sidebarHTML = "", burgerHTML = "") {
+  renderProduccion(sidebarHTML = "", burgerHTML = "", totalesHTML = "", graficaHTML = "") {
     const html = `
       <div class="dashboard-wrapper" style="display: flex; min-height: 100vh; width: 100%; overflow-x: hidden;">
         ${sidebarHTML}
@@ -32,7 +32,8 @@ export class ProduccionView {
 
           <!-- Área de Contenido -->
           <div class="dashboard-content">
-            <!-- Espacio en blanco para tablas/datos -->
+            ${totalesHTML}
+            ${graficaHTML}
           </div>
         </main>
       </div>

@@ -6,12 +6,17 @@ import { AuthController } from "../components/Auth/controller/AuthController.js"
 import { ModalFactory } from "./modal_factory.js";
 import { SidebarFactory } from "./sidebar_factory.js";
 import { icons } from "../components/Dashboard/icons/svg_icons.js";
+import { createProduccionTotalesComponent } from "../components/ProduccionTotales/_factory.js";
+import { createProduccionGraficaComponent } from "../components/ProduccionGrafica/_factory.js";
 
 export class ProduccionFactory {
   static async produccionComponent() {
     const { element: modalErrorElement, controller: modalErrorController } =
       ModalFactory.modalComponent();
     const sidebarController = SidebarFactory.createSidebar();
+
+    const produccionTotalesController = createProduccionTotalesComponent();
+    const produccionGraficaController = createProduccionGraficaComponent();
 
     const view = new ProduccionView(icons);
     const model = new ProduccionModel();
@@ -25,6 +30,8 @@ export class ProduccionFactory {
       auth,
       modalErrorController,
       sidebarController,
+      produccionTotalesController,
+      produccionGraficaController
     );
     const element = await controller.init();
 

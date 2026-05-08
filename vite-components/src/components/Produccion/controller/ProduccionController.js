@@ -1,13 +1,15 @@
 "use strict";
 
 export class ProduccionController {
-  constructor(view, model, storage, auth, modalErrorController, sidebarController) {
+  constructor(view, model, storage, auth, modalErrorController, sidebarController, produccionTotalesController = null, produccionGraficaController = null) {
     this.view = view;
     this.model = model;
     this.storage = storage;
     this.auth = auth;
     this.modalErrorController = modalErrorController;
     this.sidebarController = sidebarController;
+    this.produccionTotalesController = produccionTotalesController;
+    this.produccionGraficaController = produccionGraficaController;
   }
 
   async init() {
@@ -33,11 +35,19 @@ export class ProduccionController {
       : "";
     const burgerHTML = this.sidebarController ? this.sidebarController.getBurgerHTML() : "";
 
-    const html = this.view.renderProduccion(sidebarHTML, burgerHTML);
+    const totalesHTML = this.produccionTotalesController ? this.produccionTotalesController.init() : "";
+    const graficaHTML = this.produccionGraficaController ? this.produccionGraficaController.init() : "";
+
+    const html = this.view.renderProduccion(sidebarHTML, burgerHTML, totalesHTML, graficaHTML);
 
     // Vinculación estricta para navegación SPA
     if (this.sidebarController) {
       this.sidebarController.bindNavigation(html);
+    }
+
+    // Inicializar eventos de sub-componentes pasándoles el nodo raíz
+    if (this.produccionGraficaController) {
+      this.produccionGraficaController.bindEvents(html);
     }
 
     return html;
