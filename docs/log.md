@@ -662,3 +662,16 @@
 - [x] Documentación y Seguimiento:
   - [x] Creación de `walkthrough.md` detallando la implementación técnica y decisiones arquitectónicas.
   - [x] Actualización de `task.md` marcando la finalización de las fases de integración.
+
+---
+
+## 10-05-26 - Implementación de Selector de Rangos en Producción y Corrección de UI
+
+- [x] **Implementación de Selector de Rangos de Datos de Producción**:
+  - [x] Se elaboró y aprobó la estrategia basada en el patrón mediador para implementar selectores de rangos de tiempo (Anual, Mensual, Semanal).
+  - [x] **Modelos**: Se actualizaron \`ProduccionGraficaModel.js\` y \`ProduccionTotalesModel.js\` añadiendo datos simulados (\`monthlyData\`, \`yearlyData\`) y métodos para el cálculo dinámico de \`maxProduction\` y recálculo de totales en tiempo real.
+  - [x] **Vistas**: Se inyectó el componente \`<select id="rangoTiempo">\` armoniosamente junto al título en \`ProduccionTotalesView.js\` empleando estilos flexbox para preservar el diseño original.
+  - [x] **Controladores (Arquitectura Mediadora)**: \`ProduccionController.js\` se instauró como mediador absoluto. Se encargó de interceptar los callbacks desde \`ProduccionTotalesController\` e indicar a \`ProduccionGraficaController\` y al mismo componente de Totales que realizaran el refresco de datos en tiempo real (SPA).
+- [x] **Resolución de Error Estructural: Desbordamiento de la Gráfica (Overflow)**:
+  - [x] **Diagnóstico Crítico**: Al renderizar 31 nodos (mes completo), los elementos se agrupaban rompiendo la legibilidad o desbordaban la tarjeta principal al no contar con un comportamiento de *Scroll Horizontal* delimitado.
+  - [x] **Solución y Reestructuración de Capas**: Se mutó la vista \`ProduccionGraficaView.js\` para aislar las 5 guías horizontales estáticas (\`chart-grid\`) en un contenedor absoluto intocable. Simultáneamente, se asignó al \`chart-container\` las propiedades de `overflow-x: auto` y un \`min-width\` forzado en el CSS a los elementos hijos. El resultado final permite interactuar libremente con los datos desplazables horizontalmente manteniendo el marco inquebrantable.

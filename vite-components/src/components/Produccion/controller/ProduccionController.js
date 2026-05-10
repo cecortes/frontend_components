@@ -50,6 +50,16 @@ export class ProduccionController {
       this.produccionGraficaController.bindEvents(html);
     }
 
+    if (this.produccionTotalesController) {
+      this.produccionTotalesController.bindEvents(html, (nuevoRango) => {
+        // Callback del mediador: cuando cambia el rango en Totales, actualizamos Totales y Gráfica
+        this.produccionTotalesController.updateTotales(nuevoRango);
+        if (this.produccionGraficaController) {
+          this.produccionGraficaController.updateChartRange(nuevoRango);
+        }
+      });
+    }
+
     return html;
   }
 }

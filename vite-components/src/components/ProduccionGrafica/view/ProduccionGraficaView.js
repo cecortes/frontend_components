@@ -21,7 +21,7 @@ export class ProduccionGraficaView {
           </div>
         </div>
 
-        <div class="chart-container" id="chartContainer">
+        <div class="chart-wrapper" style="position: relative;">
           <div class="chart-grid">
             <div class="chart-grid-line"></div>
             <div class="chart-grid-line"></div>
@@ -29,7 +29,9 @@ export class ProduccionGraficaView {
             <div class="chart-grid-line"></div>
             <div class="chart-grid-line"></div>
           </div>
-          <!-- Los días se inyectarán dinámicamente aquí -->
+          <div class="chart-container" id="chartContainer">
+            <!-- Los días se inyectarán dinámicamente aquí -->
+          </div>
         </div>
       </div>
     `;
@@ -56,12 +58,8 @@ export class ProduccionGraficaView {
     const chartContainer = root.querySelector("#chartContainer");
     if (!chartContainer) return;
 
-    // Limpiar gráfica manteniendo las líneas de fondo (chart-grid)
-    const gridLines = chartContainer.querySelector(".chart-grid");
+    // Limpiar gráfica (el grid ya está afuera de este div, así que no se borra)
     chartContainer.innerHTML = "";
-    if (gridLines) {
-      chartContainer.appendChild(gridLines);
-    }
 
     weeklyData.forEach((data) => {
       const dayWrapper = document.createElement("div");

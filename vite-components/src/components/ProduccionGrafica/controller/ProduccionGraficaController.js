@@ -16,16 +16,29 @@ export class ProduccionGraficaController {
 
   bindEvents(rootElement = document) {
     this.rootElement = rootElement;
+    this.currentFilterType = "todos"; // Estado inicial
+    this.currentRange = "semanal"; // Estado inicial
+
     // Registrar el listener del filtro
     this.view.bindFilterChange(this.handleFilterChange.bind(this), this.rootElement);
     
     // Renderizado inicial
-    this.handleFilterChange("todos");
+    this.renderCurrentChart();
   }
 
   handleFilterChange(filterType) {
-    const weeklyData = this.model.getWeeklyData();
+    this.currentFilterType = filterType;
+    this.renderCurrentChart();
+  }
+
+  updateChartRange(rango) {
+    this.currentRange = rango;
+    this.renderCurrentChart();
+  }
+
+  renderCurrentChart() {
+    const data = this.model.getDataByRange(this.currentRange);
     const maxProduction = this.model.getMaxProduction();
-    this.view.renderChart(weeklyData, maxProduction, filterType, this.rootElement);
+    this.view.renderChart(data, maxProduction, this.currentFilterType, this.rootElement);
   }
 }
