@@ -669,9 +669,22 @@
 
 - [x] **Implementación de Selector de Rangos de Datos de Producción**:
   - [x] Se elaboró y aprobó la estrategia basada en el patrón mediador para implementar selectores de rangos de tiempo (Anual, Mensual, Semanal).
-  - [x] **Modelos**: Se actualizaron \`ProduccionGraficaModel.js\` y \`ProduccionTotalesModel.js\` añadiendo datos simulados (\`monthlyData\`, \`yearlyData\`) y métodos para el cálculo dinámico de \`maxProduction\` y recálculo de totales en tiempo real.
-  - [x] **Vistas**: Se inyectó el componente \`<select id="rangoTiempo">\` armoniosamente junto al título en \`ProduccionTotalesView.js\` empleando estilos flexbox para preservar el diseño original.
-  - [x] **Controladores (Arquitectura Mediadora)**: \`ProduccionController.js\` se instauró como mediador absoluto. Se encargó de interceptar los callbacks desde \`ProduccionTotalesController\` e indicar a \`ProduccionGraficaController\` y al mismo componente de Totales que realizaran el refresco de datos en tiempo real (SPA).
+  - [x] **Modelos**: Se actualizaron `ProduccionGraficaModel.js` y `ProduccionTotalesModel.js` añadiendo datos simulados (`monthlyData`, `yearlyData`) y métodos para el cálculo dinámico de `maxProduction` y recálculo de totales en tiempo real.
+  - [x] **Vistas**: Se inyectó el componente `<select id="rangoTiempo">` armoniosamente junto al título en `ProduccionTotalesView.js` empleando estilos flexbox para preservar el diseño original.
+  - [x] **Controladores (Arquitectura Mediadora)**: `ProduccionController.js` se instauró como mediador absoluto. Se encargó de interceptar los callbacks desde `ProduccionTotalesController` e indicar a `ProduccionGraficaController` y al mismo componente de Totales que realizaran el refresco de datos en tiempo real (SPA).
 - [x] **Resolución de Error Estructural: Desbordamiento de la Gráfica (Overflow)**:
   - [x] **Diagnóstico Crítico**: Al renderizar 31 nodos (mes completo), los elementos se agrupaban rompiendo la legibilidad o desbordaban la tarjeta principal al no contar con un comportamiento de *Scroll Horizontal* delimitado.
-  - [x] **Solución y Reestructuración de Capas**: Se mutó la vista \`ProduccionGraficaView.js\` para aislar las 5 guías horizontales estáticas (\`chart-grid\`) en un contenedor absoluto intocable. Simultáneamente, se asignó al \`chart-container\` las propiedades de `overflow-x: auto` y un \`min-width\` forzado en el CSS a los elementos hijos. El resultado final permite interactuar libremente con los datos desplazables horizontalmente manteniendo el marco inquebrantable.
+  - [x] **Solución y Reestructuración de Capas**: Se mutó la vista `ProduccionGraficaView.js` para aislar las 5 guías horizontales estáticas (`chart-grid`) en un contenedor absoluto intocable. Simultáneamente, se asignó al `chart-container` las propiedades de `overflow-x: auto` y un `min-width` forzado en el CSS a los elementos hijos. El resultado final permite interactuar libremente con los datos desplazables horizontalmente manteniendo el marco inquebrantable.
+
+---
+
+## 11-05-26 - Implementación de Endpoint Producción en Backend
+
+- [x] **Arquitectura y Creación de Endpoint `/produccion/new`**:
+  - [x] Se elaboró la estrategia de implementación cumpliendo estrictamente con la guía `Elaboración de Estrategias` y respetando el patrón MVC establecido por el módulo de productos.
+  - [x] **Servicios (`service.js`)**: Se implementó el componente de acceso a datos para ejecutar la inserción SQL segura (`INSERT INTO produccion`) utilizando conexión por pool (`dbPool`).
+  - [x] **Controladores (`controller.js`)**: Se desarrolló la lógica de negocio y validación estricta de parámetros en el payload (`produccion_sku`, `produccion_product`, `produccion_date`, `produccion_usr`), incluyendo la verificación del formato correcto de fecha y hora requerido por MySQL (`yyyy-mm-dd HH:MM:SS`).
+  - [x] **Rutas (`rutas.js`)**: Se integró el enrutamiento y se blindó el nuevo endpoint asignándole obligatoriamente el middleware de seguridad `authenticateToken` para JWT.
+- [x] **Corrección de Configuración y Pruebas Automáticas**:
+  - [x] Se corrigió la sintaxis de asignación del archivo `.env` (de dos puntos a signo igual) para compatibilidad nativa con la librería `dotenv`.
+  - [x] Se programó y ejecutó un script temporal de pruebas automatizadas sobre Node, que verificó con éxito la restricción de acceso (HTTP 401 sin token), el rechazo de formatos inválidos (HTTP 400) y la creación exitosa del registro (HTTP 201), borrando posteriormente la información de prueba de la base de datos real.

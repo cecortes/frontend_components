@@ -8,6 +8,7 @@ import { authenticateToken } from "../middlewares/auth.js";
 import * as userControllers from "../controllers/users/controller.js";
 import * as clientControllers from "../controllers/clients/controller.js";
 import * as productControllers from "../controllers/products/controller.js";
+import * as produccionControllers from "../controllers/produccion/controller.js";
 
 const router = express.Router();
 
@@ -18,6 +19,7 @@ router.use("/auth", authRoutes.default);
 router.use("/users", authenticateToken);
 router.use("/clients", authenticateToken);
 router.use("/products", authenticateToken);
+router.use("/produccion", authenticateToken);
 
 // --- Rutas de Usuarios ---
 router.post("/users/get/all", userControllers.getAll);
@@ -38,6 +40,9 @@ router.post("/products/get/byId", productControllers.getById);
 router.post("/products/new", productControllers.createNew);
 router.post("/products/upd/byId", productControllers.updateById);
 router.post("/products/del/byId", productControllers.deleteById);
+
+// --- Rutas de Produccion ---
+router.post("/produccion/new", produccionControllers.createNew);
 
 // Exportación
 export default router;
