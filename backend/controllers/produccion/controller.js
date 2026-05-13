@@ -1,4 +1,25 @@
-import { createNewProduccion } from "../../services/produccion/service.js";
+import { createNewProduccion, getAllProduccion } from "../../services/produccion/service.js";
+
+/**
+ * Maneja la petición POST /produccion/get/all
+ * @param {Object} req - Objeto de petición Express.
+ * @param {Object} res - Objeto de respuesta Express.
+ */
+export const getAll = async (req, res) => {
+  try {
+    const produccionRecords = await getAllProduccion();
+    res.status(200).json({
+      success: true,
+      data: produccionRecords,
+    });
+  } catch (error) {
+    console.error("Error en controlador getAll (Produccion):", error);
+    res.status(500).json({
+      success: false,
+      message: "Error interno del servidor.",
+    });
+  }
+};
 
 /**
  * Maneja la petición POST /produccion/new
