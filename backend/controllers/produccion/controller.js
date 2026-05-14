@@ -1,4 +1,4 @@
-import { createNewProduccion, getAllProduccion } from "../../services/produccion/service.js";
+import { createNewProduccion, getAllProduccion, getProduccionByPeriodProduct } from "../../services/produccion/service.js";
 
 /**
  * Maneja la petición POST /produccion/get/all
@@ -83,6 +83,69 @@ export const createNew = async (req, res) => {
     });
   } catch (error) {
     console.error("Error en controlador createNew (Produccion):", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Error interno del servidor.",
+    });
+  }
+};
+
+/**
+ * Maneja la petición POST /produccion/get/byPeriodProduct
+ * @param {Object} req - Objeto de petición Express.
+ * @param {Object} res - Objeto de respuesta Express.
+ */
+export const getByPeriodProduct = async (req, res) => {
+  const { sku, startDate, endDate } = req.body;
+
+  if (!sku || typeof sku !== "string") {
+    return res.status(400).json({
+      success: false,
+      message: "sku es requerido y debe ser una cadena de texto.",
+    });
+  }
+
+  const dateRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+  
+  if (!startDate || typeof startDate !== "string" || !dateRegex.test(startDate)) {
+    return res.status(400).json({
+      success: false,
+      message: "startDate es requerido y debe tener un formato válido (yyyy-mm-dd 00:00:00).",
+    });
+  }
+
+  if (!endDate || typeof endDate !== "string" || !dateRegex.test(endDate)) {
+    return res.status(400).json({
+      success: false,
+      message: "endDate es requerido y debe tener un formato válido (yyyy-mm-dd 00:00:00).",
+    });
+  }
+
+  const parsedStart = new Date(startDate.replace(' ', 'T'));
+  const parsedEnd = new Date(endDate.replace(' ', 'T'));
+
+  if (isNaN(parsedStart.getTime()) || isNaN(parsedEnd.getTime())) {
+    return res.status(400).json({
+      success: false,
+      message: "startDate o endDate contiene una fecha u hora inválida.",
+    });
+  }
+
+  if (parsedStart > parsedEnd) {
+    return res.status(400).json({
+      success: false,
+      message: "startDate no puede ser mayor que endDate.",
+    });
+  }
+
+  try {
+    const produccionRecords = await getProduccionByPeriodProduct(sku, startDate, endDate);
+    res.status(200).json({
+      success: true,
+      data: produccionRecords,
+    });
+  } catch (error) {
+    console.error("Error en controlador getByPeriodProduct (Produccion):", error);
     res.status(500).json({
       success: false,
       message: "Error interno del servidor.",

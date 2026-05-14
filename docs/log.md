@@ -698,3 +698,13 @@
   - [x] **Servicios (`service.js`)**: Se implementó el método `getAllProduccion()` ejecutando una consulta `SELECT * FROM produccion` mediante conexión segura por pool.
   - [x] **Controladores (`controller.js`)**: Se creó el controlador `getAll()` para orquestar la obtención asíncrona de los registros de producción, regresando un código `200` y el arreglo de datos en formato JSON en caso de éxito.
   - [x] **Rutas (`rutas.js`)**: Se integró el endpoint `POST /produccion/get/all` bajo el middleware protector de `authenticateToken`, cerrando la capa de red del componente de producción.
+
+---
+
+## 13-05-26 - Implementación de Endpoint Producción por Período y Producto
+
+- [x] **Arquitectura y Creación de Endpoint `/produccion/get/byPeriodProduct`**:
+  - [x] Se elaboró la estrategia cumpliendo con la skill `strategy_creation`, validando parámetros, tipos de datos y respondiendo las preguntas clave sobre agregación.
+  - [x] **Servicios (`service.js`)**: Se implementó el método `getProduccionByPeriodProduct` con la consulta SQL `GROUP BY DATE(produccion_date)` y se le añadió lógica en JavaScript para garantizar el relleno de fechas vacías (gaps) devolviendo el total de 0 para días sin producción.
+  - [x] **Controladores (`controller.js`)**: Se estructuró `getByPeriodProduct()` validando fuertemente el formato de fecha (`YYYY-MM-DD HH:MM:SS`) y que `startDate` no sea mayor a `endDate`.
+  - [x] **Rutas (`rutas.js`)**: Se integró el endpoint `POST /produccion/get/byPeriodProduct` bajo la protección global de `authenticateToken`.

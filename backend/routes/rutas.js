@@ -43,6 +43,7 @@ router.post("/products/del/byId", productControllers.deleteById);
 
 // --- Rutas de Produccion ---
 router.post("/produccion/get/all", produccionControllers.getAll);
+router.post("/produccion/get/byPeriodProduct", produccionControllers.getByPeriodProduct);
 router.post("/produccion/new", produccionControllers.createNew);
 
 // Exportación
