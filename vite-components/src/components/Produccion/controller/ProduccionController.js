@@ -20,9 +20,17 @@ export class ProduccionController {
       await this.auth.init(sessionData);
     } catch (error) {
       if (this.modalErrorController) {
-        this.modalErrorController.showError(error.message, () => window.router.navigate("/"));
+        if (error.isAuthError) {
+          this.modalErrorController.showError(error.message, () => window.router.navigate("/"));
+        } else {
+          this.modalErrorController.showError(error.message);
+        }
       } else {
-        window.router.navigate("/");
+        if (error.isAuthError) {
+          window.router.navigate("/");
+        } else {
+          console.error("Error de conexión:", error);
+        }
       }
       return;
     }

@@ -30,7 +30,9 @@ export class AuthModel {
    */
   async validateToken(sessionData) {
     if (!sessionData || !sessionData.token) {
-      throw new Error("Token inválido o expirado");
+      const error = new Error("Token inválido o expirado");
+      error.isAuthError = true;
+      throw error;
     }
 
     try {
@@ -45,11 +47,19 @@ export class AuthModel {
       });
 
       if (!response.ok) {
-        throw new Error("Token inválido o expirado");
+        const error = new Error("Token inválido o expirado");
+        if (response.status === 401 || response.status === 403) {
+          error.isAuthError = true;
+        }
+        throw error;
       }
     } catch (error) {
-      // Relanzar el error para que el controlador superior lo maneje y muestre el modal
-      throw new Error(error.message || "Token inválido o expirado");
+      // Si el error ya fue marcado como error de autenticación, relanzarlo
+      if (error.isAuthError) {
+        throw error;
+      }
+      // En caso contrario (ej. error de red "Failed to fetch"), relanzarlo como error normal
+      throw new Error(error.message || "Error al verificar el token");
     }
   }
 }

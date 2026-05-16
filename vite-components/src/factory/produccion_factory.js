@@ -15,13 +15,17 @@ export class ProduccionFactory {
       ModalFactory.modalComponent();
     const sidebarController = SidebarFactory.createSidebar();
 
-    const produccionTotalesController = createProduccionTotalesComponent();
+    const storage = new SessionStorage();
+    const auth = new AuthController();
+
+    const produccionTotalesController = createProduccionTotalesComponent(
+      storage,
+      modalErrorController
+    );
     const produccionGraficaController = createProduccionGraficaComponent();
 
     const view = new ProduccionView(icons);
     const model = new ProduccionModel();
-    const storage = new SessionStorage();
-    const auth = new AuthController();
 
     const controller = new ProduccionController(
       view,

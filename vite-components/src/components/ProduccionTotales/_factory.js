@@ -6,6 +6,6 @@ import { ProduccionTotalesController } from './controller/ProduccionTotalesContr
  * @function createProduccionTotalesComponent
  * @description Factory para ensamblar el componente de ProduccionTotales.
  */
-export const createProduccionTotalesComponent = () => {
-  return new ProduccionTotalesController();
+export const createProduccionTotalesComponent = (storage, modalErrorController) => {
+  return new ProduccionTotalesController(storage, modalErrorController);
 };
