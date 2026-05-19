@@ -6,6 +6,6 @@ import { ProduccionGraficaController } from './controller/ProduccionGraficaContr
  * @function createProduccionGraficaComponent
  * @description Factory para ensamblar el componente de ProduccionGrafica.
  */
-export const createProduccionGraficaComponent = () => {
-  return new ProduccionGraficaController();
+export const createProduccionGraficaComponent = (storage, modalErrorController) => {
+  return new ProduccionGraficaController(storage, modalErrorController);
 };

@@ -22,7 +22,10 @@ export class ProduccionFactory {
       storage,
       modalErrorController
     );
-    const produccionGraficaController = createProduccionGraficaComponent();
+    const produccionGraficaController = createProduccionGraficaComponent(
+      storage,
+      modalErrorController
+    );
 
     const view = new ProduccionView(icons);
     const model = new ProduccionModel();

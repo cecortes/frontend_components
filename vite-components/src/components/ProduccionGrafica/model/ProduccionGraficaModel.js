@@ -1,54 +1,136 @@
 "use strict";
 
 export class ProduccionGraficaModel {
-  constructor() {
-    this.weeklyData = [
-      { day: "Lun", ngr: 4200, blnc: 3100 },
-      { day: "Mar", ngr: 3800, blnc: 3500 },
-      { day: "Mié", ngr: 4500, blnc: 2900 },
-      { day: "Jue", ngr: 4100, blnc: 4000 },
-      { day: "Vie", ngr: 4800, blnc: 3800 },
-      { day: "Sáb", ngr: 2100, blnc: 1500 },
-      { day: "Dom", ngr: 0, blnc: 0 },
-    ];
-
-    // 31 días hardcodeados
-    this.monthlyData = Array.from({ length: 31 }, (_, i) => ({
-      day: `${i + 1}`,
-      ngr: Math.floor(Math.random() * 3000) + 2000, // Datos simulados diarios entre 2000 y 5000
-      blnc: Math.floor(Math.random() * 3000) + 1500
-    }));
-
-    // 12 meses hardcodeados
-    const months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
-    this.yearlyData = months.map(m => ({
-      day: m,
-      ngr: Math.floor(Math.random() * 80000) + 40000, // Datos simulados mensuales
-      blnc: Math.floor(Math.random() * 80000) + 30000
-    }));
-
-    this.currentRange = "semanal";
-  }
-
-  getWeeklyData() {
-    return this.weeklyData;
+  constructor(storage) {
+    this.storage = storage;
+    this.cachedData = [];
   }
 
   /**
-   * @method getDataByRange
-   * @description Retorna los datos según el rango. Si es mensual, filtra hasta la cantidad de días del mes actual.
+   * Obtiene los totales de producción de un producto en un periodo determinado.
    */
-  getDataByRange(rango) {
-    this.currentRange = rango;
-    if (rango === "anual") {
-      return this.yearlyData;
-    } else if (rango === "mensual") {
-      const now = new Date();
-      const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-      return this.monthlyData.slice(0, daysInMonth);
+  async fetchDataByPeriod(sku, startDate, endDate) {
+    const sessionData = this.storage.loadSessionStorage();
+    const token = sessionData ? sessionData.token : "";
+
+    const payload = {
+      sku,
+      startDate,
+      endDate
+    };
+
+    const apiUrl = import.meta.env.VITE_API_PRODUCCION_BY_PERIOD || "http://localhost:3000/api/waresmart/produccion/get/byPeriodProduct";
+    const response = await fetch(apiUrl, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      const error = new Error(result.message || "Error al obtener datos de producción gráfica.");
+      if (response.status === 401 || response.status === 403) {
+        error.isAuthError = true;
+      }
+      throw error;
     }
-    // Default semanal
-    return this.weeklyData;
+
+    return result.data;
+  }
+
+  /**
+   * @method processAndGroupData
+   * @description Agrupa y formatea los datos obtenidos según el rango.
+   */
+  processAndGroupData(ngrData, blncData, rango, startDateObj) {
+    let result = [];
+    const ngrMap = new Map();
+    const blncMap = new Map();
+    
+    // Normalizar la fecha a formato YYYY-MM-DD para mapeo
+    const extractDate = (dateString) => {
+      if (!dateString) return "";
+      return String(dateString).split('T')[0].split(' ')[0];
+    };
+    
+    // El backend devuelve { fecha: "YYYY-MM-DD", total: X }
+    ngrData.forEach(d => {
+      const dateVal = d.fecha || d.date || "";
+      ngrMap.set(extractDate(dateVal), (d.total || 0) * 40);
+    });
+    blncData.forEach(d => {
+      const dateVal = d.fecha || d.date || "";
+      blncMap.set(extractDate(dateVal), (d.total || 0) * 40);
+    });
+    
+    const pad = (n) => String(n).padStart(2, '0');
+    const formatYMD = (d) => `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+
+    if (rango === "semanal") {
+        const days = ["Lun", "Mar", "Mié", "Jue", "Vie", "Sáb", "Dom"];
+        let start = new Date(startDateObj);
+        for (let i = 0; i < 7; i++) {
+            const dateStr = formatYMD(start);
+            result.push({
+                day: days[i],
+                ngr: ngrMap.get(dateStr) || 0,
+                blnc: blncMap.get(dateStr) || 0
+            });
+            start.setDate(start.getDate() + 1);
+        }
+    } else if (rango === "mensual") {
+        let start = new Date(startDateObj);
+        const daysInMonth = new Date(start.getFullYear(), start.getMonth() + 1, 0).getDate();
+        for (let i = 1; i <= daysInMonth; i++) {
+            const dateStr = formatYMD(start);
+            result.push({
+                day: i.toString(),
+                ngr: ngrMap.get(dateStr) || 0,
+                blnc: blncMap.get(dateStr) || 0
+            });
+            start.setDate(start.getDate() + 1);
+        }
+    } else if (rango === "anual") {
+        const months = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"];
+        const ngrMonths = new Array(12).fill(0);
+        const blncMonths = new Array(12).fill(0);
+        
+        ngrData.forEach(d => {
+            const dateVal = d.fecha || d.date || "";
+            const dateStr = extractDate(dateVal);
+            if (dateStr) {
+                const monthIndex = parseInt(dateStr.split('-')[1], 10) - 1;
+                ngrMonths[monthIndex] += ((d.total || 0) * 40);
+            }
+        });
+        blncData.forEach(d => {
+            const dateVal = d.fecha || d.date || "";
+            const dateStr = extractDate(dateVal);
+            if (dateStr) {
+                const monthIndex = parseInt(dateStr.split('-')[1], 10) - 1;
+                blncMonths[monthIndex] += ((d.total || 0) * 40);
+            }
+        });
+        
+        for (let i = 0; i < 12; i++) {
+            result.push({
+                day: months[i],
+                ngr: ngrMonths[i],
+                blnc: blncMonths[i]
+            });
+        }
+    }
+    
+    this.cachedData = result;
+    return result;
+  }
+
+  getCachedData() {
+    return this.cachedData;
   }
 
   /**
@@ -56,7 +138,7 @@ export class ProduccionGraficaModel {
    * @description Calcula la producción máxima de la data actual para escalar la gráfica
    */
   getMaxProduction() {
-    const data = this.getDataByRange(this.currentRange);
+    const data = this.cachedData;
     let max = 0;
     data.forEach(item => {
       if (item.ngr > max) max = item.ngr;
